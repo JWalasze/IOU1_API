@@ -1,3 +1,5 @@
+using Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace IOU1_API
 {
@@ -8,6 +10,8 @@ namespace IOU1_API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddDbContext<IOU1Context>(opt => 
+                opt.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionStrings:DefaultConnection")));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
