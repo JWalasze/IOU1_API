@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+    sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        environment:
+            SA_PASSWORD: "VerySecurePassword123!"
+            ACCEPT_EULA: "Y"
+        ports:
+            - "1433:1433"
+        volumes:
+            - sqlvolume:/var/opt/mssql
+        networks:
+            - main-network
+
+networks:
+    main-network:
+
+volumes:
+    sqlvolume:
