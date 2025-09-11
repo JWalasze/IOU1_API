@@ -7,6 +7,7 @@ public class Group : Entity
     public long Id { get; }
     public string Description { get; }
     public User Owner { get; }
+    public ICollection<GroupMember> Members { get; }
 
     private Group() { }
 
