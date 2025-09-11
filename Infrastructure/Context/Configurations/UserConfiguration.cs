@@ -30,11 +30,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                .HasColumnName("AddDate")
                .IsRequired();
 
-        builder.Property(u => u.Email)
-               .HasConversion(
-                   email => email.EmailAddress,
-                   address => new Email(address))
-               .IsRequired();
+        //builder.Property(u => u.Email)
+        //       .HasConversion(
+        //           email => email.EmailAddress,
+        //           address => new Email(address))
+        //       .IsRequired();
 
         builder.HasMany(u => u.OwnedGroups)
                .WithOne(g => g.Owner);

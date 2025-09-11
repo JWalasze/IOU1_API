@@ -16,7 +16,8 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
                .IsRequired();
 
         builder.HasOne(g => g.Owner)
-               .WithMany()
+               .WithMany(u => u.OwnedGroups)
+               .HasForeignKey("CreationUserId")
                .OnDelete(DeleteBehavior.Cascade);
     }
 }

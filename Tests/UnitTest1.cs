@@ -20,5 +20,7 @@ public class UnitTest1
     public async Task Test1()
     {
         var x = await _context.Users.ToListAsync();
+        var y = await _context.Groups.ToListAsync();
+        var z = await _context.GroupMembers.ToListAsync();
     }
 }
