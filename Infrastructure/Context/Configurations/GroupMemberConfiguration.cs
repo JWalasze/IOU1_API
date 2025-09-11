@@ -8,17 +8,18 @@ public class GroupMemberConfiguration : IEntityTypeConfiguration<GroupMember>
 {
     public void Configure(EntityTypeBuilder<GroupMember> builder)
     {
-        builder.ToTable("IOU1GroupMembers");
+        builder.ToTable("GroupMembers");
 
         builder.HasKey(gm => gm.Id);
 
         builder.HasOne(gm => gm.Group)
                .WithMany(g => g.Members)
-               .HasForeignKey("IOU1Group")
+               .HasForeignKey("GroupId")
                .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(gm => gm.User)
-               .WithMany()
+               .WithMany(u => u.MemberGroups)
+               .HasForeignKey("MemberId")
                .OnDelete(DeleteBehavior.Cascade);
     }
 }

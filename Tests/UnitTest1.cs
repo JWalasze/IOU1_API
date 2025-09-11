@@ -16,11 +16,17 @@ public class UnitTest1
         _context = new IOU1Context(options); 
     }
 
+    //VERY TEMP...
     [Fact]
-    public async Task Test1()
+    public async Task EfCoreConfigurations_TempTest_ReturnsProperDataFromDB()
     {
-        var x = await _context.Users.ToListAsync();
-        var y = await _context.Groups.ToListAsync();
-        var z = await _context.GroupMembers.ToListAsync();
+        //var x = await _context.Users.ToListAsync();
+        //var y = await _context.Groups.ToListAsync();
+        //var z = await _context.GroupMembers.ToListAsync();
+
+        var xx = await _context.Users.Include(u => u.OwnedGroups).ToListAsync();
+        var zz = await _context.GroupMembers.Include(gm => gm.User).Include(gm => gm.Group).ToListAsync();
+        var xxx = await _context.Users.Include(u => u.MemberGroups).ThenInclude(gm => gm.Group).ToListAsync();
+        var yy = await _context.Groups.Include(g => g.Members).ThenInclude(gm => gm.User).ToListAsync();
     }
 }
