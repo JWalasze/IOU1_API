@@ -9,7 +9,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        builder.ToTable("IOU1User");
+        builder.ToTable("AppUser");
 
         builder.HasKey(u => u.Id);
 
@@ -28,12 +28,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.CreatedAt)
                .HasColumnName("AddDate")
-               .IsRequired();
-
-        builder.Property(u => u.Email)
-               .HasConversion(
-                   email => email.EmailAddress,
-                   address => new Email(address))
                .IsRequired();
 
         builder.HasMany(u => u.OwnedGroups)

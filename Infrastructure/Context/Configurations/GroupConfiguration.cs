@@ -8,7 +8,7 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
 {
     public void Configure(EntityTypeBuilder<Group> builder)
     {
-        builder.ToTable("IOU1Group");
+        builder.ToTable("CommunityGroup");
 
         builder.HasKey(g => g.Id);
 
@@ -16,7 +16,8 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
                .IsRequired();
 
         builder.HasOne(g => g.Owner)
-               .WithMany()
+               .WithMany(u => u.OwnedGroups)
+               .HasForeignKey("CreatedById")
                .OnDelete(DeleteBehavior.Cascade);
     }
 }

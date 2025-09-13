@@ -1,4 +1,4 @@
-create table IOU1User (
+create table AppUser (
 	Id bigint primary key identity(1,1),
 	FirstName varchar(20) not null,
 	LastName varchar(20) not null,
@@ -9,41 +9,79 @@ create table IOU1User (
 	Version rowversion
 );
 
-create table IOU1Group (
+create table CommunityGroup (
 	Id bigint primary key identity(1,1),
-	CreationUser bigint not null,
+	CreatedById bigint not null,
 	Description text,
 	Version rowversion
 
-	constraint fk_creation_user_iou1_user foreign key (CreationUser)
-	references IOU1User(Id)
+	constraint fk_created_by_id_app_user foreign key (CreatedById)
+	references AppUser(Id)
 );
 
-create table IOU1GroupMembers (
+create table GroupMembers (
 	Id bigint primary key identity(1,1),
-	MemberUser bigint not null,
-	IOU1Group bigint not null,
+	MemberId bigint not null,
+	GroupId bigint not null,
 
-	constraint fk_member_user_iou1_user foreign key (MemberUser)
-	references IOU1User(Id),
+	constraint fk_member_id_app_user foreign key (MemberId)
+	references AppUser(Id),
 
-	constraint fk_iou1_group_iou1_group foreign key (IOU1Group)
-	references IOU1Group(Id)
+	constraint fk_group_id_community_group foreign key (GroupId)
+	references CommunityGroup(Id)
 );
 
-drop table IOU1GroupMembers;
-drop table IOU1Group;
-drop table IOU1User;
+create table Transactions (
+	Id bigint primary key identity(1,1),
+	GroupId bigint not null,
+	Version rowversion
+);
 
-insert into IOU1User (FirstName, LastName, Email, Login, Password)
-values ('Alice',   'Johnson', 'alice.johnson@example.com', 'alicej', 'P@ssword1');
 
-insert into IOU1User (FirstName, LastName, Email, Login, Password)
-values ('Bob',     'Smith',   'bob.smith@example.com',     'bobsmith', 'Secr3tPwd');
+drop table GroupMembers;
+drop table CommunityGroup;
+drop table AppUser;
 
-insert into IOU1User (FirstName, LastName, Email, Login, Password)
-values ('Charlie', 'Brown',   'charlie.brown@example.com', 'cbrown', 'Ch@rlie123');
+insert into AppUser (FirstName, LastName, Email, Login, Password)
+values ('Alice',   'Johnson', 'alice.johnson@example.com', 'alicej',  'P@ssword1');
 
-insert into IOU1User (FirstName, LastName, Email, Login, Password)
-values ('Diana',   'Evans',   'diana.evans@example.com',   'dianae', 'D!anaPW2024');
+insert into AppUser (FirstName, LastName, Email, Login, Password)
+values ('Bob',     'Smith',   'bob.smith@example.com',     'bobsmith','Secr3tPwd');
+
+insert into AppUser (FirstName, LastName, Email, Login, Password)
+values ('Charlie', 'Brown',   'charlie.brown@example.com', 'cbrown',  'Ch@rlie123');
+
+insert into AppUser (FirstName, LastName, Email, Login, Password)
+values ('Diana',   'Evans',   'diana.evans@example.com',   'dianae',  'D!anaPW2024');
+
+insert into CommunityGroup (CreatedById, Description)
+values (1, 'Group for project Alpha');
+
+insert into CommunityGroup (CreatedById, Description)
+values (2, 'Testers group for QA');
+
+insert into CommunityGroup (CreatedById, Description)
+values (3, 'Finance department collaboration');
+
+insert into CommunityGroup (CreatedById, Description)
+values (4, 'Casual chat group');
+
+-- Group 1 (Alpha): everyone joins
+insert into GroupMembers (MemberId, GroupId) values (1, 1);
+insert into GroupMembers (MemberId, GroupId) values (2, 1);
+insert into GroupMembers (MemberId, GroupId) values (3, 1);
+insert into GroupMembers (MemberId, GroupId) values (4, 1);
+
+-- Group 2 (QA): Bob + Charlie
+insert into GroupMembers (MemberId, GroupId) values (2, 2);
+insert into GroupMembers (MemberId, GroupId) values (3, 2);
+
+-- Group 3 (Finance): Charlie + Alice
+insert into GroupMembers (MemberId, GroupId) values (3, 3);
+insert into GroupMembers (MemberId, GroupId) values (1, 3);
+
+-- Group 4 (Casual chat): Diana + Bob
+insert into GroupMembers (MemberId, GroupId) values (4, 4);
+insert into GroupMembers (MemberId, GroupId) values (2, 4);
+
 
