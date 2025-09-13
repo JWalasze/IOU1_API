@@ -1,5 +1,6 @@
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Tests;
 
@@ -7,13 +8,15 @@ public class UnitTest1
 {
     private readonly IOU1Context _context;
 
-    public UnitTest1()
-    {
+    public UnitTest1() {
+        var config = TestConfig.InitConfiguration();
+        var connectionString = config.GetConnectionString("DefaultConnection");
+
         var options = new DbContextOptionsBuilder<IOU1Context>()
-            .UseSqlServer("Server=JWALASZEK;Database=IOU1;Trusted_Connection=True;TrustServerCertificate=True")
+            .UseSqlServer(connectionString)
             .Options;
 
-        _context = new IOU1Context(options); 
+        _context = new IOU1Context(options);
     }
 
     //VERY TEMP...
