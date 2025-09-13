@@ -8,6 +8,9 @@ public class IOU1Context(DbContextOptions<IOU1Context> options) : DbContext(opti
     public DbSet<User> Users { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<GroupMember> GroupMembers { get; set; }
+    public DbSet<Currency> Currencies { get; set; }
+    public DbSet<TransactionStatus> TransactionStatuses { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
 
     //Runs per new instance of the context
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
