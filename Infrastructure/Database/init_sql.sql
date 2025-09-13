@@ -37,11 +37,6 @@ create table Transactions (
 	Version rowversion
 );
 
-
-drop table GroupMembers;
-drop table CommunityGroup;
-drop table AppUser;
-
 insert into AppUser (FirstName, LastName, Email, Login, Password)
 values ('Alice',   'Johnson', 'alice.johnson@example.com', 'alicej',  'P@ssword1');
 
@@ -83,5 +78,3 @@ insert into GroupMembers (MemberId, GroupId) values (1, 3);
 -- Group 4 (Casual chat): Diana + Bob
 insert into GroupMembers (MemberId, GroupId) values (4, 4);
 insert into GroupMembers (MemberId, GroupId) values (2, 4);
-
-
