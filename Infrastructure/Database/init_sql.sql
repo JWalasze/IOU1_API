@@ -31,45 +31,57 @@ create table GroupMembers (
 	references CommunityGroup(Id)
 );
 
-drop table IOU1GroupMembers;
-drop table IOU1Group;
-drop table IOU1User;
+create table Transactions (
+	Id bigint primary key identity(1,1),
+	GroupId bigint not null,
+	Version rowversion
+);
 
-insert into IOU1User (FirstName, LastName, Email, Login, Password)
-values ('Alice',   'Johnson', 'alice.johnson@example.com', 'alicej', 'P@ssword1');
 
-insert into IOU1User (FirstName, LastName, Email, Login, Password)
-values ('Bob',     'Smith',   'bob.smith@example.com',     'bobsmith', 'Secr3tPwd');
+drop table GroupMembers;
+drop table CommunityGroup;
+drop table AppUser;
 
-insert into IOU1User (FirstName, LastName, Email, Login, Password)
-values ('Charlie', 'Brown',   'charlie.brown@example.com', 'cbrown', 'Ch@rlie123');
+insert into AppUser (FirstName, LastName, Email, Login, Password)
+values ('Alice',   'Johnson', 'alice.johnson@example.com', 'alicej',  'P@ssword1');
 
-insert into IOU1User (FirstName, LastName, Email, Login, Password)
-values ('Diana',   'Evans',   'diana.evans@example.com',   'dianae', 'D!anaPW2024');
+insert into AppUser (FirstName, LastName, Email, Login, Password)
+values ('Bob',     'Smith',   'bob.smith@example.com',     'bobsmith','Secr3tPwd');
 
-insert into IOU1Group (CreationUserId, Description)
+insert into AppUser (FirstName, LastName, Email, Login, Password)
+values ('Charlie', 'Brown',   'charlie.brown@example.com', 'cbrown',  'Ch@rlie123');
+
+insert into AppUser (FirstName, LastName, Email, Login, Password)
+values ('Diana',   'Evans',   'diana.evans@example.com',   'dianae',  'D!anaPW2024');
+
+insert into CommunityGroup (CreatedById, Description)
 values (1, 'Group for project Alpha');
 
-insert into IOU1Group (CreationUserId, Description)
+insert into CommunityGroup (CreatedById, Description)
 values (2, 'Testers group for QA');
 
-insert into IOU1Group (CreationUserId, Description)
+insert into CommunityGroup (CreatedById, Description)
 values (3, 'Finance department collaboration');
 
-insert into IOU1Group (CreationUserId, Description)
+insert into CommunityGroup (CreatedById, Description)
 values (4, 'Casual chat group');
 
-insert into IOU1GroupMembers (MemberUserId, IOU1Group) values (1, 1);
-insert into IOU1GroupMembers (MemberUserId, IOU1Group) values (2, 1);
-insert into IOU1GroupMembers (MemberUserId, IOU1Group) values (3, 1);
-insert into IOU1GroupMembers (MemberUserId, IOU1Group) values (4, 1);
+-- Group 1 (Alpha): everyone joins
+insert into GroupMembers (MemberId, GroupId) values (1, 1);
+insert into GroupMembers (MemberId, GroupId) values (2, 1);
+insert into GroupMembers (MemberId, GroupId) values (3, 1);
+insert into GroupMembers (MemberId, GroupId) values (4, 1);
 
-insert into IOU1GroupMembers (MemberUserId, IOU1Group) values (2, 2);
-insert into IOU1GroupMembers (MemberUserId, IOU1Group) values (3, 2);
+-- Group 2 (QA): Bob + Charlie
+insert into GroupMembers (MemberId, GroupId) values (2, 2);
+insert into GroupMembers (MemberId, GroupId) values (3, 2);
 
-insert into IOU1GroupMembers (MemberUserId, IOU1Group) values (3, 3);
-insert into IOU1GroupMembers (MemberUserId, IOU1Group) values (1, 3);
+-- Group 3 (Finance): Charlie + Alice
+insert into GroupMembers (MemberId, GroupId) values (3, 3);
+insert into GroupMembers (MemberId, GroupId) values (1, 3);
 
-insert into IOU1GroupMembers (MemberUserId, IOU1Group) values (4, 4);
-insert into IOU1GroupMembers (MemberUserId, IOU1Group) values (2, 4);
+-- Group 4 (Casual chat): Diana + Bob
+insert into GroupMembers (MemberId, GroupId) values (4, 4);
+insert into GroupMembers (MemberId, GroupId) values (2, 4);
+
 
