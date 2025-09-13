@@ -1,4 +1,7 @@
+using Domain.RepoInterfaces;
 using Infrastructure.Context;
+using Infrastructure.Repositories;
+using IOU1_API.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace IOU1_API
@@ -9,13 +12,17 @@ namespace IOU1_API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<IOU1Context>(opt => 
-                opt.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionStrings:DefaultConnection")));
+            builder.Services.AddDbContext<IOU1Context>(opt =>
+                opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             #region SingletonServices
             #endregion
 
             #region ScopedServices
+
+            builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+            builder.Services.AddScoped<GroupService>();
+
             #endregion
 
             #region TransientServices
