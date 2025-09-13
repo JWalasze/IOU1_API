@@ -4,11 +4,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace Tests;
 
-public class UnitTest1
+public class TempTests
 {
     private readonly IOU1Context _context;
 
-    public UnitTest1() {
+    public TempTests() {
         var config = TestConfig.InitConfiguration();
         var connectionString = config.GetConnectionString("DefaultConnection");
 
@@ -23,10 +23,6 @@ public class UnitTest1
     [Fact]
     public async Task EfCoreConfigurations_TempTest_ReturnsProperDataFromDB()
     {
-        //var x = await _context.Users.ToListAsync();
-        //var y = await _context.Groups.ToListAsync();
-        //var z = await _context.GroupMembers.ToListAsync();
-
         var xx = await _context.Users.Include(u => u.OwnedGroups).ToListAsync();
         var zz = await _context.GroupMembers.Include(gm => gm.User).Include(gm => gm.Group).ToListAsync();
         var xxx = await _context.Users.Include(u => u.MemberGroups).ThenInclude(gm => gm.Group).ToListAsync();
@@ -34,5 +30,12 @@ public class UnitTest1
         var a = await _context.Currencies.ToListAsync();
         var b = await _context.TransactionStatuses.ToListAsync();
         var c = await _context.Transactions.ToListAsync();
+        var cc = await _context.Transactions
+            .Include(t => t.Status)
+            .Include(t => t.Borrower)
+            .Include(t => t.Currency)
+            .Include(t => t.Buyer)
+            .Include(t => t.Status)
+            .ToListAsync();
     }
 }

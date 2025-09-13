@@ -21,13 +21,13 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.Property(t => t.ModificationDate);
 
         builder.HasOne(t => t.Group)
-            .WithMany();
+               .WithMany();
 
         builder.HasOne(t => t.Buyer)
                .WithMany();
 
         builder.HasOne(t => t.Borrower)
-            .WithMany();
+               .WithMany();
 
         builder.HasOne(t => t.Currency)
                .WithMany();

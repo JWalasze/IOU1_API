@@ -6,7 +6,7 @@ public class Transaction : Entity
 {
     public long Id { get; }
     public DateTime AddDate { get; }
-    public DateTime ModificationDate { get; }
+    public DateTime? ModificationDate { get; }
     public decimal Amount { get; }
     public Group Group { get; } = null!;
     public User Buyer { get; } = null!;
