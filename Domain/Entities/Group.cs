@@ -5,9 +5,10 @@ namespace Domain.Entities;
 public class Group : Entity
 {
     public long Id { get; }
-    public string Description { get; }
-    public User Owner { get; }
-    public ICollection<GroupMember> Members { get; }
+    public string Description { get; } = null!;
+    public User Owner { get; } = null!;
+
+    public ICollection<GroupMember> Members { get; } = [];
 
     private Group() { }
 
