@@ -19,7 +19,7 @@ public class Transaction : Entity
     public Transaction(
         long id,
         DateTime addDate,
-        DateTime modificationDate,
+        DateTime? modificationDate,
         decimal amount,
         Group group,
         User buyer,
@@ -36,5 +36,25 @@ public class Transaction : Entity
         Borrower = borrower;
         Currency = currency;
         Status = status;
+    }
+
+    public static Transaction CreateNewTransaction(
+        decimal amount,
+        Group group,
+        User from,
+        User to,
+        Currency currency,
+        TransactionStatus status)
+    {
+        return new Transaction(
+            0,
+            addDate: DateTime.UtcNow,
+            modificationDate: null,
+            amount,
+            group,
+            from,
+            to,
+            currency,
+            status);
     }
 }
