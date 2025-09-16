@@ -6,10 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.RepoInterfaces;
-public interface IGroupRepository
+
+public interface ICurrencyRepository
 {
-    Task<Group?> GetByIdAsync(long groupId);
-    Task<Group?> GetGroupWithMembersAsync(long groupId);
+    Task<Currency> GetDefaultCurrency();
 }
-
-

@@ -6,10 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.RepoInterfaces;
-public interface IGroupRepository
+
+public interface IUserRepository
 {
-    Task<Group?> GetByIdAsync(long groupId);
-    Task<Group?> GetGroupWithMembersAsync(long groupId);
+    Task<User?> GetByIdAsync(long creatorId);
+    Task<IEnumerable<User>> GetByIdsAsync(IEnumerable<long> memberIds);
 }
-
-
