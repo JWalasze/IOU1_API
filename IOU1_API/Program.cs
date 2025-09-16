@@ -1,5 +1,10 @@
+using Application.Features.Groups.Handler;
+using Application.Features.Groups.Request;
+using Application.Features.Groups.Response;
+using Application.Mediator;
 using Domain.RepoInterfaces;
 using Infrastructure.Context;
+using Infrastructure.Mediator;
 using Infrastructure.Repositories;
 using IOU1_API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +21,9 @@ namespace IOU1_API
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             #region SingletonServices
+
+            builder.Services.AddSingleton<IRequestMediator, RequestMediator>();
+
             #endregion
 
             #region ScopedServices
@@ -26,6 +34,9 @@ namespace IOU1_API
             #endregion
 
             #region TransientServices
+
+            builder.Services.AddTransient<IRequestHandler<GroupsRequest, GroupsResponse>, GroupHandler>();
+
             #endregion
 
             builder.Services.AddControllers();

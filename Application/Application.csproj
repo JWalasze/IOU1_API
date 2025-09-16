@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Groups\" />
     <Folder Include="Features\Balance\" />
+    <Folder Include="Features\Members\" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,7 @@
-﻿using Domain.Entities;
+﻿using Application.Features.Groups.Request;
+using Application.Features.Groups.Response;
+using Application.Mediator;
+using Domain.Entities;
 using IOU1_API.Mappers;
 using IOU1_API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -7,19 +10,16 @@ namespace IOU1_API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class GroupController : ControllerBase
+public class GroupController(IRequestMediator mediator, GroupService groupService) : ControllerBase
 {
-    private readonly GroupService _groupService;
+    private readonly IRequestMediator _mediator = mediator;
 
-    public GroupController(GroupService groupService)
-    {
-        _groupService = groupService;
-    }
+    private readonly GroupService _groupService = groupService;
 
     [HttpGet]
-    public async Task<IActionResult> GetGroups()
+    public async Task<IActionResult> GetGroups([FromQuery] GroupsRequest request)
     {
-        return Ok();
+        return Ok(await _mediator.Send<GroupsRequest, GroupsResponse>(request));
     }
 
     [HttpGet("{id}")]
