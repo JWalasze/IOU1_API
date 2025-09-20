@@ -7,13 +7,13 @@ public class RequestMediator(IServiceProvider serviceProvider) : IRequestMediato
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
-    public async Task<TResponse> Send<TRequest, TResponse>(TRequest request)
+    public async Task<TResponse> Send<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default)
         where TRequest : IRequest<TResponse>
     {
         using (var scope = _serviceProvider.CreateScope())
         {
             var service = scope.ServiceProvider.GetRequiredService<IRequestHandler<TRequest, TResponse>>();
-            return await service.Handle(request);
+            return await service.Handle(request, cancellationToken);
         }
     }
 }

@@ -9,7 +9,7 @@ public class GetGroupsQuery(IOU1Context context) : IGetGroupsQuery
 {
     private readonly IOU1Context _context = context;
 
-    public async Task<ICollection<GetGroupsDto>> GetGroups(long userId)
+    public async Task<ICollection<GetGroupsDto>> GetGroups(long userId, CancellationToken cancellationToken = default)
     {
         return await _context
             .GroupMembers
@@ -22,6 +22,6 @@ public class GetGroupsQuery(IOU1Context context) : IGetGroupsQuery
                 OwnerName = gm.Group.Owner.FullName,
                 Description = gm.Group.Description,
             })
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 }
