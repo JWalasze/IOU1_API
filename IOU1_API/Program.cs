@@ -32,6 +32,11 @@ namespace IOU1_API
 
             builder.Services.AddScoped<IGroupRepository, GroupRepository>();
             builder.Services.AddScoped<GroupService>();
+            builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ITransactionStatusRepository, TransactionStatusRepository>();
+            builder.Services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+            builder.Services.AddScoped<TransactionService>();
 
             builder.Services.AddScoped<IRequestHandler<GroupsRequest, GroupsResponse>, GroupHandler>();
             builder.Services.AddScoped<IGetGroupsQuery, GetGroupsQuery>();

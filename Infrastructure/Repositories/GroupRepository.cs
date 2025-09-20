@@ -19,6 +19,11 @@ public class GroupRepository : IGroupRepository
         _context = context;
     }
 
+    public async Task<Group?> GetByIdAsync(long groupId)
+    {
+        return await _context.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+    }
+
     public async Task<Group?> GetGroupWithMembersAsync(long groupId)
     {
         return await _context.Groups
