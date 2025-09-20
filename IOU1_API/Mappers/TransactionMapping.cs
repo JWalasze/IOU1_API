@@ -22,6 +22,6 @@ public static class TransactionMapping
         );
     }
 
-    public static IEnumerable<TransactionDto> ToDtoList(this IEnumerable<Transaction> txs)
-        => txs.Select(t => t.ToDto());
+    public static List<TransactionDto> ToDtoList(this IEnumerable<Transaction> txs)
+        => txs.Select(t => t.ToDto()).ToList();
 }
