@@ -72,8 +72,6 @@ public class TransactionController : ControllerBase
     {
         var transactions = await _transactionService
             .GetTransactionByGroupIdAsync(groupId);
-        if (!transactions.Any())
-            return NotFound();
 
         return Ok(transactions);
     }
