@@ -1,3 +1,4 @@
+using Application.Features.Groups;
 using Application.Features.Groups.Handler;
 using Application.Features.Groups.Request;
 using Application.Features.Groups.Response;
@@ -5,6 +6,7 @@ using Application.Mediator;
 using Domain.RepoInterfaces;
 using Infrastructure.Context;
 using Infrastructure.Mediator;
+using Infrastructure.Queries;
 using Infrastructure.Repositories;
 using IOU1_API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -31,11 +33,11 @@ namespace IOU1_API
             builder.Services.AddScoped<IGroupRepository, GroupRepository>();
             builder.Services.AddScoped<GroupService>();
 
+            builder.Services.AddScoped<IRequestHandler<GroupsRequest, GroupsResponse>, GroupHandler>();
+            builder.Services.AddScoped<IGetGroupsQuery, GetGroupsQuery>();
             #endregion
 
             #region TransientServices
-
-            builder.Services.AddTransient<IRequestHandler<GroupsRequest, GroupsResponse>, GroupHandler>();
 
             #endregion
 

@@ -2,5 +2,5 @@
 
 public interface IRequestMediator
 {
-    Task<TResponse> Send<TRequest, TResponse>(TRequest request) where TRequest : IRequest where TResponse : IResponse;
+    Task<TResponse> Send<TRequest, TResponse>(TRequest request) where TRequest : IRequest<TResponse>;
 }

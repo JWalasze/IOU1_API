@@ -1,12 +1,16 @@
 ﻿using Application.Features.Groups.Request;
 using Application.Features.Groups.Response;
+using Application.Features.Mapper;
 using Application.Mediator;
+using Domain.Entities;
 
 namespace Application.Features.Groups.Handler;
 
-public class GroupHandler : IRequestHandler<GroupsRequest, GroupsResponse>
+public class GroupHandler(IGetGroupsQuery repository) : IRequestHandler<GroupsRequest, GroupsResponse>
 {
-    public Task<GroupsResponse> Handle(GroupsRequest request)
+    private readonly IGetGroupsQuery repository = repository;
+
+    public async Task<GroupsResponse> Handle(GroupsRequest request)
     {
         //1 validation (bussiness rules)
 
@@ -14,6 +18,10 @@ public class GroupHandler : IRequestHandler<GroupsRequest, GroupsResponse>
 
         //3 return result
 
-        return null;
+        var groupsInfo = await repository.GetGroups(request.UserId);
+        return new GroupsResponse
+        {
+            GroupInfoResponse = groupsInfo.MapToDto()
+        };
     }
 }

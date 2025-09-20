@@ -15,6 +15,8 @@ public class User
     public ICollection<Group> OwnedGroups { get; } = [];
     public ICollection<GroupMember> MemberGroups { get; } = [];
 
+    public string FullName => $"{FirstName} {LastName}";
+
     private User() { }
 
     public User(

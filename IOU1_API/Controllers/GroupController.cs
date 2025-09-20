@@ -1,7 +1,6 @@
 ﻿using Application.Features.Groups.Request;
 using Application.Features.Groups.Response;
 using Application.Mediator;
-using Domain.Entities;
 using IOU1_API.Mappers;
 using IOU1_API.Services;
 using Microsoft.AspNetCore.Mvc;

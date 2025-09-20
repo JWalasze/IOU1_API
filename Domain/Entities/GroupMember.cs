@@ -6,6 +6,8 @@ public class GroupMember : Entity
 {
     public long Id { get; }
     public Group Group { get; }
+
+    public long MemberId { get; }
     public User User { get; }
 
     private GroupMember() { }
@@ -14,6 +16,8 @@ public class GroupMember : Entity
     {
         Id = id;
         Group = group;
+
         User = user;
+        MemberId = User.Id;
     }
 }
