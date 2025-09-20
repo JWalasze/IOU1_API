@@ -26,7 +26,14 @@ public class TransactionService
 
     public async Task<List<TransactionDto>> GetTransactionByGroupIdAsync(long groupId)
     {
-        throw new NotImplementedException();
+        var result = await _transactionRepository.GetGroupTransactionsAsync(groupId);
+
+        if (result == null)
+        {
+            return new();
+        }
+
+        return result.ToDtoList();
     }
 
     public async Task<IEnumerable<TransactionDto>> CreateGroupTransactionsAsync(
@@ -122,7 +129,7 @@ public class TransactionService
         );
     }
 
-    private async Task<IEnumerable<TransactionDto>> CreateTransactions(
+    private async Task<List<TransactionDto>> CreateTransactions(
         Group group,
         User creator,
         IEnumerable<TransactionData> customSplits)

@@ -10,4 +10,6 @@ namespace Domain.RepoInterfaces;
 public interface ITransactionRepository
 {
     Task<List<Transaction>> AddRangeAsync(List<Transaction> transactions);
+
+    Task<List<Transaction>> GetGroupTransactionsAsync(long groupId);
 }
