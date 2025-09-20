@@ -2,7 +2,7 @@
 
 namespace Application.Features.Groups.Response;
 
-public sealed record GroupsResponse : IResponse
+public sealed record GroupsResponse : EndpointResponse
 {
     public required ICollection<GroupInfoResponse> GroupInfoResponse { get; init; }
 }

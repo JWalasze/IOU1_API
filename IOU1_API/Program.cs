@@ -2,8 +2,10 @@ using Application.Features.Groups;
 using Application.Features.Groups.Handler;
 using Application.Features.Groups.Request;
 using Application.Features.Groups.Response;
+using Application.Features.Groups.Validators;
 using Application.Mediator;
 using Domain.RepoInterfaces;
+using FluentValidation;
 using Infrastructure.Context;
 using Infrastructure.Mediator;
 using Infrastructure.Queries;
@@ -25,6 +27,7 @@ namespace IOU1_API
             #region SingletonServices
 
             builder.Services.AddSingleton<IRequestMediator, RequestMediator>();
+            builder.Services.AddSingleton<IValidator<GroupsRequest>, GetGroupsValidator>();
 
             #endregion
 
@@ -43,6 +46,8 @@ namespace IOU1_API
             #endregion
 
             #region TransientServices
+
+
 
             #endregion
 
