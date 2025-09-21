@@ -14,7 +14,6 @@ public class Transaction : Entity
     public User Buyer { get; } = null!;
     public User Borrower { get; } = null!;
     public Currency Currency { get; } = null!;
-    public TransactionStatus Status { get; } = null!;
 
     private Transaction() { }
 
@@ -26,8 +25,7 @@ public class Transaction : Entity
         Group group,
         User buyer,
         User borrower,
-        Currency currency,
-        TransactionStatus status)
+        Currency currency)
     {
         AddDate = addDate;
         ModificationDate = modificationDate;
@@ -37,7 +35,6 @@ public class Transaction : Entity
         Buyer = buyer;
         Borrower = borrower;
         Currency = currency;
-        Status = status;
     }
 
     public static Transaction CreateNewTransaction(
@@ -46,8 +43,7 @@ public class Transaction : Entity
         Group group,
         User from,
         User to,
-        Currency currency,
-        TransactionStatus status)
+        Currency currency)
     {
         return new Transaction(
             addDate: DateTime.UtcNow,
@@ -57,7 +53,6 @@ public class Transaction : Entity
             group,
             from,
             to,
-            currency,
-            status);
+            currency);
     }
 }

@@ -7,38 +7,29 @@ using IOU1_API.Mappers;
 namespace IOU1_API.Services;
 
 public record TransactionData(User User, decimal Amount);
-public class TransactionService
+public class ExpensesService
 {
     private readonly IUserRepository _userRepository;
     private readonly IGroupRepository _groupRepository;
-    private readonly ITransactionRepository _transactionRepository;
     private readonly IExpenseRepository _expenseRepository;
     private readonly ICurrencyRepository _currencyRepository;
-    private readonly ITransactionStatusRepository _transactionStatusRepository;
 
-    public TransactionService(IGroupRepository groupRepository, IUserRepository userRepository, ITransactionRepository transactionRepository, IExpenseRepository expenseRepository, ICurrencyRepository currencyRepository, ITransactionStatusRepository transactionStatusRepository)
+    public ExpensesService(IGroupRepository groupRepository, IUserRepository userRepository, IExpenseRepository expenseRepository, ICurrencyRepository currencyRepository)
     {
         _groupRepository = groupRepository;
         _userRepository = userRepository;
-        _transactionRepository = transactionRepository;
         _expenseRepository = expenseRepository;
         _currencyRepository = currencyRepository;
-        _transactionStatusRepository = transactionStatusRepository;
     }
 
-    public async Task<List<TransactionDto>> GetTransactionByGroupIdAsync(long groupId)
+    public async Task<List<ExpenseDto>> GetExpensesByGroupIdAsync(long groupId)
     {
-        var result = await _transactionRepository.GetGroupTransactionsAsync(groupId);
-
-        if (result == null)
-        {
-            return new();
-        }
+        var result = await _expenseRepository.GetByGroupIdAsync(groupId);
 
         return result.ToDtoList();
     }
 
-    public async Task<IEnumerable<TransactionDto>> CreateGroupTransactionsAsync(
+    public async Task<ExpenseDto> CreateGroupTransactionsAsync(
         GroupTransactionRequest request)
     {
         var group = await _groupRepository.GetByIdAsync(request.GroupId)
@@ -48,7 +39,6 @@ public class TransactionService
             ?? throw new ArgumentException("Buyer not found");
 
         Currency currency = await _currencyRepository.GetDefaultCurrency(); // TODO: hold default in group info or take it form request
-        TransactionStatus pendingStatus = await _transactionStatusRepository.GetPendingStatus(); // TODO: delete this ridiculous thing
 
         bool equalOverride = false;
         var memberIds = InferSplitMethod(request, group, ref equalOverride);
@@ -72,8 +62,7 @@ public class TransactionService
                 group: expense.Group,
                 from: creator,
                 to: to,
-                currency: expense.Currency,
-                status: pendingStatus
+                currency: expense.Currency
             );
 
             expense.Transactions.Add(tx);
@@ -82,7 +71,7 @@ public class TransactionService
         await _expenseRepository.AddAsync(expense);
         await _expenseRepository.SaveChangesAsync();
 
-        return expense.Transactions.ToDtoList();
+        return expense.ToDto();
     }
 
     private static IEnumerable<long> InferSplitMethod(GroupTransactionRequest request, Group group, ref bool equalOverride)
@@ -158,7 +147,6 @@ public class TransactionService
         {
             if (difference > 0)
             {
-
                 transactionSplits.Add(new(creator, difference));
                 transactionSplits.Add(new(creator, -difference));
             }

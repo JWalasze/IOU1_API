@@ -10,6 +10,5 @@ public record TransactionDto(
     string BuyerName,
     long BorrowerId,
     string BorrowerName,
-    string CurrencyCode,
-    string Status
+    string CurrencyCode
 );

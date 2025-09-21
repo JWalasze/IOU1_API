@@ -32,9 +32,6 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.HasOne(t => t.Currency)
                .WithMany();
 
-        builder.HasOne(t => t.Status)
-               .WithMany();
-
         builder.HasOne(t => t.Expense)
                .WithMany(e => e.Transactions)
                .OnDelete(DeleteBehavior.Cascade);

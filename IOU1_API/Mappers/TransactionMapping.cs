@@ -14,14 +14,13 @@ public static class TransactionMapping
             GroupId: tx.Group.Id,
             GroupName: tx.Group.Description,
             BuyerId: tx.Buyer.Id,
-            BuyerName: $"{tx.Buyer.FirstName} {tx.Buyer.LastName}",
+            BuyerName: $"{tx.Buyer.FirstName}",
             BorrowerId: tx.Borrower.Id,
-            BorrowerName: $"{tx.Borrower.FirstName} {tx.Borrower.LastName}",
-            CurrencyCode: tx.Currency.Name,
-            Status: tx.Status.Name
+            BorrowerName: $"{tx.Borrower.FirstName}",
+            CurrencyCode: tx.Currency.Name
         );
     }
 
     public static List<TransactionDto> ToDtoList(this IEnumerable<Transaction> txs)
-        => txs.Select(t => t.ToDto()).ToList();
+        => [.. txs.Select(t => t.ToDto())];
 }

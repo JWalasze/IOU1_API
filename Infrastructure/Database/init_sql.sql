@@ -1,9 +1,11 @@
+drop table if exists GroupTransaction;
+drop table if exists GroupExpense;
+drop table if exists TransactionStatus; --old
+drop table if exists Currency;
 drop table if exists GroupMember;
 drop table if exists GroupTransaction;
 drop table if exists CommunityGroup;
 drop table if exists AppUser;
-drop table if exists Currency;
-drop table if exists TransactionStatus;
 
 create table AppUser (
 	Id bigint primary key identity(1,1),
@@ -43,11 +45,6 @@ create table Currency (
 	Name varchar(10) not null,
 );
 
-create table TransactionStatus (
-	Id bigint primary key identity(1,1),
-	Name varchar(10) not null,
-);
-
 create table GroupExpense (
 	Id bigint primary key identity(1,1),
 	GroupId bigint not null,
@@ -78,7 +75,6 @@ create table GroupTransaction (
 	ModificationDate datetime null,
 	Amount decimal(10,2) not null,
 	CurrencyId bigint not null,
-	StatusId bigint not null,
 	Version rowversion,
 
 	constraint fk_expense_id_group_transaction foreign key (ExpenseId)
@@ -95,9 +91,6 @@ create table GroupTransaction (
 
 	constraint fk_currency_id_group_transaction foreign key (CurrencyId)
 	references Currency(Id),
-
-	constraint fk_status_id_group_transaction foreign key (StatusId)
-	references TransactionStatus(Id)
 );
 
 insert into AppUser (FirstName, LastName, Email, Login, Password)
@@ -148,11 +141,6 @@ insert into Currency (Name) values ('EUR');  -- Id = 2
 insert into Currency (Name) values ('USD');  -- Id = 3
 insert into Currency (Name) values ('GBP');  -- Id = 4
 
-insert into TransactionStatus (Name) values ('Pending');   -- Id = 1
-insert into TransactionStatus (Name) values ('Paid');      -- Id = 2
-insert into TransactionStatus (Name) values ('Cancelled'); -- Id = 3
-insert into TransactionStatus (Name) values ('Disputed');  -- Id = 4
-
 -- 2) Sample transactions
 -- Group 1 (Alpha: members 1,2,3,4)
 declare @ExpenseId bigint;
@@ -163,10 +151,10 @@ values (1, 1, 120.50, 'Beer', 1); -- Alice total
 
 set @ExpenseId = SCOPE_IDENTITY();
 
-insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
-values (@ExpenseId, 1, 1, 2, 65.50, 1, 1); -- Alice bought for Bob, PLN, Pending
-insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
-values (@ExpenseId, 1, 1, 1, 55.00, 1, 1); -- Alice bought for herself, PLN, Pending
+insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId)
+values (@ExpenseId, 1, 1, 2, 65.50, 1); -- Alice bought for Bob, PLN, Pending
+insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId)
+values (@ExpenseId, 1, 1, 1, 55.00, 1); -- Alice bought for herself, PLN, Pending
 
 -- Bob paid for Charlie in Group 1
 insert into GroupExpense (GroupId, BuyerId, TotalAmount, Title, CurrencyId)
@@ -174,8 +162,8 @@ values (1, 2, 45.00, 'Beer', 3);
 
 set @ExpenseId = SCOPE_IDENTITY();
 
-insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
-values (@ExpenseId, 1, 2, 3, 45.00, 3, 2);
+insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId)
+values (@ExpenseId, 1, 2, 3, 45.00, 3);
 
 -- Diana paid for Alice in Group 1
 insert into GroupExpense (GroupId, BuyerId, TotalAmount, Title, CurrencyId)
@@ -183,8 +171,8 @@ values (1, 4, 89.99, 'Beer', 2);
 
 set @ExpenseId = SCOPE_IDENTITY();
 
-insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
-values (@ExpenseId, 1, 4, 1, 89.99, 2, 4);
+insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId)
+values (@ExpenseId, 1, 4, 1, 89.99, 2);
 
 -- Charlie paid for Diana in Group 1
 insert into GroupExpense (GroupId, BuyerId, TotalAmount, Title, CurrencyId)
@@ -192,8 +180,8 @@ values (1, 3, 72.10, 'Beer', 2);
 
 set @ExpenseId = SCOPE_IDENTITY();
 
-insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
-values (@ExpenseId, 1, 3, 4, 72.10, 2, 1);
+insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId)
+values (@ExpenseId, 1, 3, 4, 72.10, 2);
 
 
 
