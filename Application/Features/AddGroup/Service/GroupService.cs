@@ -21,6 +21,8 @@ public class GroupService(IUnitOfWork unit, IGroupRepository groupRepository/*, 
         {
             await _unit.BeginTransaction();
 
+            var repo = _unit.Repository<Group>();
+            var repoo = _unit.Get<IGroupRepository>();
             //var newGroup = new Group();
 
             await _unit.CommitTransaction();

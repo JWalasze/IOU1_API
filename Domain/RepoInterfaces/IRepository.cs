@@ -2,7 +2,7 @@
 
 namespace Domain.RepoInterfaces;
 
-public interface IRepository<T> where T : Entity
+public interface IRepository<T> : IRepository where T : Entity 
 {
     
 }

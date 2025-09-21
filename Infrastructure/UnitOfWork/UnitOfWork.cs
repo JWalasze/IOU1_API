@@ -1,10 +1,25 @@
-﻿using Domain.UnitOfWork;
+﻿using Domain.Base;
+using Domain.RepoInterfaces;
+using Domain.UnitOfWork;
+using Infrastructure.Context;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.UnitOfWork;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork(IOU1Context context, IServiceProvider serviceProvider) : IUnitOfWork
 {
-    //Method where you get any repo you need
+    private readonly IOU1Context _context = context;
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
+
+    public IRepository<T> Repository<T>() where T : Entity
+    {
+        return _serviceProvider.GetRequiredService<IRepository<T>>();
+    }
+
+    public TRepo Get<TRepo>() where TRepo : IRepository
+    {
+        return _serviceProvider.GetRequiredService<TRepo>();
+    }
 
     public Task BeginTransaction()
     {
@@ -17,6 +32,16 @@ public class UnitOfWork : IUnitOfWork
     }
 
     public Task RollbackTransaction()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task CreateSavepoint()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task RollbackToSavepoint()
     {
         throw new NotImplementedException();
     }

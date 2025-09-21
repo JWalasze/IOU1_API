@@ -9,6 +9,7 @@ using Application.Features.Groups.Request;
 using Application.Features.Groups.Response;
 using Application.Features.Groups.Validator;
 using Application.Mediator;
+using Domain.Entities;
 using Domain.RepoInterfaces;
 using Domain.UnitOfWork;
 using FluentValidation;
@@ -41,6 +42,7 @@ namespace IOU1_API
 
             #region ScopedServices
 
+            builder.Services.AddScoped<IRepository<Group>, GroupRepository>();
             builder.Services.AddScoped<IGroupRepository, GroupRepository>();
             builder.Services.AddScoped<xdGroupService>();
             builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();

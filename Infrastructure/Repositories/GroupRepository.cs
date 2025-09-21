@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories;
 
-public class GroupRepository : IGroupRepository
+public class GroupRepository : IGroupRepository, IRepository<Group>
 {
     private readonly IOU1Context _context;
 
