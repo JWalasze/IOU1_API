@@ -17,8 +17,7 @@ public static class TransactionMapping
             BuyerName: $"{tx.Buyer.FirstName}",
             BorrowerId: tx.Borrower.Id,
             BorrowerName: $"{tx.Borrower.FirstName}",
-            CurrencyCode: tx.Currency.Name,
-            Status: tx.Status.Name
+            CurrencyCode: tx.Currency.Name
         );
     }
 

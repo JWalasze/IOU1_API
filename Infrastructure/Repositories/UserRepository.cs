@@ -34,30 +34,3 @@ public class UserRepository : IUserRepository
             .ToListAsync();
     }
 }
-
-public class TransactionStatusRepository : ITransactionStatusRepository
-{
-    private readonly IOU1Context _context;
-
-    public TransactionStatusRepository(IOU1Context context)
-    {
-        _context = context;
-    }
-    public async Task<TransactionStatus> GetPendingStatus()
-    {
-        return await _context.TransactionStatuses.FirstAsync(s => s.Name == "Pending");
-    }
-}
-public class CurrencyRepository : ICurrencyRepository
-{
-    private readonly IOU1Context _context;
-
-    public CurrencyRepository(IOU1Context context)
-    {
-        _context = context;
-    }
-    public async Task<Currency> GetDefaultCurrency()
-    {
-        return await _context.Currencies.FirstAsync(s => s.Name == "USD");
-    }
-}

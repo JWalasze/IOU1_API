@@ -45,7 +45,6 @@ namespace IOU1_API
             builder.Services.AddScoped<xdGroupService>();
             builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-            builder.Services.AddScoped<ITransactionStatusRepository, TransactionStatusRepository>();
             builder.Services.AddScoped<ICurrencyRepository, CurrencyRepository>();
             builder.Services.AddScoped<ExpensesService>();
             builder.Services.AddScoped<IGroupService, GroupService>();

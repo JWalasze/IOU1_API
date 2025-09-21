@@ -13,15 +13,13 @@ public class ExpensesService
     private readonly IGroupRepository _groupRepository;
     private readonly IExpenseRepository _expenseRepository;
     private readonly ICurrencyRepository _currencyRepository;
-    private readonly ITransactionStatusRepository _transactionStatusRepository;
 
-    public ExpensesService(IGroupRepository groupRepository, IUserRepository userRepository, IExpenseRepository expenseRepository, ICurrencyRepository currencyRepository, ITransactionStatusRepository transactionStatusRepository)
+    public ExpensesService(IGroupRepository groupRepository, IUserRepository userRepository, IExpenseRepository expenseRepository, ICurrencyRepository currencyRepository)
     {
         _groupRepository = groupRepository;
         _userRepository = userRepository;
         _expenseRepository = expenseRepository;
         _currencyRepository = currencyRepository;
-        _transactionStatusRepository = transactionStatusRepository;
     }
 
     public async Task<List<ExpenseDto>> GetExpensesByGroupIdAsync(long groupId)
@@ -41,7 +39,6 @@ public class ExpensesService
             ?? throw new ArgumentException("Buyer not found");
 
         Currency currency = await _currencyRepository.GetDefaultCurrency(); // TODO: hold default in group info or take it form request
-        TransactionStatus pendingStatus = await _transactionStatusRepository.GetPendingStatus(); // TODO: delete this ridiculous thing
 
         bool equalOverride = false;
         var memberIds = InferSplitMethod(request, group, ref equalOverride);
@@ -65,8 +62,7 @@ public class ExpensesService
                 group: expense.Group,
                 from: creator,
                 to: to,
-                currency: expense.Currency,
-                status: pendingStatus
+                currency: expense.Currency
             );
 
             expense.Transactions.Add(tx);

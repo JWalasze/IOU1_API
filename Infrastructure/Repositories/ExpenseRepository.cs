@@ -28,7 +28,7 @@ public class ExpenseRepository : IExpenseRepository
     public async Task<IEnumerable<Expense>> GetByGroupIdAsync(long groupId, CancellationToken cancellationToken = default)
     {
         return await _context.Expenses
-             .Include(e => e.Transactions)
+            .Include(e => e.Transactions)
                 .ThenInclude(t => t.Group)
             .Include(e => e.Transactions)
                 .ThenInclude(t => t.Buyer)
@@ -36,8 +36,6 @@ public class ExpenseRepository : IExpenseRepository
                 .ThenInclude(t => t.Borrower)
             .Include(e => e.Transactions)
                 .ThenInclude(t => t.Currency)
-            .Include(e => e.Transactions)
-                .ThenInclude(t => t.Status)
             .Include(e => e.Group)
             .Include(e => e.Buyer)
             .Include(e => e.Currency)
