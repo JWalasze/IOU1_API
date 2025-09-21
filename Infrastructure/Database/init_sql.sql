@@ -48,8 +48,29 @@ create table TransactionStatus (
 	Name varchar(10) not null,
 );
 
+create table GroupExpense (
+	Id bigint primary key identity(1,1),
+	GroupId bigint not null,
+	BuyerId bigint not null,
+	TotalAmount decimal(10,2) not null,
+	Title nvarchar(50) not null,
+	Description nvarchar(255) null,
+	CurrencyId bigint not null,
+	Version rowversion,
+
+	constraint fk_group_id_group_expense foreign key (GroupId)
+	references CommunityGroup(Id),
+
+	constraint fk_buyer_id_group_expense foreign key (BuyerId)
+	references AppUser(Id),
+
+	constraint fk_currency_id_group_expense foreign key (CurrencyId)
+	references Currency(Id)
+);
+
 create table GroupTransaction (
 	Id bigint primary key identity(1,1),
+	ExpenseId bigint not null,
 	GroupId bigint not null,
 	BuyerId bigint not null,
 	BorrowerId bigint not null,
@@ -59,6 +80,9 @@ create table GroupTransaction (
 	CurrencyId bigint not null,
 	StatusId bigint not null,
 	Version rowversion,
+
+	constraint fk_expense_id_group_transaction foreign key (ExpenseId)
+	references GroupExpense(Id),
 
 	constraint fk_group_id_group_transaction foreign key (GroupId)
 	references CommunityGroup(Id),
@@ -131,39 +155,45 @@ insert into TransactionStatus (Name) values ('Disputed');  -- Id = 4
 
 -- 2) Sample transactions
 -- Group 1 (Alpha: members 1,2,3,4)
-insert into GroupTransaction (GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
-values (1, 1, 2, 120.50, 1, 1); -- Alice bought for Bob, PLN, Pending
+declare @ExpenseId bigint;
 
-insert into GroupTransaction (GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId, ModificationDate)
-values (1, 2, 3,  45.00, 3, 2, getdate()); -- Bob for Charlie, USD, Paid
+-- Alice paid for others in Group 1
+insert into GroupExpense (GroupId, BuyerId, TotalAmount, Title, CurrencyId)
+values (1, 1, 120.50, 'Beer', 1); -- Alice total
 
-insert into GroupTransaction (GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
-values (1, 4, 1,  89.99, 2, 4); -- Diana for Alice, EUR, Disputed
+set @ExpenseId = SCOPE_IDENTITY();
 
--- Group 2 (QA: members 2,3)
-insert into GroupTransaction (GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId, ModificationDate)
-values (2, 2, 3,  15.75, 1, 2, getdate()); -- Bob for Charlie, PLN, Paid
+insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
+values (@ExpenseId, 1, 1, 2, 65.50, 1, 1); -- Alice bought for Bob, PLN, Pending
+insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
+values (@ExpenseId, 1, 1, 1, 55.00, 1, 1); -- Alice bought for herself, PLN, Pending
 
-insert into GroupTransaction (GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
-values (2, 3, 2, 220.00, 2, 1); -- Charlie for Bob, EUR, Pending
+-- Bob paid for Charlie in Group 1
+insert into GroupExpense (GroupId, BuyerId, TotalAmount, Title, CurrencyId)
+values (1, 2, 45.00, 'Beer', 3);
 
--- Group 3 (Finance: members 3,1)
-insert into GroupTransaction (GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
-values (3, 1, 3,  33.30, 1, 2); -- Alice for Charlie, PLN, Paid
+set @ExpenseId = SCOPE_IDENTITY();
 
-insert into GroupTransaction (GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId, ModificationDate)
-values (3, 3, 1, 199.00, 3, 1, getdate()); -- Charlie for Alice, USD, Pending
+insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
+values (@ExpenseId, 1, 2, 3, 45.00, 3, 2);
 
--- Group 4 (Casual: members 4,2)
-insert into GroupTransaction (GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
-values (4, 4, 2,  12.00, 1, 2); -- Diana for Bob, PLN, Paid
+-- Diana paid for Alice in Group 1
+insert into GroupExpense (GroupId, BuyerId, TotalAmount, Title, CurrencyId)
+values (1, 4, 89.99, 'Beer', 2);
 
-insert into GroupTransaction (GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
-values (4, 2, 4,  55.55, 4, 3); -- Bob for Diana, GBP, Cancelled
+set @ExpenseId = SCOPE_IDENTITY();
 
--- Extra variety in Group 1
-insert into GroupTransaction (GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
-values (1, 3, 4,  72.10, 2, 1); -- Charlie for Diana, EUR, Pending
+insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
+values (@ExpenseId, 1, 4, 1, 89.99, 2, 4);
+
+-- Charlie paid for Diana in Group 1
+insert into GroupExpense (GroupId, BuyerId, TotalAmount, Title, CurrencyId)
+values (1, 3, 72.10, 'Beer', 2);
+
+set @ExpenseId = SCOPE_IDENTITY();
+
+insert into GroupTransaction (ExpenseId, GroupId, BuyerId, BorrowerId, Amount, CurrencyId, StatusId)
+values (@ExpenseId, 1, 3, 4, 72.10, 2, 1);
 
 
 

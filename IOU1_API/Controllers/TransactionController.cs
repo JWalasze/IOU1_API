@@ -10,6 +10,8 @@ public record GroupTransactionRequest(
     long BuyerId,
     long GroupId,
     decimal AmountTotal,
+    string Title,
+    string? Description,
     bool DivideEqually,
     IEnumerable<MemberAmountPair>? Splits,
     IEnumerable<long>? MemberIds

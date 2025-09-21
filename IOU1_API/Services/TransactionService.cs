@@ -12,14 +12,16 @@ public class TransactionService
     private readonly IUserRepository _userRepository;
     private readonly IGroupRepository _groupRepository;
     private readonly ITransactionRepository _transactionRepository;
+    private readonly IExpenseRepository _expenseRepository;
     private readonly ICurrencyRepository _currencyRepository;
     private readonly ITransactionStatusRepository _transactionStatusRepository;
 
-    public TransactionService(IGroupRepository groupRepository, IUserRepository userRepository, ITransactionRepository transactionRepository, ICurrencyRepository currencyRepository, ITransactionStatusRepository transactionStatusRepository)
+    public TransactionService(IGroupRepository groupRepository, IUserRepository userRepository, ITransactionRepository transactionRepository, IExpenseRepository expenseRepository, ICurrencyRepository currencyRepository, ITransactionStatusRepository transactionStatusRepository)
     {
         _groupRepository = groupRepository;
         _userRepository = userRepository;
         _transactionRepository = transactionRepository;
+        _expenseRepository = expenseRepository;
         _currencyRepository = currencyRepository;
         _transactionStatusRepository = transactionStatusRepository;
     }
@@ -45,9 +47,47 @@ public class TransactionService
         var creator = await _userRepository.GetByIdAsync(request.BuyerId)
             ?? throw new ArgumentException("Buyer not found");
 
-        IEnumerable<long> memberIds;
-        bool equalOverride = false;
+        Currency currency = await _currencyRepository.GetDefaultCurrency(); // TODO: hold default in group info or take it form request
+        TransactionStatus pendingStatus = await _transactionStatusRepository.GetPendingStatus(); // TODO: delete this ridiculous thing
 
+        bool equalOverride = false;
+        var memberIds = InferSplitMethod(request, group, ref equalOverride);
+
+        var borrowers = await _userRepository.GetByIdsAsync(memberIds)
+            ?? throw new ArgumentException("Borrowers not found");
+
+        List<TransactionData> transactionSplits = new();
+        CalculateBorrowersSplits(request, equalOverride, borrowers, transactionSplits);
+        InferCreatorsShare(request, creator, transactionSplits);
+
+        var expense = new Expense(request.AmountTotal, request.Title, request.Description, group, creator, currency);
+
+        foreach (TransactionData split in transactionSplits)
+        {
+            var to = split.User;
+
+            var tx = Transaction.CreateNewTransaction(
+                amount: split.Amount,
+                expense: expense,
+                group: expense.Group,
+                from: creator,
+                to: to,
+                currency: expense.Currency,
+                status: pendingStatus
+            );
+
+            expense.Transactions.Add(tx);
+        }
+
+        await _expenseRepository.AddAsync(expense);
+        await _expenseRepository.SaveChangesAsync();
+
+        return expense.Transactions.ToDtoList();
+    }
+
+    private static IEnumerable<long> InferSplitMethod(GroupTransactionRequest request, Group group, ref bool equalOverride)
+    {
+        IEnumerable<long> memberIds;
         if (request.Splits != null && request.Splits.Any()) //there are explicit splits
         {
             memberIds = request.Splits.Select(m => m.MemberId);
@@ -63,11 +103,11 @@ public class TransactionService
             equalOverride = true;
         }
 
-        var borrowers = await _userRepository.GetByIdsAsync(memberIds)
-            ?? throw new ArgumentException("Borrowers not found");
+        return memberIds;
+    }
 
-        List<TransactionData> transactionSplits = new();
-
+    private static void CalculateBorrowersSplits(GroupTransactionRequest request, bool equalOverride, IEnumerable<User> borrowers, List<TransactionData> transactionSplits)
+    {
         // create negative transaction (borrowing, payment request)
         if (request.DivideEqually || equalOverride)
         {
@@ -91,9 +131,12 @@ public class TransactionService
         {
             throw new ArgumentException("Incompatible request");
         }
+    }
 
+    private static void InferCreatorsShare(GroupTransactionRequest request, User creator, List<TransactionData> transactionSplits)
+    {
         var sum = -transactionSplits.Select(s => s.Amount)
-            .Sum();
+                    .Sum();
 
         // if crator payed for himself
         var index = transactionSplits.FindIndex(a => a.User.Id == creator.Id);
@@ -111,52 +154,14 @@ public class TransactionService
             // add compensating transaction
             transactionSplits.Add(new TransactionData(creator, -transactionSplits[index].Amount));
         }
-        else 
+        else
         {
-            if(difference > 0)
+            if (difference > 0)
             {
-                
+
                 transactionSplits.Add(new(creator, difference));
                 transactionSplits.Add(new(creator, -difference));
             }
-            
         }
-
-        return await CreateTransactions(
-            group,
-            creator,
-            transactionSplits
-        );
-    }
-
-    private async Task<List<TransactionDto>> CreateTransactions(
-        Group group,
-        User creator,
-        IEnumerable<TransactionData> customSplits)
-    {
-        var transactions = new List<Transaction>();
-
-        Currency currency = await _currencyRepository.GetDefaultCurrency();
-        TransactionStatus pendingStatus = await _transactionStatusRepository.GetPendingStatus();
-
-        foreach (TransactionData split in customSplits)
-        {
-            var to = split.User;
-
-            var tx = Transaction.CreateNewTransaction(
-                amount: split.Amount,
-                group: group,
-                from: creator,
-                to: to,
-                currency: currency,
-                status: pendingStatus
-            );
-
-            transactions.Add(tx);
-        }
-
-        var result = await _transactionRepository.AddRangeAsync(transactions);
-
-        return result.ToDtoList();
     }
 }
