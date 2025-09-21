@@ -19,12 +19,12 @@ public record GroupTransactionRequest(
 
 [ApiController]
 [Route("api/[controller]")]
-public class TransactionController : ControllerBase
+public class ExpensesController : ControllerBase
 {
-    private readonly TransactionService _transactionService;
+    private readonly ExpensesService _transactionService;
     private readonly xdGroupService _groupService;
 
-    public TransactionController(TransactionService transactionService, xdGroupService groupService)
+    public ExpensesController(ExpensesService transactionService, xdGroupService groupService)
     {
         _transactionService = transactionService;
         _groupService = groupService;
@@ -35,6 +35,7 @@ public class TransactionController : ControllerBase
     {
       "buyerId": 1,
       "groupId": 1,
+      "title": "Food",
       "amountTotal": 100,
       "divideEqually": true,
       "splits": null,
@@ -45,6 +46,7 @@ public class TransactionController : ControllerBase
     {
       "buyerId": 1,
       "groupId": 1,
+      "title": "Food",
       "amountTotal": 100,
       "divideEqually": false,
       "splits": [
@@ -63,17 +65,17 @@ public class TransactionController : ControllerBase
             .CreateGroupTransactionsAsync(request);
 
         return CreatedAtAction(
-            nameof(GetGroupTransactions),
+            nameof(GetGroupExpenses),
             new { groupId = request.GroupId },
             result
         );
     }
 
     [HttpGet("{groupId:long}")]
-    public async Task<IActionResult> GetGroupTransactions(long groupId)
+    public async Task<IActionResult> GetGroupExpenses(long groupId)
     {
         var transactions = await _transactionService
-            .GetTransactionByGroupIdAsync(groupId);
+            .GetExpensesByGroupIdAsync(groupId);
 
         return Ok(transactions);
     }

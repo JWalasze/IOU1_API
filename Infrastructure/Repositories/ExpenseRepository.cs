@@ -25,6 +25,26 @@ public class ExpenseRepository : IExpenseRepository
         await _context.Expenses.AddAsync(expense, cancellationToken);
     }
 
+    public async Task<IEnumerable<Expense>> GetByGroupIdAsync(long groupId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Expenses
+             .Include(e => e.Transactions)
+                .ThenInclude(t => t.Group)
+            .Include(e => e.Transactions)
+                .ThenInclude(t => t.Buyer)
+            .Include(e => e.Transactions)
+                .ThenInclude(t => t.Borrower)
+            .Include(e => e.Transactions)
+                .ThenInclude(t => t.Currency)
+            .Include(e => e.Transactions)
+                .ThenInclude(t => t.Status)
+            .Include(e => e.Group)
+            .Include(e => e.Buyer)
+            .Include(e => e.Currency)
+            .Where(e => e.Group.Id == groupId)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<Expense?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
         return await _context.Expenses
