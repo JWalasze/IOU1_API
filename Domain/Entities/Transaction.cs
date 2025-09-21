@@ -1,4 +1,5 @@
 ﻿using Domain.Base;
+using System.Text.RegularExpressions;
 
 namespace Domain.Entities;
 
@@ -8,6 +9,7 @@ public class Transaction : Entity
     public DateTime AddDate { get; }
     public DateTime? ModificationDate { get; }
     public decimal Amount { get; }
+    public Expense Expense { get; } = null!;
     public Group Group { get; } = null!;
     public User Buyer { get; } = null!;
     public User Borrower { get; } = null!;
@@ -17,20 +19,20 @@ public class Transaction : Entity
     private Transaction() { }
 
     public Transaction(
-        long id,
         DateTime addDate,
         DateTime? modificationDate,
         decimal amount,
+        Expense expense,
         Group group,
         User buyer,
         User borrower,
         Currency currency,
         TransactionStatus status)
     {
-        Id = id;
         AddDate = addDate;
         ModificationDate = modificationDate;
         Amount = amount;
+        Expense = expense;
         Group = group;
         Buyer = buyer;
         Borrower = borrower;
@@ -40,6 +42,7 @@ public class Transaction : Entity
 
     public static Transaction CreateNewTransaction(
         decimal amount,
+        Expense expense,
         Group group,
         User from,
         User to,
@@ -47,10 +50,10 @@ public class Transaction : Entity
         TransactionStatus status)
     {
         return new Transaction(
-            0,
             addDate: DateTime.UtcNow,
             modificationDate: null,
             amount,
+            expense,
             group,
             from,
             to,
