@@ -1,6 +1,7 @@
-﻿using Application.Features.Groups.Request;
+﻿using Application.Features.Groups.Mapper;
+using Application.Features.Groups.Query;
+using Application.Features.Groups.Request;
 using Application.Features.Groups.Response;
-using Application.Features.Mapper;
 using Application.Mediator;
 using FluentValidation;
 

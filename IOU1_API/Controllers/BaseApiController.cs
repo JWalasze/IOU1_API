@@ -5,7 +5,8 @@ namespace IOU1_API.Controllers;
 
 public class BaseApiController : ControllerBase
 {
-    public IActionResult CreateEndpointResponse(IResponse response)
+    [NonAction]
+    protected IActionResult CreateEndpointResponse(IResponse response)
     {
         return Ok(response);
     }

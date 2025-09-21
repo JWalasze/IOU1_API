@@ -1,4 +1,4 @@
-﻿namespace Application.Features.Groups.Dtos;
+﻿namespace Application.Features.Groups.Dto;
 
 public record GetGroupsDto
 {

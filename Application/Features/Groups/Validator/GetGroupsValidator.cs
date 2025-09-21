@@ -1,7 +1,7 @@
 ﻿using Application.Features.Groups.Request;
 using FluentValidation;
 
-namespace Application.Features.Groups.Validators;
+namespace Application.Features.Groups.Validator;
 
 public class GetGroupsValidator : AbstractValidator<GroupsRequest>
 {

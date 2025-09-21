@@ -20,9 +20,9 @@ public record GroupTransactionRequest(
 public class TransactionController : ControllerBase
 {
     private readonly TransactionService _transactionService;
-    private readonly GroupService _groupService;
+    private readonly xdGroupService _groupService;
 
-    public TransactionController(TransactionService transactionService, GroupService groupService)
+    public TransactionController(TransactionService transactionService, xdGroupService groupService)
     {
         _transactionService = transactionService;
         _groupService = groupService;

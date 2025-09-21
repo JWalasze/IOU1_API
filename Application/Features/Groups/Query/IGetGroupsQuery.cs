@@ -1,6 +1,6 @@
-﻿using Application.Features.Groups.Dtos;
+﻿using Application.Features.Groups.Dto;
 
-namespace Application.Features.Groups;
+namespace Application.Features.Groups.Query;
 
 public interface IGetGroupsQuery
 {

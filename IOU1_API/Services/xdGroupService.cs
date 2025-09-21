@@ -7,11 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace IOU1_API.Services;
-public class GroupService
+public class xdGroupService
 {
     private readonly IGroupRepository _groupRepository;
 
-    public GroupService(IGroupRepository groupRepository)
+    public xdGroupService(IGroupRepository groupRepository)
     {
         _groupRepository = groupRepository;
     }

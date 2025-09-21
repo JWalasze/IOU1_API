@@ -1,7 +1,7 @@
-﻿using Application.Features.Groups.Dtos;
+﻿using Application.Features.Groups.Dto;
 using Application.Features.Groups.Response;
 
-namespace Application.Features.Mapper;
+namespace Application.Features.Groups.Mapper;
 
 public static class GroupMapperExtensions
 {
@@ -10,7 +10,7 @@ public static class GroupMapperExtensions
         ArgumentNullException.ThrowIfNull(source);
 
         var result = new List<GroupInfoResponse>();
-        foreach (var item in source) 
+        foreach (var item in source)
         {
             result.Add(new GroupInfoResponse(
                 Id: item.GroupId,
