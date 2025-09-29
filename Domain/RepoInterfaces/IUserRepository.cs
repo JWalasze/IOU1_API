@@ -1,14 +1,9 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.RepoInterfaces;
 
-public interface IUserRepository
+public interface IUserRepository : IRepository<User>
 {
-    Task<User?> GetByIdAsync(long creatorId);
-    Task<IEnumerable<User>> GetByIdsAsync(IEnumerable<long> memberIds);
+    Task<User?> GetByIdAsync(long userId, CancellationToken cancellation = default);
+    Task<IEnumerable<User>> GetByIdsAsync(IEnumerable<long> memberIds, CancellationToken cancellation = default);
 }

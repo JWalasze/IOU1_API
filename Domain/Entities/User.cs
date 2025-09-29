@@ -1,8 +1,9 @@
-﻿using Domain.ValueObjects;
+﻿using Domain.Base;
+using Domain.ValueObjects;
 
 namespace Domain.Entities;
 
-public class User
+public class User : Entity
 {
     public long Id { get; }
     public string FirstName { get; } = null!;

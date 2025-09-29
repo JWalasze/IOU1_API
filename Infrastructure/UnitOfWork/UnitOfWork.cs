@@ -21,19 +21,19 @@ public class UnitOfWork(IOU1Context context, IServiceProvider serviceProvider) :
         return _serviceProvider.GetRequiredService<TRepo>();
     }
 
-    public Task BeginTransaction()
+    public async Task BeginTransaction()
     {
-        throw new NotImplementedException();
+        await _context.Database.BeginTransactionAsync();
     }
 
-    public Task CommitTransaction()
+    public async Task CommitTransaction()
     {
-        throw new NotImplementedException();
+        await _context.Database.CommitTransactionAsync();
     }
 
-    public Task RollbackTransaction()
+    public async Task RollbackTransaction()
     {
-        throw new NotImplementedException();
+        await _context.Database.RollbackTransactionAsync();
     }
 
     public Task CreateSavepoint()
@@ -44,5 +44,10 @@ public class UnitOfWork(IOU1Context context, IServiceProvider serviceProvider) :
     public Task RollbackToSavepoint()
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<int> SaveChanges(CancellationToken cancellationToken = default)
+    {
+        return await _context.SaveChangesAsync(cancellationToken);
     }
 }

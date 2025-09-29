@@ -12,10 +12,20 @@ public class Group : Entity
 
     private Group() { }
 
-    public Group(long id, string description, User owner)
+    public Group(string description, User owner)
     {
-        Id = id;
         Description = description;
         Owner = owner;
+    }
+
+    public void AddNewMembers(IEnumerable<GroupMember> newMembers)
+    {
+        foreach (var newMember in newMembers)
+        {
+            if (!Members.Any(m => m.MemberId == newMember.MemberId))
+            {
+                Members.Add(newMember);
+            }
+        }
     }
 }

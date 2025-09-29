@@ -12,12 +12,9 @@ public class GroupMember : Entity
 
     private GroupMember() { }
 
-    public GroupMember(long id, Group group, long memberId, User user)
+    public GroupMember(Group group, User user)
     {
-        Id = id;
         Group = group;
-
         User = user;
-        MemberId = memberId;
     }
 }

@@ -17,11 +17,15 @@ public class AddGroupHandler(IValidator<AddGroupRequest> validator, IGroupServic
         var validationResult = _validator.Validate(request);
         if (!validationResult.IsValid)
         {
-
+            return new()
+            {
+                IsSuccess = false,
+                ErrorMessage = validationResult.Errors.First().ErrorMessage
+            };
         }
 
         //2 Bussiness logic
-        var result = await _groupService.AddGroup([1]);
+        var result = await _groupService.AddGroup(request.MemberIds, request.OwnerId, request.Description, cancellationToken);
 
         //3 Return response
         return new AddGroupResponse();

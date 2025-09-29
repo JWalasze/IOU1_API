@@ -2,6 +2,7 @@
 
 namespace Application.Features.AddGroup.Response;
 
-public record AddGroupResponse : EndpointResponse
+public sealed record AddGroupResponse : EndpointResponse
 {
+    public long GroupId { get; init; }
 }

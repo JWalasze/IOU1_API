@@ -19,4 +19,6 @@ public interface IUnitOfWork
     Task CreateSavepoint();
 
     Task RollbackToSavepoint();
+
+    Task<int> SaveChanges(CancellationToken cancellationToken = default);
 }

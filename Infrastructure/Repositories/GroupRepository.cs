@@ -2,11 +2,6 @@
 using Domain.RepoInterfaces;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories;
 
@@ -17,6 +12,11 @@ public class GroupRepository : IGroupRepository, IRepository<Group>
     public GroupRepository(IOU1Context context)
     {
         _context = context;
+    }
+
+    public void Add(Group group)
+    {
+        _context.Add(group);
     }
 
     public async Task<Group?> GetByIdAsync(long groupId)
