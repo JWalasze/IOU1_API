@@ -1,4 +1,4 @@
-using Application.Features.AddGroup.Service;
+using Application.Service;
 using Domain.RepoInterfaces;
 using FluentAssertions;
 using Infrastructure.Context;
@@ -33,11 +33,10 @@ public class TempTests
             .EnableSensitiveDataLogging()   
             .EnableDetailedErrors()
             .LogTo(_output.WriteLine,      
-                   new[]
-                   {
+                   [
                        DbLoggerCategory.Database.Command.Name,
                        DbLoggerCategory.Update.Name
-                   },
+                   ],
                    LogLevel.Information,
                    DbContextLoggerOptions.UtcTime)
             .Options;

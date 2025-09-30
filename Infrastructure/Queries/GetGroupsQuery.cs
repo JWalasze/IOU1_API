@@ -1,5 +1,5 @@
-﻿using Application.Features.Groups.Dto;
-using Application.Features.Groups.Query;
+﻿using Application.Features.Groups.GetGroups.Dto;
+using Application.Features.Groups.GetGroups.Query;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 

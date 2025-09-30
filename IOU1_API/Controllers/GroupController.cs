@@ -1,7 +1,9 @@
-﻿using Application.Features.AddGroup.Request;
-using Application.Features.AddGroup.Response;
-using Application.Features.Groups.Request;
-using Application.Features.Groups.Response;
+﻿using Application.Features.Groups.AddGroup.Request;
+using Application.Features.Groups.AddGroup.Response;
+using Application.Features.Groups.DeleteGroup.Request;
+using Application.Features.Groups.DeleteGroup.Response;
+using Application.Features.Groups.GetGroups.Request;
+using Application.Features.Groups.GetGroups.Response;
 using Application.Mediator;
 using IOU1_API.Mappers;
 using IOU1_API.Services;
@@ -28,6 +30,13 @@ public class GroupController(IRequestMediator mediator, xdGroupService groupServ
     public async Task<IActionResult> AddGroup([FromBody] AddGroupRequest request, CancellationToken cancellationToken = default)
     {
         var result = await _mediator.Send<AddGroupRequest, AddGroupResponse>(request, cancellationToken);
+        return CreateEndpointResponse(result);
+    }
+
+    [HttpDelete("{GroupId}")]
+    public async Task<IActionResult> DeleteGroup([FromRoute] DeleteGroupRequest request, CancellationToken cancellationToken = default)
+    {
+        var result = await _mediator.Send<DeleteGroupRequest, DeleteGroupResponse>(request, cancellationToken);
         return CreateEndpointResponse(result);
     }
 

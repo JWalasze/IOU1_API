@@ -14,21 +14,27 @@ public class GroupRepository : IGroupRepository, IRepository<Group>
         _context = context;
     }
 
+    //Add BaseRepo implementation, this goes there
     public void Add(Group group)
     {
         _context.Add(group);
     }
 
-    public async Task<Group?> GetByIdAsync(long groupId)
+    public void Delete(Group group)
     {
-        return await _context.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+        _context.Remove(group);
     }
 
-    public async Task<Group?> GetGroupWithMembersAsync(long groupId)
+    public async Task<Group?> GetByIdAsync(long groupId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Groups.FirstOrDefaultAsync(g => g.Id == groupId, cancellationToken);
+    }
+
+    public async Task<Group?> GetGroupWithMembersAsync(long groupId, CancellationToken cancellationToken = default)
     {
         return await _context.Groups
             .Include(g => g.Members)
                 .ThenInclude(gm => gm.User)
-            .FirstOrDefaultAsync(g => g.Id == groupId);
+            .FirstOrDefaultAsync(g => g.Id == groupId, cancellationToken);
     }
 }
