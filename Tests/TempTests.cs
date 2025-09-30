@@ -1,5 +1,4 @@
 using Application.Features.AddGroup.Service;
-using Domain.Entities;
 using Domain.RepoInterfaces;
 using FluentAssertions;
 using Infrastructure.Context;
@@ -7,13 +6,10 @@ using Infrastructure.Repositories;
 using Infrastructure.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Moq;
-using System;
 using Xunit.Abstractions;
 
 namespace Tests;
@@ -34,17 +30,16 @@ public class TempTests
 
         var options = new DbContextOptionsBuilder<IOU1Context>()
             .UseSqlServer(connectionString)
-            .EnableSensitiveDataLogging()   // include parameter values (tests only)
+            .EnableSensitiveDataLogging()   
             .EnableDetailedErrors()
-            .LogTo(_output.WriteLine,       // send to xUnit output
+            .LogTo(_output.WriteLine,      
                    new[]
                    {
-                       DbLoggerCategory.Database.Command.Name, // SQL + params
-                       DbLoggerCategory.Update.Name            // INSERT/UPDATE details
+                       DbLoggerCategory.Database.Command.Name,
+                       DbLoggerCategory.Update.Name
                    },
                    LogLevel.Information,
-                   DbContextLoggerOptions.SingleLine |
-                   DbContextLoggerOptions.UtcTime) // show @p0 = 123, etc.
+                   DbContextLoggerOptions.UtcTime)
             .Options;
 
         _context = new IOU1Context(options);
