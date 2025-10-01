@@ -1,6 +1,4 @@
-﻿using Application.Features.Groups.GetGroups.Response;
-
-namespace Application.Features.Groups.AddGroup.Response;
+﻿namespace Application.Features.Groups.AddGroup.Response;
 
 public sealed record AddGroupResponse : EndpointResponse
 {

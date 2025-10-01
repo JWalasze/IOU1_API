@@ -11,7 +11,7 @@ public class Expense : Entity
     public Group Group { get; } = null!;
     public User Buyer { get; } = null!;
     public Currency Currency { get; } = null!;
-    public ICollection<Transaction> Transactions { get; } = new List<Transaction>();
+    public ICollection<Transaction> Transactions { get; } = [];
 
     private Expense() { }
 

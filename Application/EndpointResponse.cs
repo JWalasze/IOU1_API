@@ -1,6 +1,6 @@
 ﻿using Application.Mediator;
 
-namespace Application.Features.Groups.GetGroups.Response;
+namespace Application;
 
 public record EndpointResponse : IResponse
 {

@@ -2,7 +2,7 @@
 
 namespace Domain.RepoInterfaces;
 
-public interface IExpenseRepository
+public interface IExpenseRepository : IRepository
 {
     Task AddAsync(Expense expense, CancellationToken cancellationToken = default);
     Task<Expense?> GetByIdAsync(long id, CancellationToken cancellationToken = default);
