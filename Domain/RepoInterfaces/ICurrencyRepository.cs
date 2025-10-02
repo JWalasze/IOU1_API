@@ -1,13 +1,9 @@
 ﻿using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.RepoInterfaces;
 
-namespace Domain.RepoInterfaces;
+namespace IOU1.Domain.RepoInterfaces;
 
-public interface ICurrencyRepository
+public interface ICurrencyRepository : IRepository
 {
     Task<Currency> GetDefaultCurrency();
 }

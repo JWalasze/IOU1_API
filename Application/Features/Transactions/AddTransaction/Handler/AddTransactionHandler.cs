@@ -1,10 +1,10 @@
-﻿using Application.Features.Transactions.AddTransaction.Request;
-using Application.Features.Transactions.AddTransaction.Response;
+﻿using Application.Features.Transactions.AddTransaction.Response;
 using Application.Mediator;
 using Application.Service;
 using FluentValidation;
+using IOU1.Application.Features.Transactions.AddTransaction.Request;
 
-namespace Application.Features.Transactions.AddTransaction.Handler;
+namespace IOU1.Application.Features.Transactions.AddTransaction.Handler;
 
 public class AddTransactionHandler(IValidator<AddTransactionRequest> validator, IExpenseService expenseService) : IRequestHandler<AddTransactionRequest, AddTransactionResponse>
 {

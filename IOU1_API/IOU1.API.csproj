@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Application\IOU1.Application.csproj" />
+    <ProjectReference Include="..\Infrastructure\IOU1.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
 	<None Update="appsettings.Development.json">

@@ -1,7 +1,6 @@
 ﻿using Application.Mediator;
-using Domain.Enums;
 
-namespace Application.Features.Transactions.AddTransaction.Request;
+namespace IOU1.Application.Features.Transactions.AddTransaction.Request;
 
 public record AddTransactionRequest(
     long BuyerId,
@@ -9,7 +8,6 @@ public record AddTransactionRequest(
     decimal Amount,
     string Title,
     string? Description,
-    IEnumerable<SplitRequest> Splits,
-    ExpenseType Type) : IRequest;
+    IEnumerable<SplitRequest> Splits) : IRequest;
 
 public record SplitRequest(long MemberId, decimal Amount);

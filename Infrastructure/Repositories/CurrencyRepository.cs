@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
-using Domain.RepoInterfaces;
 using Infrastructure.Context;
+using IOU1.Domain.RepoInterfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;

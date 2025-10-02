@@ -22,6 +22,7 @@ using Infrastructure.Mediator;
 using Infrastructure.Queries;
 using Infrastructure.Repositories;
 using Infrastructure.UnitOfWork;
+using IOU1.Domain.RepoInterfaces;
 using IOU1_API.Services;
 using Microsoft.EntityFrameworkCore;
 

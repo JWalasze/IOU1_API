@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IOU1_API\IOU1_API.csproj" />
+    <ProjectReference Include="..\IOU1_API\IOU1.API.csproj" />
   </ItemGroup>
 
 </Project>
