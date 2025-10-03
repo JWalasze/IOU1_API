@@ -16,6 +16,10 @@ using Application.Service;
 using Domain.Entities;
 using Domain.RepoInterfaces;
 using Domain.UnitOfWork;
+using Elastic.Channels;
+using Elastic.Ingest.Elasticsearch;
+using Elastic.Ingest.Elasticsearch.DataStreams;
+using Elastic.Serilog.Sinks;
 using FluentValidation;
 using Infrastructure.Context;
 using Infrastructure.Mediator;
@@ -25,6 +29,7 @@ using Infrastructure.UnitOfWork;
 using IOU1.Domain.RepoInterfaces;
 using IOU1_API.Services;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace IOU1_API
 {
@@ -78,6 +83,29 @@ namespace IOU1_API
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddLogging();
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .Enrich.FromLogContext()
+                .WriteTo.Elasticsearch([new Uri("http://localhost:9200")], opts =>
+                {
+                    opts.DataStream = new DataStreamName("logs", "console-example", "demo");
+                    opts.BootstrapMethod = BootstrapMethod.Failure;
+                    opts.ConfigureChannel = channelOpts =>
+                    {
+                        channelOpts.BufferOptions = new BufferOptions
+                        {
+                            
+                        };
+                    };
+                }, transport =>
+                {
+                    // transport.Authentication(new BasicAuthentication(username, password));
+                    // transport.Authentication(new ApiKey(base64EncodedApiKey));
+                })
+                .CreateLogger();
+
+            Log.Logger.Error("TEST TEST TEST");
 
             var app = builder.Build();
 
