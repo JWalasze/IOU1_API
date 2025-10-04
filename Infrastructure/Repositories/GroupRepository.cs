@@ -1,15 +1,16 @@
 ﻿using Domain.Entities;
 using Domain.RepoInterfaces;
-using Infrastructure.Context;
+using IOU1.Domain.RepoInterfaces;
+using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories;
+namespace IOU1.Infrastructure.Repositories;
 
-public class GroupRepository : IGroupRepository, IRepository<Group>
+public class GroupRepository : Repository<Group>, IGroupRepository, IRepository<Group>
 {
     private readonly IOU1Context _context;
 
-    public GroupRepository(IOU1Context context)
+    public GroupRepository(IOU1Context context) : base(context)
     {
         _context = context;
     }

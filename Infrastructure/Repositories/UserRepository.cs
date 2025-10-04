@@ -1,15 +1,16 @@
 ﻿using Domain.Entities;
 using Domain.RepoInterfaces;
-using Infrastructure.Context;
+using IOU1.Domain.RepoInterfaces;
+using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repositories;
+namespace IOU1.Infrastructure.Repositories;
 
-public class UserRepository : IUserRepository, IRepository<User>
+public class UserRepository : Repository<User>, IUserRepository, IRepository<User>
 {
     private readonly IOU1Context _context;
 
-    public UserRepository(IOU1Context context)
+    public UserRepository(IOU1Context context) : base(context)
     {
         _context = context;
     }

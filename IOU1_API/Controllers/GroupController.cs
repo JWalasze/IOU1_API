@@ -5,11 +5,12 @@ using Application.Features.Groups.DeleteGroup.Response;
 using Application.Features.Groups.GetGroups.Request;
 using Application.Features.Groups.GetGroups.Response;
 using Application.Mediator;
+using IOU1_API.Controllers;
 using IOU1_API.Mappers;
 using IOU1_API.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IOU1_API.Controllers;
+namespace IOU1.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

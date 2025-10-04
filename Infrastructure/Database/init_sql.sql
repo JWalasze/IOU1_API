@@ -53,6 +53,7 @@ create table GroupExpense (
 	Title nvarchar(50) not null,
 	Description nvarchar(255) null,
 	CurrencyId bigint not null,
+	CreatedAt date not null,
 	Version rowversion,
 
 	constraint fk_group_id_group_expense foreign key (GroupId)
@@ -72,7 +73,6 @@ create table GroupTransaction (
 	BuyerId bigint not null,
 	BorrowerId bigint not null,
 	AddDate datetime not null constraint df_add_date_group_transaction default getdate(),
-	ModificationDate datetime null,
 	Amount decimal(10,2) not null,
 	CurrencyId bigint not null,
 	Version rowversion,

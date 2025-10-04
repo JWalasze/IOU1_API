@@ -1,7 +1,8 @@
 ﻿using Domain.Entities;
+using IOU1.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Context;
+namespace IOU1.Persistance.Context;
 
 public class IOU1Context(DbContextOptions<IOU1Context> options) : DbContext(options)
 {

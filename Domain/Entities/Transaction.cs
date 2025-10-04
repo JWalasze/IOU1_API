@@ -1,34 +1,31 @@
-﻿using Domain.Base;
-using System.Text.RegularExpressions;
+﻿using Domain.Entities;
+using IOU1.Domain.Base;
 
-namespace Domain.Entities;
+namespace IOU1.Domain.Entities;
 
 public class Transaction : Entity
 {
     public long Id { get; }
-    public DateTime AddDate { get; }
-    public DateTime? ModificationDate { get; }
     public decimal Amount { get; }
+    public DateTime CreatedAt { get; }
     public Expense Expense { get; } = null!;
     public Group Group { get; } = null!;
-    public User Buyer { get; } = null!;
-    public User Borrower { get; } = null!;
+    public User? Buyer { get; }
+    public User? Borrower { get; } = null!;
     public Currency Currency { get; } = null!;
 
     private Transaction() { }
 
     public Transaction(
-        DateTime addDate,
-        DateTime? modificationDate,
         decimal amount,
+        DateTime addDate,
         Expense expense,
         Group group,
         User buyer,
         User borrower,
         Currency currency)
     {
-        AddDate = addDate;
-        ModificationDate = modificationDate;
+        CreatedAt = addDate;
         Amount = amount;
         Expense = expense;
         Group = group;
@@ -46,9 +43,8 @@ public class Transaction : Entity
         Currency currency)
     {
         return new Transaction(
-            addDate: DateTime.UtcNow,
-            modificationDate: null,
             amount,
+            DateTime.UtcNow,
             expense,
             group,
             from,

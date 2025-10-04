@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using IOU1.Domain.Entities;
 
 namespace IOU1.Application.Strategy;
 

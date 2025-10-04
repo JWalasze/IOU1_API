@@ -1,20 +1,15 @@
-﻿using Domain.Entities;
-using Domain.RepoInterfaces;
-using Infrastructure.Context;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.RepoInterfaces;
 using Microsoft.EntityFrameworkCore;
+using IOU1.Domain.Entities;
+using IOU1.Persistance.Context;
 
-namespace Infrastructure.Repositories;
+namespace IOU1.Infrastructure.Repositories;
 
-public class ExpenseRepository : IExpenseRepository
+public class ExpenseRepository : Repository<Expense>, IExpenseRepository
 {
     private readonly IOU1Context _context;
 
-    public ExpenseRepository(IOU1Context context)
+    public ExpenseRepository(IOU1Context context) : base(context)
     {
         _context = context;
     }

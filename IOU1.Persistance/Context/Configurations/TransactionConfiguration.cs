@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using IOU1.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,10 +15,9 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
         builder.Property(t => t.Amount)
                .IsRequired();
 
-        builder.Property(t => t.AddDate)
-               .HasDefaultValue(DateTime.UtcNow);
-
-        builder.Property(t => t.ModificationDate);
+        builder.Property(t => t.CreatedAt)
+               .HasDefaultValue(DateTime.UtcNow)
+               .HasColumnName("AddDate");
 
         builder.HasOne(t => t.Group)
                .WithMany();

@@ -1,6 +1,8 @@
-﻿using Domain.Base;
+﻿using Domain.Entities;
+using IOU1.Application.Features.Transactions.AddTransaction.Dto;
+using IOU1.Domain.Base;
 
-namespace Domain.Entities;
+namespace IOU1.Domain.Entities;
 
 public class Expense : Entity
 {
@@ -8,10 +10,12 @@ public class Expense : Entity
     public decimal TotalAmount { get; }
     public string Title { get; } = null!;
     public string? Description { get; } = null!;
+    public DateTime CreatedAt { get; }
     public Group Group { get; } = null!;
     public User Buyer { get; } = null!;
     public Currency Currency { get; } = null!;
     public ICollection<Transaction> Transactions { get; } = [];
+    public ICollection<Split> Splits { get; } = [];
 
     private Expense() { }
 
@@ -21,7 +25,8 @@ public class Expense : Entity
         string? description,
         Group group,
         User buyer,
-        Currency currency)
+        Currency currency,
+        IEnumerable<Split> splits)
     {
         TotalAmount = totalAmount;
         Title = title;
@@ -29,5 +34,19 @@ public class Expense : Entity
         Group = group;
         Buyer = buyer;
         Currency = currency;
+
+        ValidateSplits(splits);
+        Splits = splits.ToList();
+    }
+
+    private void ValidateSplits(IEnumerable<Split> splits)
+    {
+        foreach (var member in splits)
+        {
+            if (!Group.Members.Any(m => m.MemberId == member.MemberId))
+            {
+                throw new InvalidOperationException($"Member {member.MemberId} doesn't belong to the group {Group.Id}");
+            }
+        }
     }
 }

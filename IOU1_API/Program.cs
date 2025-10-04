@@ -15,23 +15,23 @@ using Application.Mediator;
 using Application.Service;
 using Domain.Entities;
 using Domain.RepoInterfaces;
-using Domain.UnitOfWork;
 using Elastic.Channels;
 using Elastic.Ingest.Elasticsearch;
 using Elastic.Ingest.Elasticsearch.DataStreams;
 using Elastic.Serilog.Sinks;
 using FluentValidation;
-using Infrastructure.Context;
 using Infrastructure.Mediator;
-using Infrastructure.Queries;
-using Infrastructure.Repositories;
-using Infrastructure.UnitOfWork;
 using IOU1.Domain.RepoInterfaces;
+using IOU1.Domain.UnitOfWork;
+using IOU1.Infrastructure.Queries;
+using IOU1.Infrastructure.Repositories;
+using IOU1.Infrastructure.UnitOfWork;
+using IOU1.Persistance.Context;
 using IOU1_API.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
-namespace IOU1_API
+namespace IOU1.API
 {
     public class Program
     {
@@ -82,8 +82,6 @@ namespace IOU1_API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddLogging();
-
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .Enrich.FromLogContext()
@@ -95,7 +93,7 @@ namespace IOU1_API
                     {
                         channelOpts.BufferOptions = new BufferOptions
                         {
-                            
+
                         };
                     };
                 }, transport =>
@@ -106,6 +104,27 @@ namespace IOU1_API
                 .CreateLogger();
 
             Log.Logger.Error("TEST TEST TEST");
+
+            
+            builder.Host.UseSerilog((ctx, services, cfg) => cfg
+                .MinimumLevel.Debug()
+                .Enrich.FromLogContext()
+                .WriteTo.Elasticsearch([new Uri("http://localhost:9200")], opts =>
+                {
+                    opts.DataStream = new DataStreamName("logs", "console-example", "demo");
+                    opts.BootstrapMethod = BootstrapMethod.Failure;
+                    opts.ConfigureChannel = channelOpts =>
+                    {
+                        channelOpts.BufferOptions = new BufferOptions
+                        {
+
+                        };
+                    };
+                }, transport =>
+                {
+                    // transport.Authentication(new BasicAuthentication(username, password));
+                    // transport.Authentication(new ApiKey(base64EncodedApiKey));
+                }));
 
             var app = builder.Build();
 
@@ -118,7 +137,6 @@ namespace IOU1_API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

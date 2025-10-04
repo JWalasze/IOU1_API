@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using IOU1.Domain.Entities;
 using IOU1_API.DTOs;
 
 namespace IOU1_API.Mappers;
@@ -10,7 +10,7 @@ public static class TransactionMapping
         return new TransactionDto(
             Id: tx.Id,
             Amount: tx.Amount,
-            AddDate: tx.AddDate,
+            AddDate: tx.CreatedAt,
             GroupId: tx.Group.Id,
             GroupName: tx.Group.Description,
             BuyerId: tx.Buyer.Id,

@@ -1,4 +1,7 @@
-﻿namespace Domain.RepoInterfaces
+﻿namespace IOU1.Domain.RepoInterfaces
 {
-    public interface IRepository { }
+    public interface IRepository
+    {
+
+    }
 }

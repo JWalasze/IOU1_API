@@ -1,4 +1,4 @@
-﻿using Domain.Base;
+﻿using IOU1.Domain.Base;
 
 namespace Domain.Entities;
 

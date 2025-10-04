@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using Domain.RepoInterfaces;
+﻿using IOU1.Domain.Entities;
 
 namespace IOU1.Domain.RepoInterfaces;
 

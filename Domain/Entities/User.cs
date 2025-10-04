@@ -1,5 +1,5 @@
-﻿using Domain.Base;
-using Domain.ValueObjects;
+﻿using Domain.ValueObjects;
+using IOU1.Domain.Base;
 
 namespace Domain.Entities;
 

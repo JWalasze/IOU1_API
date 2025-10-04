@@ -1,6 +1,7 @@
-﻿using Domain.Base;
+﻿using IOU1.Domain.Base;
+using System.Text.RegularExpressions;
 
-namespace Domain.Entities;
+namespace IOU1.Domain.Entities;
 
 public class Currency : Entity
 {
@@ -8,11 +9,7 @@ public class Currency : Entity
 
     public string Name { get; } = null!;
 
-    private Currency() { }
+    public Group? Group { get; }
 
-    public Currency(long id, string name)
-    {
-        Id = id;
-        Name = name;
-    }
+    private Currency() { }
 }

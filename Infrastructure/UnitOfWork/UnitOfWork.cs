@@ -1,10 +1,10 @@
-﻿using Domain.Base;
-using Domain.RepoInterfaces;
-using Domain.UnitOfWork;
-using Infrastructure.Context;
+﻿using IOU1.Domain.Base;
+using IOU1.Domain.RepoInterfaces;
+using IOU1.Domain.UnitOfWork;
+using IOU1.Persistance.Context;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.UnitOfWork;
+namespace IOU1.Infrastructure.UnitOfWork;
 
 public class UnitOfWork(IOU1Context context, IServiceProvider serviceProvider) : IUnitOfWork
 {

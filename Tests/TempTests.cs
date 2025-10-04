@@ -1,18 +1,22 @@
 using Application.Service;
 using Domain.RepoInterfaces;
 using FluentAssertions;
-using Infrastructure.Context;
-using Infrastructure.Repositories;
-using Infrastructure.UnitOfWork;
+using IOU1.Application.Features.Transactions.AddTransaction.Request;
+using IOU1.Application.Service;
+using IOU1.Domain.RepoInterfaces;
+using IOU1.Infrastructure.Repositories;
+using IOU1.Infrastructure.UnitOfWork;
+using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Tests;
 using Xunit.Abstractions;
 
-namespace Tests;
+namespace IOU1.Tests;
 
 public class TempTests
 {
@@ -20,8 +24,8 @@ public class TempTests
     private readonly IServiceProvider _serviceProvider;
 
     private readonly ITestOutputHelper _output;
-    
-    public TempTests(ITestOutputHelper output) 
+
+    public TempTests(ITestOutputHelper output)
     {
         _output = output;
 
@@ -30,9 +34,9 @@ public class TempTests
 
         var options = new DbContextOptionsBuilder<IOU1Context>()
             .UseSqlServer(connectionString)
-            .EnableSensitiveDataLogging()   
+            .EnableSensitiveDataLogging()
             .EnableDetailedErrors()
-            .LogTo(_output.WriteLine,      
+            .LogTo(_output.WriteLine,
                    [
                        DbLoggerCategory.Database.Command.Name,
                        DbLoggerCategory.Update.Name
@@ -48,6 +52,8 @@ public class TempTests
         var services = new ServiceCollection();
         services.AddScoped<IUserRepository>(x => new UserRepository(_context));
         services.AddScoped<IGroupRepository>(x => new GroupRepository(_context));
+        services.AddScoped<IExpenseRepository>(x => new ExpenseRepository(_context));
+        services.AddScoped<ICurrencyRepository>(x => new CurrencyRepository(_context));
 
         _serviceProvider = services.BuildServiceProvider();
     }
@@ -77,12 +83,34 @@ public class TempTests
         var sut = new GroupService(unit);
 
         //Act
-        var result = await sut.AddGroup([1,2,3], 1, "TextTextText");
+        var result = await sut.AddGroup([1, 2, 3], 1, "TextTextText");
 
         //Assert
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
         result.ErrorMessage.Should().BeNullOrEmpty();
         result.Data?.GroupId.Should().BeGreaterThan(0);
+    }
+
+    [Fact]
+    public async Task TransactionService_AddTransaction_AddProperExepenseAndTransactions()
+    {
+        //Arrange
+        var unit = new UnitOfWork(_context, _serviceProvider);
+        var sut = new ExpenseService(unit, _context);
+
+        var testData = new AddTransactionRequest(
+            BuyerId: 1,
+            GroupId: 1,
+            Amount: 100,
+            Title: "Test title",
+            Description: "Test description",
+            [new(2, 10), new(3, 40)]);
+
+        //Act
+        var result = await sut.AddExpense(testData);
+
+        //Assert
+        result.Should().NotBeNull();
     }
 }

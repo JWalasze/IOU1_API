@@ -1,8 +1,8 @@
-﻿using Domain.Base;
-using Domain.Entities;
-using Domain.RepoInterfaces;
+﻿using Domain.Entities;
+using IOU1.Domain.Base;
+using IOU1.Domain.RepoInterfaces;
 
-namespace Domain.UnitOfWork;
+namespace IOU1.Domain.UnitOfWork;
 
 public interface IUnitOfWork
 {

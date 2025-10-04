@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using IOU1.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,11 +19,16 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
                .IsRequired()
                .HasMaxLength(50);
 
+        builder.Property(e => e.CreatedAt)
+               .IsRequired();
+
         builder.Property(e => e.Description)
                .HasMaxLength(255);
 
         builder.HasOne(e => e.Group)
                .WithMany();
+
+        builder.Ignore(e => e.Splits);
 
         builder.HasOne(e => e.Buyer)
                .WithMany();

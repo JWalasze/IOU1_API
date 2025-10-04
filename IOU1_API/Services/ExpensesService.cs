@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.RepoInterfaces;
+using IOU1.Domain.Entities;
 using IOU1.Domain.RepoInterfaces;
 using IOU1_API.Controllers;
 using IOU1_API.DTOs;
@@ -51,7 +52,7 @@ public class ExpensesService
         CalculateBorrowersSplits(request, equalOverride, borrowers, transactionSplits);
         InferCreatorsShare(request, creator, transactionSplits);
 
-        var expense = new Expense(request.AmountTotal, request.Title, request.Description, group, creator, currency);
+        var expense = new Expense(request.AmountTotal, request.Title, request.Description, group, creator, currency, []);
 
         foreach (TransactionData split in transactionSplits)
         {
