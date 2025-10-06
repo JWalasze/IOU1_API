@@ -1,7 +1,8 @@
 ﻿using Domain.RepoInterfaces;
-using Microsoft.EntityFrameworkCore;
 using IOU1.Domain.Entities;
 using IOU1.Persistance.Context;
+using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace IOU1.Infrastructure.Repositories;
 
@@ -46,6 +47,24 @@ public class ExpenseRepository : Repository<Expense>, IExpenseRepository
             .Include(e => e.Buyer)
             .Include(e => e.Currency)
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+    }
+
+    public IQueryable<Expense> GetByGroupIdQuery(long groupId)
+    {
+        return _context.Expenses
+            .Include(e => e.Transactions)
+                .ThenInclude(t => t.Group)
+            .Include(e => e.Transactions)
+                .ThenInclude(t => t.Buyer)
+            .Include(e => e.Transactions)
+                .ThenInclude(t => t.Borrower)
+            .Include(e => e.Transactions)
+                .ThenInclude(t => t.Currency)
+            .Include(e => e.Group)
+            .Include(e => e.Buyer)
+            .Include(e => e.Currency)
+            .Where(e => e.Group.Id == groupId)
+            .AsQueryable();
     }
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)

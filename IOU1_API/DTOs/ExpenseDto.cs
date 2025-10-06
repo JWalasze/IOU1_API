@@ -10,5 +10,6 @@ public record ExpenseDto(
     long BuyerId,
     string BuyerName,
     string CurrencyCode,
+    DateTime CreatedAt,
     List<TransactionDto> Transactions
 );

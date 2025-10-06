@@ -1,4 +1,5 @@
-﻿using IOU1_API.DTOs;
+﻿using Domain.RepoInterfaces;
+using IOU1_API.DTOs;
 using IOU1_API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -72,11 +73,25 @@ public class ExpensesController : ControllerBase
     }
 
     [HttpGet("{groupId:long}")]
-    public async Task<IActionResult> GetGroupExpenses(long groupId)
+    public async Task<IActionResult> GetGroupExpenses(
+        long groupId,
+        int pageNumber = 1,
+        int pageSize = 20,
+        string sorting = "newest")
     {
         var transactions = await _transactionService
-            .GetExpensesByGroupIdAsync(groupId);
+            .GetExpensesByGroupIdAsync(groupId, pageNumber, pageSize, toSortingEnum(sorting));
 
         return Ok(transactions);
+    }
+
+    private SortingOptions toSortingEnum(string sortString)
+    {
+        return sortString switch
+        {
+            ("newest") => SortingOptions.Newest,
+            ("oldest") => SortingOptions.Oldest,
+            _ => SortingOptions.Newest,
+        };
     }
 }
