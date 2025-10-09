@@ -7,9 +7,7 @@ public class CustomSplitStrategy(Expense expense) : BaseSplitStrategy(expense)
     public override void Split()
     {
         if (_expense.Splits.Count == 0)
-        {
             throw new InvalidOperationException("Can't split an expense without defined inforamtion.");
-        }
 
         var buyer = _expense.Group.Members.FirstOrDefault(m => m.MemberId == _expense.Buyer.Id)?.User
             ?? throw new InvalidOperationException($"Buyer {_expense.Buyer.Id} doesn't exist.");
@@ -35,21 +33,13 @@ public class CustomSplitStrategy(Expense expense) : BaseSplitStrategy(expense)
         var leftDifference = _expense.TotalAmount - splitTotal;
         var buyerSplitAmount = Math.Abs(buyerSplit?.Amount ?? 0) + leftDifference;
 
-        //Split trzeba sprawdzic wczesniej czy w borrower split
-        var buyerTransactionNegative = new Transaction(Math.Abs(buyerSplitAmount), DateTime.UtcNow, _expense, _expense.Group, buyer, buyer, _expense.Currency);
-        _expense.Transactions.Add(buyerTransactionNegative);
-
+        if (!_expense.Splits.Any(s => s.MemberId == buyer.Id))
+        {
+            var buyerTransactionNegative = new Transaction(Math.Abs(buyerSplitAmount), DateTime.UtcNow, _expense, _expense.Group, buyer, buyer, _expense.Currency);
+            _expense.Transactions.Add(buyerTransactionNegative);
+        }
+        
         var buyerTransactionPositive = new Transaction(-1 * Math.Abs(buyerSplitAmount), DateTime.UtcNow, _expense, _expense.Group, buyer, buyer, _expense.Currency);
         _expense.Transactions.Add(buyerTransactionPositive);
-    }
-
-    private void HandleBorrowers()
-    {
-
-    }
-
-    private void HandleBuyer()
-    {
-
     }
 }

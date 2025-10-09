@@ -1,4 +1,5 @@
 ﻿using IOU1.Domain.Base;
+using IOU1.Domain.Entities;
 
 namespace Domain.Entities;
 
@@ -16,5 +17,11 @@ public class GroupMember : Entity
     {
         Group = group;
         User = user;
+        MemberId = user.Id;
+    }
+
+    public GroupMember(long id, Group group, User user) : this(group, user)
+    {
+        Id = id;
     }
 }

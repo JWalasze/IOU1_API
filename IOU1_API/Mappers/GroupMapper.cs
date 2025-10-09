@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using IOU1.Domain.Entities;
 using IOU1_API.DTOs;
 
 namespace IOU1_API.Mappers;

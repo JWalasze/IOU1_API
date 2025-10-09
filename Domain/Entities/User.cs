@@ -1,11 +1,11 @@
 ﻿using Domain.ValueObjects;
 using IOU1.Domain.Base;
+using IOU1.Domain.Entities;
 
 namespace Domain.Entities;
 
 public class User : Entity
 {
-    public long Id { get; }
     public string FirstName { get; } = null!;
     public string LastName { get; } = null!;
     public Email Email { get; } = null!;

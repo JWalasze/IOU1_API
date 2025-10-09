@@ -1,4 +1,4 @@
-﻿namespace IOU1.Application.Features.Transactions.AddTransaction.Dto;
+﻿namespace IOU1.Domain.Models;
 
 public record Split
 {

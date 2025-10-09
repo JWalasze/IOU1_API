@@ -1,12 +1,11 @@
 ﻿using Domain.Entities;
-using IOU1.Application.Features.Transactions.AddTransaction.Dto;
 using IOU1.Domain.Base;
+using IOU1.Domain.Models;
 
 namespace IOU1.Domain.Entities;
 
 public class Expense : Entity
 {
-    public long Id { get; }
     public decimal TotalAmount { get; }
     public string Title { get; } = null!;
     public string? Description { get; } = null!;

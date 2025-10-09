@@ -1,10 +1,10 @@
-﻿using IOU1.Domain.Base;
+﻿using Domain.Entities;
+using IOU1.Domain.Base;
 
-namespace Domain.Entities;
+namespace IOU1.Domain.Entities;
 
 public class Group : Entity
 {
-    public long Id { get; }
     public string Description { get; } = null!;
     public User Owner { get; } = null!;
 
@@ -16,6 +16,11 @@ public class Group : Entity
     {
         Description = description;
         Owner = owner;
+    }
+
+    public Group(long id, string description, User owner) : this(description, owner)
+    {
+        Id = id;
     }
 
     public void AddNewMembers(IEnumerable<GroupMember> newMembers)

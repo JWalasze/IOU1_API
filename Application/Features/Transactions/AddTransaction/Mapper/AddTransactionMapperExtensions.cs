@@ -1,5 +1,5 @@
-﻿using IOU1.Application.Features.Transactions.AddTransaction.Dto;
-using IOU1.Application.Features.Transactions.AddTransaction.Request;
+﻿using IOU1.Application.Features.Transactions.AddTransaction.Request;
+using IOU1.Domain.Models;
 
 namespace IOU1.Application.Features.Transactions.AddTransaction.Mapper;
 

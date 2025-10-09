@@ -1,11 +1,13 @@
 ﻿using Application.Features.Groups.AddGroup.Dto;
 using Application.Features.Groups.DeleteGroup.Dto;
+using Application.Service;
 using Domain.Entities;
 using Domain.Models;
 using Domain.RepoInterfaces;
+using IOU1.Domain.Entities;
 using IOU1.Domain.UnitOfWork;
 
-namespace Application.Service;
+namespace IOU1.Application.Service;
 
 public class GroupService(IUnitOfWork unit/*, ILogger logger*/) : IGroupService
 {
@@ -85,7 +87,7 @@ public class GroupService(IUnitOfWork unit/*, ILogger logger*/) : IGroupService
 
             return Result<DeleteGroupDto?>.Success(new DeleteGroupDto());
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             await _unit.RollbackTransaction();
             return Result<DeleteGroupDto?>.Failure(ex.Message);
