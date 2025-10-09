@@ -5,6 +5,7 @@ using IOU1.Domain.RepoInterfaces;
 using IOU1_API.Controllers;
 using IOU1_API.DTOs;
 using IOU1_API.Mappers;
+using Microsoft.EntityFrameworkCore;
 
 namespace IOU1_API.Services;
 
@@ -24,9 +25,28 @@ public class ExpensesService
         _currencyRepository = currencyRepository;
     }
 
-    public async Task<List<ExpenseDto>> GetExpensesByGroupIdAsync(long groupId)
+    public async Task<List<ExpenseDto>> GetExpensesByGroupIdAsync(
+        long groupId,
+        int pageNumber = 1,
+        int pageSize = 20,
+        SortingOptions sorting = SortingOptions.Newest)
     {
-        var result = await _expenseRepository.GetByGroupIdAsync(groupId);
+        var query = _expenseRepository.GetByGroupIdQuery(groupId); // IQueryable<Expense>
+
+        // Apply sorting
+        query = sorting switch
+        {
+            SortingOptions.Oldest => query.OrderBy(e => e.CreatedAt),
+            SortingOptions.Newest => query.OrderByDescending(e => e.CreatedAt),
+            _ => query
+        };
+
+        // Apply pagination
+        query = query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize);
+
+        var result = await query.ToListAsync();
 
         return result.ToDtoList();
     }

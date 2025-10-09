@@ -17,6 +17,7 @@ public static class ExpenseMapping
             BuyerId: expense.Buyer.Id,
             BuyerName: $"{expense.Buyer.FirstName}",
             CurrencyCode: expense.Currency.Name,
+            CreatedAt: expense.CreatedAt,
             Transactions: expense.Transactions.ToDtoList()
         );
     }
