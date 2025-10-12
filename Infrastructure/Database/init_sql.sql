@@ -15,6 +15,8 @@ drop table if exists CommunityGroup;
 
 drop table if exists AppUser;
 
+drop table if exists InvitationLink;
+
 create table AppUser (
   Id bigint primary key identity(1, 1),
   FirstName varchar(20) not null,
@@ -77,6 +79,18 @@ create table GroupTransaction (
   constraint fk_borrower_id_group_transaction foreign key (BorrowerId) references AppUser (Id),
   constraint fk_currency_id_group_transaction foreign key (CurrencyId) references Currency (Id),
 );
+
+create table InvitationLink (
+  Id bigint primary key identity(1, 1),
+  GroupId bigint not null,
+  AddDate datetime not null constraint df_add_date_group_transaction default getdate(),
+  ExpirationDate datetime not null,
+  InvitationKey nvarchar(30) not null,
+  Version rowversion,
+
+  constraint fk_group_id_group_transaction foreign key (GroupId) references CommunityGroup (Id)
+);
+
 
 insert into
   AppUser (

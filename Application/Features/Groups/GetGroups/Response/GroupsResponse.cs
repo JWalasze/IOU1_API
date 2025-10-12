@@ -1,4 +1,6 @@
-﻿namespace Application.Features.Groups.GetGroups.Response;
+﻿using IOU1.Application;
+
+namespace Application.Features.Groups.GetGroups.Response;
 
 public sealed record GroupsResponse : EndpointResponse
 {

@@ -12,6 +12,7 @@ public class IOU1Context(DbContextOptions<IOU1Context> options) : DbContext(opti
     public DbSet<Currency> Currencies { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<Expense> Expenses { get; set; }
+    public DbSet<InvitationLink> InvitationLinks { get; set; }
 
     //Runs per new instance of the context
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
