@@ -1,20 +1,20 @@
 ﻿using Application.Mediator;
 using FluentValidation;
-using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
+using IOU1.Application.Features.Invitations.UseInvitationLink.Request;
 using IOU1.Application.Features.Invitations.UseInvitationLink.Response;
 using IOU1.Application.Service;
 
-namespace IOU1.Application.Features.Invitations.GenerateInvitationKey.Handler;
+namespace IOU1.Application.Features.Invitations.UseInvitationLink.Handler;
 
-public class GenerateInvitationKeyHandler(IInvitationLinkService generateInvitationService, IValidator<GenerateInvitationKeyRequest> validator) : IRequestHandler<GenerateInvitationKeyRequest, UseInvitationLinkResponse>
+public class UseInvitationLinkHandler(IInvitationLinkService generateInvitationService, IValidator<UseInvitationLinkRequest> validator) : IRequestHandler<UseInvitationLinkRequest, UseInvitationLinkResponse>
 {
-    private readonly IValidator<GenerateInvitationKeyRequest> _validator = validator;
+    private readonly IValidator<UseInvitationLinkRequest> _validator = validator;
     private readonly IInvitationLinkService _generateInvitationService = generateInvitationService;
 
-    public async Task<UseInvitationLinkResponse> Handle(GenerateInvitationKeyRequest request, CancellationToken cancellationToken = default)
+    public async Task<UseInvitationLinkResponse> Handle(UseInvitationLinkRequest request, CancellationToken cancellationToken = default)
     {
         //1 validation (bussiness rules)
-        var validationResult = _validator.Validate(request);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
         {
             //Here hide logic in some method (IRequestHandler)
@@ -26,7 +26,7 @@ public class GenerateInvitationKeyHandler(IInvitationLinkService generateInvitat
         }
 
         //2 bussiness logic/operations
-        var createdInvitationLink = await _generateInvitationService.For(request.GroupId, cancellationToken);
+        var createdInvitationLink = await _generateInvitationService.For(0, cancellationToken);
         if (createdInvitationLink is null)
         {
             return new UseInvitationLinkResponse

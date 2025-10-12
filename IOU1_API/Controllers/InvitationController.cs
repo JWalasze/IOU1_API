@@ -1,6 +1,7 @@
 ﻿using Application.Mediator;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
-using IOU1.Application.Features.Invitations.GenerateInvitationKey.Response;
+using IOU1.Application.Features.Invitations.UseInvitationLink.Request;
+using IOU1.Application.Features.Invitations.UseInvitationLink.Response;
 using IOU1_API.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +13,17 @@ public class InvitationController(IRequestMediator mediator) : BaseApiController
 {
     private readonly IRequestMediator _mediator = mediator;
 
-    [HttpPost]
+    [HttpPost("[action]")]
     public async Task<IActionResult> CreateInvitationLink([FromBody] GenerateInvitationKeyRequest request, CancellationToken cancellationToken = default)
     {
-        var result = await _mediator.Send<GenerateInvitationKeyRequest, GenerateInvitationKeyResponse>(request, cancellationToken);
+        var result = await _mediator.Send<GenerateInvitationKeyRequest, UseInvitationLinkResponse>(request, cancellationToken);
         return CreateEndpointResponse(result);
     }
 
+    [HttpPost("[action]")]
+    public async Task<IActionResult> UseInvitationLink([FromBody] UseInvitationLinkRequest request, CancellationToken cancellationToken = default)
+    {
+        var result = await _mediator.Send<UseInvitationLinkRequest, UseInvitationLinkResponse>(request, cancellationToken);
+        return CreateEndpointResponse(result);
+    }
 }

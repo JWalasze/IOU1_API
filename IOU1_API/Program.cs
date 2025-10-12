@@ -9,7 +9,6 @@ using Application.Features.Groups.GetGroups.Handler;
 using Application.Features.Groups.GetGroups.Query;
 using Application.Features.Groups.GetGroups.Request;
 using Application.Features.Groups.GetGroups.Response;
-using Application.Features.Groups.GetGroups.Validator;
 using Application.Mediator;
 using Application.Service;
 using Domain.RepoInterfaces;
@@ -20,10 +19,14 @@ using Elastic.Serilog.Sinks;
 using FluentValidation;
 using Infrastructure.Mediator;
 using IOU1.Application.Features.Groups.AddGroup.Validator;
+using IOU1.Application.Features.Groups.GetGroups.Validator;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Handler;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
-using IOU1.Application.Features.Invitations.GenerateInvitationKey.Response;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Validator;
+using IOU1.Application.Features.Invitations.UseInvitationLink.Handler;
+using IOU1.Application.Features.Invitations.UseInvitationLink.Request;
+using IOU1.Application.Features.Invitations.UseInvitationLink.Response;
+using IOU1.Application.Features.Invitations.UseInvitationLink.Validator;
 using IOU1.Application.Options;
 using IOU1.Application.Service;
 using IOU1.Domain.Entities;
@@ -56,6 +59,7 @@ namespace IOU1.API
             builder.Services.AddSingleton<IValidator<AddGroupRequest>, AddGroupValidator>();
             builder.Services.AddSingleton<IValidator<DeleteGroupRequest>, DeleteGroupValidator>();
             builder.Services.AddSingleton<IValidator<GenerateInvitationKeyRequest>, GenerateInvitationKeyValidator>();
+            builder.Services.AddScoped<IValidator<UseInvitationLinkRequest>, UseInvitationLinkValidator>();
 
             #endregion
 
@@ -75,7 +79,8 @@ namespace IOU1.API
             builder.Services.AddScoped<IRequestHandler<GroupsRequest, GroupsResponse>, GroupHandler>();
             builder.Services.AddScoped<IRequestHandler<AddGroupRequest, AddGroupResponse>, AddGroupHandler>();
             builder.Services.AddScoped<IRequestHandler<DeleteGroupRequest, DeleteGroupResponse>, DeleteGroupHandler>();
-            builder.Services.AddScoped<IRequestHandler<GenerateInvitationKeyRequest, GenerateInvitationKeyResponse>, GenerateInvitationKeyHandler>();
+            builder.Services.AddScoped<IRequestHandler<GenerateInvitationKeyRequest, UseInvitationLinkResponse>, GenerateInvitationKeyHandler>();
+            builder.Services.AddScoped<IRequestHandler<UseInvitationLinkRequest, UseInvitationLinkResponse>, UseInvitationLinkHandler>();
 
             builder.Services.AddScoped<IGetGroupsQuery, GetGroupsQuery>();
 

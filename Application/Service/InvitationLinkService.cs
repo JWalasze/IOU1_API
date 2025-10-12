@@ -24,4 +24,9 @@ public class InvitationLinkService(IOU1Context context, IOptionsMonitor<LinkInvi
 
         return invitationLink;
     }
+
+    public async Task Use(CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 }

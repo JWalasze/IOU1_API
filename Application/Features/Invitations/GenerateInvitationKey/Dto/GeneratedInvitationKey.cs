@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace IOU1.Application.Features.Invitations.GenerateInvitationKey.Dto;
 
-namespace IOU1.Application.Features.Invitations.GenerateInvitationKey.Dto
+public class GeneratedInvitationKey
 {
-    internal class GeneratedInvitationKey
-    {
-    }
 }
