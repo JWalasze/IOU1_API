@@ -1,4 +1,6 @@
-﻿namespace Application.Features.Groups.AddGroup.Response;
+﻿using IOU1.Application;
+
+namespace Application.Features.Groups.AddGroup.Response;
 
 public sealed record AddGroupResponse : EndpointResponse
 {

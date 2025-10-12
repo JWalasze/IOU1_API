@@ -15,19 +15,18 @@ public class CustomSplitStrategy(Expense expense) : BaseSplitStrategy(expense)
         decimal splitTotal = 0;
         foreach (var split in _expense.Splits)
         {
+            var absAmount = Math.Abs(split.Amount);
             var borrower = _expense.Group.Members.First(m => m.MemberId == split.MemberId).User;
-            var borrowerTransaction = new Transaction(-1 * split.Amount, DateTime.UtcNow, _expense, _expense.Group, buyer, borrower, _expense.Currency);
+            var borrowerTransaction = new Transaction(-1 * absAmount, DateTime.UtcNow, _expense, _expense.Group, buyer, borrower, _expense.Currency);
 
             _expense.Transactions.Add(borrowerTransaction);
 
-            splitTotal += split.Amount;
+            splitTotal += absAmount;
         }
 
         if (_expense.TotalAmount < splitTotal)
-        {
             throw new InvalidOperationException($"Total amount from {splitTotal} is greater than totalAmount {_expense.TotalAmount}");
-        }
-
+        
         var buyerSplit = _expense.Splits.FirstOrDefault(s => s.MemberId == _expense.Buyer.Id);
 
         var leftDifference = _expense.TotalAmount - splitTotal;
@@ -35,11 +34,11 @@ public class CustomSplitStrategy(Expense expense) : BaseSplitStrategy(expense)
 
         if (!_expense.Splits.Any(s => s.MemberId == buyer.Id))
         {
-            var buyerTransactionNegative = new Transaction(Math.Abs(buyerSplitAmount), DateTime.UtcNow, _expense, _expense.Group, buyer, buyer, _expense.Currency);
+            var buyerTransactionNegative = new Transaction(-1 * Math.Abs(buyerSplitAmount), DateTime.UtcNow, _expense, _expense.Group, buyer, buyer, _expense.Currency);
             _expense.Transactions.Add(buyerTransactionNegative);
         }
         
-        var buyerTransactionPositive = new Transaction(-1 * Math.Abs(buyerSplitAmount), DateTime.UtcNow, _expense, _expense.Group, buyer, buyer, _expense.Currency);
+        var buyerTransactionPositive = new Transaction(Math.Abs(buyerSplitAmount), DateTime.UtcNow, _expense, _expense.Group, buyer, buyer, _expense.Currency);
         _expense.Transactions.Add(buyerTransactionPositive);
     }
 }

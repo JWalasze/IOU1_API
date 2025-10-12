@@ -1,7 +1,7 @@
 ﻿using Domain.Base;
 using System.Text.RegularExpressions;
 
-namespace Domain.ValueObjects;
+namespace IOU1.Domain.ValueObjects;
 
 public record Email : ValueObject
 {

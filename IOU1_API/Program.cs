@@ -1,7 +1,6 @@
 using Application.Features.Groups.AddGroup.Handler;
 using Application.Features.Groups.AddGroup.Request;
 using Application.Features.Groups.AddGroup.Response;
-using Application.Features.Groups.AddGroup.Validator;
 using Application.Features.Groups.DeleteGroup.Handler;
 using Application.Features.Groups.DeleteGroup.Request;
 using Application.Features.Groups.DeleteGroup.Response;
@@ -22,6 +21,12 @@ using FluentValidation;
 using Infrastructure.Mediator;
 using IOU1.Application.Features.Invitations.DirectInvitation;
 using IOU1.Application.Features.Invitations.DirectInvitation.Models;
+using IOU1.Application.Features.Groups.AddGroup.Validator;
+using IOU1.Application.Features.Invitations.GenerateInvitationKey.Handler;
+using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
+using IOU1.Application.Features.Invitations.GenerateInvitationKey.Response;
+using IOU1.Application.Features.Invitations.GenerateInvitationKey.Validator;
+using IOU1.Application.Options;
 using IOU1.Application.Service;
 using IOU1.Domain.Entities;
 using IOU1.Domain.RepoInterfaces;
@@ -52,6 +57,7 @@ namespace IOU1.API
             builder.Services.AddSingleton<IValidator<GroupsRequest>, GetGroupsValidator>();
             builder.Services.AddSingleton<IValidator<AddGroupRequest>, AddGroupValidator>();
             builder.Services.AddSingleton<IValidator<DeleteGroupRequest>, DeleteGroupValidator>();
+            builder.Services.AddSingleton<IValidator<GenerateInvitationKeyRequest>, GenerateInvitationKeyValidator>();
 
             #endregion
 
@@ -67,11 +73,13 @@ namespace IOU1.API
             builder.Services.AddScoped<ExpensesService>();
             builder.Services.AddScoped<IGroupService, GroupService>();
             builder.Services.AddScoped<IDirectInvitationCreationService, DirectInvitationCreationService>();
+            builder.Services.AddScoped<IInvitationLinkService, InvitationLinkService>();
 
             builder.Services.AddScoped<IRequestHandler<GroupsRequest, GroupsResponse>, GroupHandler>();
             builder.Services.AddScoped<IRequestHandler<AddGroupRequest, AddGroupResponse>, AddGroupHandler>();
             builder.Services.AddScoped<IRequestHandler<DirectInvitationCreationRequest, DirectInvitationCreationResponse>, DirectInvitationCreationHandler>();
             builder.Services.AddScoped<IRequestHandler<DeleteGroupRequest, DeleteGroupResponse>, DeleteGroupHandler>();
+            builder.Services.AddScoped<IRequestHandler<GenerateInvitationKeyRequest, GenerateInvitationKeyResponse>, GenerateInvitationKeyHandler>();
 
             builder.Services.AddScoped<IValidator<DirectInvitationCreationRequest>, DirectInvitationCreationValidator>();
 
@@ -82,6 +90,12 @@ namespace IOU1.API
             #endregion
 
             #region TransientServices
+
+            #endregion
+
+            #region Options
+
+            builder.Services.Configure<LinkInvitation>(builder.Configuration.GetSection("LinkInvitation"));
 
             #endregion
 

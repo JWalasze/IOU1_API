@@ -1,6 +1,6 @@
 ﻿using Application.Mediator;
 
-namespace Application;
+namespace IOU1.Application;
 
 public record EndpointResponse : IResponse
 {

@@ -14,7 +14,7 @@ using Domain.Entities;
 using IOU1.Application.Strategy;
 using IOU1.Domain.Entities;
 using FluentAssertions;
-using Domain.ValueObjects;
+using IOU1.Domain.ValueObjects;
 
 namespace IOU1.Tests;
 
@@ -59,7 +59,7 @@ public class ExpenseTests
     }
 
     [Fact]
-    public async Task SplitStrategy_MemberIsNotInGroup_ThrowsException()
+    public void SplitStrategy_MemberIsNotInGroup_ThrowsException()
     {
         //Arrange
         var alice = User(1, "Alice", "Nowak");
@@ -78,7 +78,7 @@ public class ExpenseTests
         carol.MemberGroups.Add(gmCarol);
 
         //Act
-        var action = () => 
+        var action = () =>
         {
             var sut = new Expense(100, "Tytul", "Description", group, alice, null,
             [
@@ -96,7 +96,7 @@ public class ExpenseTests
     }
 
     [Fact]
-    public async Task SplitStrategy_SplitsAreValid_CreatesProperTransactions()
+    public void SplitStrategy_SplitsAreValid_CreatesProperTransactions()
     {
         //Arrange
         var alice = User(1, "Alice", "Nowak");
@@ -145,14 +145,24 @@ public class ExpenseTests
         sut.Transactions.Should().NotBeNullOrEmpty();
         sut.Transactions.Should().NotContainNulls();
         sut.Transactions.Count.Should().Be(4);
-        //ContainsSingle, Contain, AllSatisfy, OnlyContain
-        //sut.Transactions.Should().BeEquivalentTo(new List<Transaction>()
-        //{
-        //    new(-100, DateTime.UtcNow, sut, )
-        //});
+        sut.Transactions.Should().OnlyContain(t => t.Buyer!.Id == alice.Id);
+        sut.Transactions.Count(t => t.Borrower!.Id == alice.Id).Should().Be(2);
+        sut.Transactions.Count(t => t.Borrower!.Id == bob.Id).Should().Be(1);
+        sut.Transactions.Count(t => t.Borrower!.Id == carol.Id).Should().Be(1);
+
+        var aliceTransaction = sut.Transactions.Where(t => t.Borrower!.Id == alice.Id).ToList();
+        var bobTransaction = sut.Transactions.First(t => t.Borrower!.Id == bob.Id);
+        var carolTransaction = sut.Transactions.First(t => t.Borrower!.Id == carol.Id);
+
+        aliceTransaction.Should().NotBeNullOrEmpty();
+        aliceTransaction.Should().ContainSingle(t => t.Amount == 50);
+        aliceTransaction.Should().ContainSingle(t => t.Amount == -1 * 50);
+
+        bobTransaction.Amount.Should().Be(-1 * 100);
+        carolTransaction.Amount.Should().Be(-1 * 50);
     }
 
-    public static Email EmailOf(string local) => new Email($"{local}@test.local");
+    public static Email EmailOf(string local) => new($"{local}@test.local");
 
     public static User User(long id, string first, string last, string? login = null)
         => new(
@@ -163,9 +173,6 @@ public class ExpenseTests
             login: login ?? $"{first.ToLower()}.{last.ToLower()}",
             hashedPassword: $"HASH-{id}");
 
-    /// <summary>
-    /// Creates a group owned by Alice with Bob & Carol as members (fully wired).
-    /// </summary>
     public static (Group Group, User Owner, User[] Members) BasicGroup()
     {
         var alice = User(1, "Alice", "Nowak");
@@ -174,7 +181,6 @@ public class ExpenseTests
 
         var group = new Group("Weekend trip to Mazury", alice);
 
-        // Back-references (collections are mutable)
         alice.OwnedGroups.Add(group);
 
         var gmBob = new GroupMember(group, bob);
@@ -187,9 +193,6 @@ public class ExpenseTests
         return (group, alice, new[] { bob, carol });
     }
 
-    /// <summary>
-    /// Creates N users with deterministic data.
-    /// </summary>
     public static List<User> NUsers(int n, long startId = 1)
     {
         var list = new List<User>(n);
@@ -203,9 +206,6 @@ public class ExpenseTests
         return list;
     }
 
-    /// <summary>
-    /// Creates multiple groups with overlapping membership.
-    /// </summary>
     public static (List<Group> Groups, List<User> Users) GroupsDataset()
     {
         var users = new[]
