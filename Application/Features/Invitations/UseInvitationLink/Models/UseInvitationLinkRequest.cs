@@ -1,6 +1,6 @@
 ﻿using Application.Mediator;
 
-namespace IOU1.Application.Features.Invitations.UseInvitationLink.Request;
+namespace IOU1.Application.Features.Invitations.UseInvitationLink.Models;
 
 public record UseInvitationLinkRequest : IRequest
 {

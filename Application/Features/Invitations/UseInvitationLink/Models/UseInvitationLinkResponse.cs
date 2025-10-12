@@ -1,4 +1,4 @@
-﻿namespace IOU1.Application.Features.Invitations.UseInvitationLink.Response;
+﻿namespace IOU1.Application.Features.Invitations.UseInvitationLink.Models;
 
 public record UseInvitationLinkResponse : EndpointResponse
 {

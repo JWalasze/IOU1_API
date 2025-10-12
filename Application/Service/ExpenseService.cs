@@ -1,11 +1,11 @@
 ﻿using Application.Features.Transactions.AddTransaction.Dto;
 using Application.Service;
-using Domain.Models;
 using Domain.RepoInterfaces;
 using IOU1.Application.Features.Transactions.AddTransaction.Mapper;
 using IOU1.Application.Features.Transactions.AddTransaction.Request;
 using IOU1.Application.Strategy;
 using IOU1.Domain.Entities;
+using IOU1.Domain.Models;
 using IOU1.Domain.RepoInterfaces;
 using IOU1.Domain.UnitOfWork;
 using IOU1.Persistance.Context;

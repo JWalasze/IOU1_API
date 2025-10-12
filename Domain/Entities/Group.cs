@@ -3,33 +3,6 @@ using IOU1.Domain.Base;
 
 namespace IOU1.Domain.Entities;
 
-public enum InvitationStatus
-{
-    Pending,
-    Accepted,
-    Canceled
-}
-
-public class Invitation : Entity
-{
-    public Group Group { get; } = null!;
-    public long GroupId { get; }
-    public User User { get; } = null!;
-    public long UserId { get; }
-    public User Sender { get; } = null!;
-    public long SenderId { get; }
-
-    public InvitationStatus InvitationStatus;
-
-    public Invitation(long groupId, long userId, long senderId)
-    {
-        GroupId = groupId;
-        UserId = userId;
-        SenderId = senderId;
-        InvitationStatus = InvitationStatus.Pending;
-    }
-}
-
 public class Group : Entity
 {
     public string Description { get; } = null!;

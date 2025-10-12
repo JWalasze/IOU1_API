@@ -1,6 +1,6 @@
-﻿using Application.Mediator;
-using FluentValidation;
+﻿using FluentValidation;
 using IOU1.Application.Features.Invitations.DirectInvitation.Models;
+using IOU1.Application.Mediator;
 using IOU1.Application.Service;
 using IOU1.Domain.Exceptions;
 

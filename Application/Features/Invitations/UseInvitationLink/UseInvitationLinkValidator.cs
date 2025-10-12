@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using IOU1.Application.Features.Invitations.UseInvitationLink.Request;
+using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace IOU1.Application.Features.Invitations.UseInvitationLink.Validator;
+namespace IOU1.Application.Features.Invitations.UseInvitationLink;
 
 public class UseInvitationLinkValidator : AbstractValidator<UseInvitationLinkRequest>
 {

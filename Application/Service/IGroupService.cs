@@ -1,6 +1,6 @@
 ﻿using Application.Features.Groups.AddGroup.Dto;
 using Application.Features.Groups.DeleteGroup.Dto;
-using Domain.Models;
+using IOU1.Domain.Models;
 
 namespace Application.Service;
 

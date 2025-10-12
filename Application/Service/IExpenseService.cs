@@ -1,6 +1,6 @@
 ﻿using Application.Features.Transactions.AddTransaction.Dto;
-using Domain.Models;
 using IOU1.Application.Features.Transactions.AddTransaction.Request;
+using IOU1.Domain.Models;
 
 namespace Application.Service;
 

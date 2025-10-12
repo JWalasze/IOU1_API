@@ -1,7 +1,7 @@
-﻿using Application.Mediator;
-using FluentValidation;
+﻿using FluentValidation;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
-using IOU1.Application.Features.Invitations.UseInvitationLink.Response;
+using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
+using IOU1.Application.Mediator;
 using IOU1.Application.Service;
 
 namespace IOU1.Application.Features.Invitations.GenerateInvitationKey.Handler;

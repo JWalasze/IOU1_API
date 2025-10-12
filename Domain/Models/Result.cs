@@ -1,6 +1,8 @@
-﻿namespace Domain.Models;
+﻿using IOU1.Domain.Interfaces;
 
-public class Result<T>
+namespace IOU1.Domain.Models;
+
+public class Result<T> : IResult
 {
     public T Data { get; init; }
     public bool IsSuccess { get; init; }

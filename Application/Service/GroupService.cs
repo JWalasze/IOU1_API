@@ -2,9 +2,9 @@
 using Application.Features.Groups.DeleteGroup.Dto;
 using Application.Service;
 using Domain.Entities;
-using Domain.Models;
 using Domain.RepoInterfaces;
 using IOU1.Domain.Entities;
+using IOU1.Domain.Models;
 using IOU1.Domain.UnitOfWork;
 
 namespace IOU1.Application.Service;

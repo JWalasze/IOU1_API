@@ -1,8 +1,8 @@
 ﻿using Application.Features.Groups.DeleteGroup.Request;
 using Application.Features.Groups.DeleteGroup.Response;
-using Application.Mediator;
 using Application.Service;
 using FluentValidation;
+using IOU1.Application.Mediator;
 
 namespace Application.Features.Groups.DeleteGroup.Handler;
 

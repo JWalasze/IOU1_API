@@ -25,10 +25,6 @@ using IOU1.Application.Features.Groups.GetGroups.Validator;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Handler;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Validator;
-using IOU1.Application.Features.Invitations.UseInvitationLink.Handler;
-using IOU1.Application.Features.Invitations.UseInvitationLink.Request;
-using IOU1.Application.Features.Invitations.UseInvitationLink.Response;
-using IOU1.Application.Features.Invitations.UseInvitationLink.Validator;
 using IOU1.Application.Options;
 using IOU1.Application.Service;
 using IOU1.Domain.Entities;
@@ -41,6 +37,9 @@ using IOU1.Persistance.Context;
 using IOU1_API.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
+using IOU1.Application.Features.Invitations.UseInvitationLink;
+using IOU1.Application.Mediator;
 
 namespace IOU1.API
 {

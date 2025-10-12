@@ -2,8 +2,8 @@
 using Application.Features.Groups.GetGroups.Query;
 using Application.Features.Groups.GetGroups.Request;
 using Application.Features.Groups.GetGroups.Response;
-using Application.Mediator;
 using FluentValidation;
+using IOU1.Application.Mediator;
 
 namespace Application.Features.Groups.GetGroups.Handler;
 
