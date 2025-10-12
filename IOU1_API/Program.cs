@@ -18,6 +18,8 @@ using Elastic.Ingest.Elasticsearch.DataStreams;
 using Elastic.Serilog.Sinks;
 using FluentValidation;
 using Infrastructure.Mediator;
+using IOU1.Application.Features.Invitations.DirectInvitation;
+using IOU1.Application.Features.Invitations.DirectInvitation.Models;
 using IOU1.Application.Features.Groups.AddGroup.Validator;
 using IOU1.Application.Features.Groups.GetGroups.Validator;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Handler;
@@ -74,13 +76,17 @@ namespace IOU1.API
             builder.Services.AddScoped<xdGroupService>();
             builder.Services.AddScoped<ExpensesService>();
             builder.Services.AddScoped<IGroupService, GroupService>();
+            builder.Services.AddScoped<IDirectInvitationCreationService, DirectInvitationCreationService>();
             builder.Services.AddScoped<IInvitationLinkService, InvitationLinkService>();
 
             builder.Services.AddScoped<IRequestHandler<GroupsRequest, GroupsResponse>, GroupHandler>();
             builder.Services.AddScoped<IRequestHandler<AddGroupRequest, AddGroupResponse>, AddGroupHandler>();
+            builder.Services.AddScoped<IRequestHandler<DirectInvitationCreationRequest, DirectInvitationCreationResponse>, DirectInvitationCreationHandler>();
             builder.Services.AddScoped<IRequestHandler<DeleteGroupRequest, DeleteGroupResponse>, DeleteGroupHandler>();
             builder.Services.AddScoped<IRequestHandler<GenerateInvitationKeyRequest, UseInvitationLinkResponse>, GenerateInvitationKeyHandler>();
             builder.Services.AddScoped<IRequestHandler<UseInvitationLinkRequest, UseInvitationLinkResponse>, UseInvitationLinkHandler>();
+
+            builder.Services.AddScoped<IValidator<DirectInvitationCreationRequest>, DirectInvitationCreationValidator>();
 
             builder.Services.AddScoped<IGetGroupsQuery, GetGroupsQuery>();
 

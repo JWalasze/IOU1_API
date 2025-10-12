@@ -43,6 +43,17 @@ create table GroupMember (
   constraint fk_group_id_group_member foreign key (GroupId) references CommunityGroup (Id)
 );
 
+create table Invitation(
+  Id bigint primary key identity(1, 1),
+  GroupId bigint not null,
+  SenderId bigint not null,
+  UserId bigint not null,
+  InvitationStatus varchar(32),
+
+  constraint fk_group_id_invitation foreign key (GroupId) references CommunityGroup (Id),
+  constraint fk_user_id_invitation foreign key (UserId) references CommunityGroup (Id)
+);
+
 create table Currency (
   Id bigint primary key identity(1, 1),
   Name varchar(10) not null,
