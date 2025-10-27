@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using IOU1.Domain.Base;
+﻿using IOU1.Domain.Base;
 using IOU1.Domain.Enums;
 
 namespace IOU1.Domain.Entities;

@@ -1,4 +1,4 @@
-﻿using Application.Mediator;
+﻿using IOU1.Application.Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOU1_API.Controllers;

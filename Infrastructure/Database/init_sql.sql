@@ -2,7 +2,6 @@ drop table if exists GroupTransaction;
 
 drop table if exists GroupExpense;
 
---old
 drop table if exists TransactionStatus;
 
 drop table if exists Currency;
@@ -11,11 +10,13 @@ drop table if exists GroupMember;
 
 drop table if exists GroupTransaction;
 
+drop table if exists InvitationLink;
+
+drop table if exists Invitation;
+
 drop table if exists CommunityGroup;
 
 drop table if exists AppUser;
-
-drop table if exists InvitationLink;
 
 create table AppUser (
   Id bigint primary key identity(1, 1),
@@ -24,7 +25,8 @@ create table AppUser (
   Email varchar(30) not null,
   AddDate datetime not null constraint df_add_date_app_user default getdate(),
   Login varchar(30) not null,
-  Password varchar(30) not null,
+  PasswordHash varchar(100) not null,
+  PasswordSalt varchar(100) not null,
   Version rowversion
 );
 
@@ -94,12 +96,12 @@ create table GroupTransaction (
 create table InvitationLink (
   Id bigint primary key identity(1, 1),
   GroupId bigint not null,
-  AddDate datetime not null constraint df_add_date_group_transaction default getdate(),
+  AddDate datetime not null constraint df_add_date_invitation_link default getdate(),
   ExpirationDate datetime not null,
   InvitationKey nvarchar(30) not null,
   Version rowversion,
 
-  constraint fk_group_id_group_transaction foreign key (GroupId) references CommunityGroup (Id)
+  constraint fk_group_id_invitation_link foreign key (GroupId) references CommunityGroup (Id)
 );
 
 
@@ -109,7 +111,8 @@ insert into
     LastName,
     Email,
     Login,
-    Password
+    PasswordHash,
+    PasswordSalt
   )
 values
   (
@@ -117,7 +120,8 @@ values
     'Johnson',
     'alice.johnson@example.com',
     'alicej',
-    'P@ssword1'
+    'P@ssword1',
+    'Salt'
   );
 
 insert into
@@ -126,7 +130,8 @@ insert into
     LastName,
     Email,
     Login,
-    Password
+    PasswordHash,
+    PasswordSalt
   )
 values
   (
@@ -134,7 +139,8 @@ values
     'Smith',
     'bob.smith@example.com',
     'bobsmith',
-    'Secr3tPwd'
+    'P@ssword1',
+    'Salt'
   );
 
 insert into
@@ -143,7 +149,8 @@ insert into
     LastName,
     Email,
     Login,
-    Password
+    PasswordHash,
+    PasswordSalt
   )
 values
   (
@@ -151,7 +158,8 @@ values
     'Brown',
     'charlie.brown@example.com',
     'cbrown',
-    'Ch@rlie123'
+    'P@ssword1',
+    'Salt'
   );
 
 insert into
@@ -160,7 +168,8 @@ insert into
     LastName,
     Email,
     Login,
-    Password
+    PasswordHash,
+    PasswordSalt
   )
 values
   (
@@ -168,7 +177,8 @@ values
     'Evans',
     'diana.evans@example.com',
     'dianae',
-    'D!anaPW2024'
+    'P@ssword1',
+    'Salt'
   );
 
 insert into
@@ -462,3 +472,4 @@ values
     1,
     '2025-10-01 21:10:36'
   );
+  

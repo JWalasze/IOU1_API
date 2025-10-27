@@ -33,4 +33,12 @@ public class Group : Entity
             }
         }
     }
+
+    public void AddNewMember(GroupMember newMember)
+    {
+        if (!Members.Any(m => m.MemberId == newMember.MemberId))
+        {
+            Members.Add(newMember);
+        }
+    }
 }

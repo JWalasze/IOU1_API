@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using IOU1.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,8 +21,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Login)
                .IsRequired();
 
-        builder.Property(u => u.HashedPassword)
-               .HasColumnName("Password")
+        builder.Property(u => u.PasswordHash)
+               .HasColumnName("PasswordHash")
+               .IsRequired();
+
+        builder.Property(u => u.PasswordSalt)
+               .HasColumnName("PasswordSalt")
                .IsRequired();
 
         builder.Property(u => u.CreatedAt)

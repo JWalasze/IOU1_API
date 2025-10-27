@@ -40,6 +40,12 @@ using Serilog;
 using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
 using IOU1.Application.Features.Invitations.UseInvitationLink;
 using IOU1.Application.Mediator;
+using IOU1.Application.Features.Auth;
+using IOU1.Application.Features.Auth.LogIn.Models;
+using IOU1.Application.Features.Auth.LogIn;
+using IOU1.Infrastructure.Auth;
+using IOU1.Application.Features.Users;
+using IOU1.Domain.Services;
 
 namespace IOU1.API
 {
@@ -60,7 +66,9 @@ namespace IOU1.API
             builder.Services.AddSingleton<IValidator<AddGroupRequest>, AddGroupValidator>();
             builder.Services.AddSingleton<IValidator<DeleteGroupRequest>, DeleteGroupValidator>();
             builder.Services.AddSingleton<IValidator<GenerateInvitationKeyRequest>, GenerateInvitationKeyValidator>();
-            builder.Services.AddScoped<IValidator<UseInvitationLinkRequest>, UseInvitationLinkValidator>();
+            builder.Services.AddSingleton<IValidator<LogInRequest>, LogInValidator>();
+            builder.Services.AddSingleton<IValidator<AddUserRequest>, AddUserValidator>();
+            builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>(); 
 
             #endregion
 
@@ -72,11 +80,16 @@ namespace IOU1.API
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ICurrencyRepository, CurrencyRepository>();
 
+            builder.Services.AddScoped<IValidator<UseInvitationLinkRequest>, UseInvitationLinkValidator>();
+
             builder.Services.AddScoped<xdGroupService>();
             builder.Services.AddScoped<ExpensesService>();
             builder.Services.AddScoped<IGroupService, GroupService>();
             builder.Services.AddScoped<IDirectInvitationCreationService, DirectInvitationCreationService>();
             builder.Services.AddScoped<IInvitationLinkService, InvitationLinkService>();
+            builder.Services.AddScoped<IMemberService, MemberService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddScoped<IRequestHandler<GroupsRequest, GroupsResponse>, GroupHandler>();
             builder.Services.AddScoped<IRequestHandler<AddGroupRequest, AddGroupResponse>, AddGroupHandler>();
@@ -84,6 +97,8 @@ namespace IOU1.API
             builder.Services.AddScoped<IRequestHandler<DeleteGroupRequest, DeleteGroupResponse>, DeleteGroupHandler>();
             builder.Services.AddScoped<IRequestHandler<GenerateInvitationKeyRequest, UseInvitationLinkResponse>, GenerateInvitationKeyHandler>();
             builder.Services.AddScoped<IRequestHandler<UseInvitationLinkRequest, UseInvitationLinkResponse>, UseInvitationLinkHandler>();
+            builder.Services.AddScoped<IRequestHandler<LogInRequest, LogInResponse>, LogInHandler>();
+            builder.Services.AddScoped<IRequestHandler<AddUserRequest, AddUserResponse>, AddUserHandler>();
 
             builder.Services.AddScoped<IValidator<DirectInvitationCreationRequest>, DirectInvitationCreationValidator>();
 

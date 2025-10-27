@@ -1,4 +1,6 @@
-﻿namespace Application.Mediator;
+﻿using IOU1.Application.Mediator;
+
+namespace Application.Mediator;
 
 public interface IRequestMediator
 {

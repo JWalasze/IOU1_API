@@ -1,8 +1,12 @@
-﻿namespace Application.Mediator;
+﻿using IOU1.Domain.Models;
+
+namespace IOU1.Application.Mediator;
 
 public interface IResponse
 {
-    public string? ErrorMessage { get; set; }
+    string? ErrorMessage { get; init; }
 
-    public bool IsSuccess { get; set; }
+    bool IsSuccess { get; init; }
+
+    IEnumerable<ProblemDetails> Errors { get; init; }
 }

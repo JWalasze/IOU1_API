@@ -1,5 +1,5 @@
-﻿using Domain.Entities;
-using Domain.RepoInterfaces;
+﻿using Domain.RepoInterfaces;
+using IOU1.Domain.Entities;
 using IOU1.Domain.RepoInterfaces;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;

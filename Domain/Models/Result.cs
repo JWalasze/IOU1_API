@@ -8,6 +8,8 @@ public class Result<T> : IResult
     public bool IsSuccess { get; init; }
     public string? ErrorMessage { get; init; }
 
+    public IEnumerable<ProblemDetails> Errors { get; } = [];
+
     private Result(T data, bool isSuccess, string? errorMessage)
     {
         Data = data;
