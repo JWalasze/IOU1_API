@@ -63,6 +63,9 @@ public class User : Entity
         PasswordHash = passwordHasher.Hash(password);
         Email = email;
         CreatedAt = DateTime.UtcNow;
+
+        //TEMP
+        PasswordSalt = "1234";
     }
 
     public User(

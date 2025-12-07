@@ -20,7 +20,6 @@ public class GenerateInvitationKeyHandler(IInvitationLinkService generateInvitat
             //Here hide logic in some method (IRequestHandler)
             return new UseInvitationLinkResponse
             {
-                IsSuccess = false,
                 ErrorMessage = validationResult.Errors.FirstOrDefault()?.ErrorMessage
             };
         }
@@ -31,7 +30,6 @@ public class GenerateInvitationKeyHandler(IInvitationLinkService generateInvitat
         {
             return new UseInvitationLinkResponse
             {
-                IsSuccess = false,
                 ErrorMessage = "Invitation link couldn't be created."
             };
         }
@@ -42,7 +40,6 @@ public class GenerateInvitationKeyHandler(IInvitationLinkService generateInvitat
             HashedKey = createdInvitationLink.InvitationKey.Key,
             ExpirationDate = createdInvitationLink.ExpirationDate.ExpirationDate,
             ErrorMessage = string.Empty,
-            IsSuccess = true
         };
     }
 }

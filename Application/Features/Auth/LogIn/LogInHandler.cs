@@ -22,7 +22,7 @@ public class LogInHandler(IValidator<LogInRequest> validator, IAuthService authS
         throw new NotImplementedException();
     }
 
-    protected override LogInResponse MapFailureValidationResult(ValidationResult result)
+    protected override LogInResponse MapFailure(ValidationResult result)
     {
         throw new NotImplementedException();
     }

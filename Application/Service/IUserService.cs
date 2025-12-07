@@ -1,4 +1,4 @@
-﻿using IOU1.Application.Features.Users;
+﻿using IOU1.Application.Features.Users.Models;
 using IOU1.Domain.Entities;
 using IOU1.Domain.Models;
 

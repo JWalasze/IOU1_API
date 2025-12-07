@@ -6,7 +6,7 @@ public interface IResponse
 {
     string? ErrorMessage { get; init; }
 
-    bool IsSuccess { get; init; }
+    bool IsSuccess { get; }
 
     IEnumerable<ProblemDetails> Errors { get; init; }
 }

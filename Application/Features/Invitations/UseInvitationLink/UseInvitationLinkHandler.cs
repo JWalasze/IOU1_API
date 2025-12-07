@@ -24,17 +24,15 @@ public class UseInvitationLinkHandler(IInvitationLinkService generateInvitationS
     {
         return new UseInvitationLinkResponse()
         {
-            IsSuccess = false,
             ErrorMessage = result?.ErrorMessage
         };
     }
 
-    protected override UseInvitationLinkResponse MapFailureValidationResult(ValidationResult result)
+    protected override UseInvitationLinkResponse MapFailure(ValidationResult result)
     {
         return new UseInvitationLinkResponse()
         {
             ErrorMessage = result.Errors.FirstOrDefault()?.ErrorMessage,
-            IsSuccess = false
         };
     }
 

@@ -1,6 +1,6 @@
 ﻿using Application.Mediator;
 
-namespace IOU1.Application.Features.Users;
+namespace IOU1.Application.Features.Users.Models.Endpoint;
 
 public sealed record AddUserRequest(
     string FirstName,

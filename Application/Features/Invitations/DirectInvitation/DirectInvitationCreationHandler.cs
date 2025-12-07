@@ -18,7 +18,6 @@ public class DirectInvitationCreationHandler(IValidator<DirectInvitationCreation
         {
             return new()
             {
-                IsSuccess = false,
                 ErrorMessage = validationResult.Errors.First().ErrorMessage,
             };
         }
@@ -28,13 +27,13 @@ public class DirectInvitationCreationHandler(IValidator<DirectInvitationCreation
             var result = await _service.MakeInvitation(request.email, request.GroupId, request.SenderId);
             if (result == null)
             {
-                return new() { IsSuccess = false, ErrorMessage = "Failed to create invitation!" };
+                return new() { ErrorMessage = "Failed to create invitation!" };
             }
         }
         catch (UserNotFoundException e)
         {
             {
-                return new() { IsSuccess = false, ErrorMessage = "Could not find user with this email!" };
+                return new() { ErrorMessage = "Could not find user with this email!" };
             }
         }
         return new();

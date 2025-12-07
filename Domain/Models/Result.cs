@@ -2,7 +2,7 @@
 
 namespace IOU1.Domain.Models;
 
-public class Result<T> : IResult
+public class Result<T> : IResult<T> where T : class
 {
     public T Data { get; init; }
     public bool IsSuccess { get; init; }

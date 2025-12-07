@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Application", "Applica
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Persistance", "IOU1.Persistance\IOU1.Persistance.csproj", "{2AAA538A-6283-44BE-94D8-6EBA730A2A39}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Shared", "IOU1.Shared\IOU1.Shared.csproj", "{500FA294-5FFD-4DE4-BF6F-D132F54DCFF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{2AAA538A-6283-44BE-94D8-6EBA730A2A39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AAA538A-6283-44BE-94D8-6EBA730A2A39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AAA538A-6283-44BE-94D8-6EBA730A2A39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{500FA294-5FFD-4DE4-BF6F-D132F54DCFF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{500FA294-5FFD-4DE4-BF6F-D132F54DCFF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{500FA294-5FFD-4DE4-BF6F-D132F54DCFF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{500FA294-5FFD-4DE4-BF6F-D132F54DCFF2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

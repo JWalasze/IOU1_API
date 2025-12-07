@@ -19,7 +19,6 @@ public class AddGroupHandler(IValidator<AddGroupRequest> validator, IGroupServic
         {
             return new()
             {
-                IsSuccess = false,
                 ErrorMessage = validationResult.Errors.First().ErrorMessage
             };
         }

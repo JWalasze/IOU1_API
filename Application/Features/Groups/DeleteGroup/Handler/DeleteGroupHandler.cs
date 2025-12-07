@@ -18,7 +18,6 @@ public class DeleteGroupHandler(IValidator<DeleteGroupRequest> validator, IGroup
         {
             return new()
             {
-                IsSuccess = false,
                 ErrorMessage = validationResult.Errors.First().ErrorMessage
             };
         }
@@ -28,14 +27,12 @@ public class DeleteGroupHandler(IValidator<DeleteGroupRequest> validator, IGroup
         {
             return new()
             {
-                IsSuccess = false,
                 ErrorMessage = result.ErrorMessage
             };
         }
 
         return new()
         {
-            IsSuccess = true
         };
     }
 }

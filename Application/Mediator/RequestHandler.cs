@@ -2,6 +2,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using IOU1.Domain.Interfaces;
+using IOU1.Domain.Models;
 
 namespace IOU1.Application.Mediator;
 
@@ -15,7 +16,7 @@ public abstract class RequestHandler<TRequest, TResponse>(IValidator<TRequest> v
         var validationResult = await Validate(request, cancellationToken);
         if (!validationResult.IsValid)
         {
-            return MapFailureValidationResult(validationResult);
+            return MapFailure(validationResult);
         }
 
         var result = await Do(request, cancellationToken);
@@ -32,19 +33,17 @@ public abstract class RequestHandler<TRequest, TResponse>(IValidator<TRequest> v
         return await _validator.ValidateAsync(request, cancellationToken);
     }
 
-    protected virtual TResponse MapFailureValidationResult(ValidationResult result)
+    protected virtual TResponse MapFailure(ValidationResult result)
     {
         return new()
         {
-            IsSuccess = false,
-            ErrorMessage = "",
-            Errors = []
+            Errors = [..result.Errors.Select(e => new ProblemDetails(e.ErrorCode, e.ErrorMessage))]
         };
     }
 
-    protected abstract TResponse MapSuccess(IResult result); //TODO Should have base implementation, add a virtual keyword
+    protected abstract TResponse MapSuccess(IResult result);
 
-    protected abstract TResponse MapFailure(IResult? result); //TODO Should have base implementation,  add a virtual keyword
+    protected abstract TResponse MapFailure(IResult? result);
 
-    protected abstract Task<IResult> Do(TRequest request, CancellationToken cancellationToken = default); //Stays abstract
+    protected abstract Task<IResult> Do(TRequest request, CancellationToken cancellationToken = default);
 }

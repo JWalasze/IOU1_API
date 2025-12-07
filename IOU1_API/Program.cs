@@ -46,6 +46,13 @@ using IOU1.Application.Features.Auth.LogIn;
 using IOU1.Infrastructure.Auth;
 using IOU1.Application.Features.Users;
 using IOU1.Domain.Services;
+using MassTransit;
+using IOU1.Infrastructure.Messages;
+using IOU1.Application.Messages;
+using IOU1.Application.Features.Users.Models.Endpoint;
+using IOU1.Application.Mappings;
+using Mapster;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace IOU1.API
 {
@@ -69,7 +76,6 @@ namespace IOU1.API
             builder.Services.AddSingleton<IValidator<LogInRequest>, LogInValidator>();
             builder.Services.AddSingleton<IValidator<AddUserRequest>, AddUserValidator>();
             builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>(); 
-
             #endregion
 
             #region ScopedServices
@@ -90,6 +96,7 @@ namespace IOU1.API
             builder.Services.AddScoped<IMemberService, MemberService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IUserChecker, UserChecker>();
 
             builder.Services.AddScoped<IRequestHandler<GroupsRequest, GroupsResponse>, GroupHandler>();
             builder.Services.AddScoped<IRequestHandler<AddGroupRequest, AddGroupResponse>, AddGroupHandler>();
@@ -106,6 +113,8 @@ namespace IOU1.API
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            builder.Services.AddScoped<IServiceBus, ServiceBus>();
+
             #endregion
 
             #region TransientServices
@@ -118,6 +127,30 @@ namespace IOU1.API
 
             #endregion
 
+            #region MassTransit
+
+            builder.Services.AddMassTransit(x =>
+            {
+                x.AddConsumer<ProductAddedEventConsumer>();
+                x.UsingRabbitMq((context, cfg) =>
+                {
+
+                    cfg.Host("localhost", "/", h => {
+                        h.Username("kalo");
+                        h.Password("kalo");
+                    });
+
+                    //cfg.ConfigureEndpoints(context);
+                    cfg.ReceiveEndpoint("TestQueue",
+                        e => { e.ConfigureConsumer<ProductAddedEventConsumer>(context); });
+                });
+            });
+
+            #endregion
+
+            MappingConfig.Init();
+
+            builder.Services.AddMapster();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
+using IOU1.Application.Features.Users.Models.Endpoint;
 using IOU1.Application.Mediator;
 using IOU1.Application.Service;
+using IOU1.Domain.Entities;
 using IOU1.Domain.Interfaces;
 
 namespace IOU1.Application.Features.Users;
@@ -24,16 +25,13 @@ public class AddUserHandler(IValidator<AddUserRequest> validator, IUserService u
 
     protected override AddUserResponse MapFailure(IResult? result)
     {
-        throw new NotImplementedException();
-    }
-
-    protected override AddUserResponse MapFailureValidationResult(ValidationResult result)
-    {
-        throw new NotImplementedException();
+        var testMaper = new UserMapper();
+        return testMaper.Map<AddUserResponse>(result);
     }
 
     protected override AddUserResponse MapSuccess(IResult result)
     {
-        throw new NotImplementedException();
+        var testMaper = new UserMapper();
+        return testMaper.Map<AddUserResponse>(((IResult<User>)result).Data); 
     }
 }

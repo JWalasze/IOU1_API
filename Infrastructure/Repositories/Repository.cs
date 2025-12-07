@@ -1,5 +1,4 @@
-﻿using Infrastructure.Context;
-using IOU1.Domain.Base;
+﻿using IOU1.Domain.Base;
 using IOU1.Domain.RepoInterfaces;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
