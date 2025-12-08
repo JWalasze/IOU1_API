@@ -21,7 +21,7 @@ public static class MappingConfig
             }
             catch (ReflectionTypeLoadException ex)
             {
-                types = ex.Types.Where(t => t != null).ToArray()!;
+                types = ex.Types.Where(t => t is not null).ToArray()!;
             }
 
             foreach (var type in types.Where(t => 

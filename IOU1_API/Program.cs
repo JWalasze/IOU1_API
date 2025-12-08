@@ -5,7 +5,6 @@ using Application.Features.Groups.DeleteGroup.Handler;
 using Application.Features.Groups.DeleteGroup.Request;
 using Application.Features.Groups.DeleteGroup.Response;
 using Application.Features.Groups.DeleteGroup.Validator;
-using Application.Features.Groups.GetGroups.Handler;
 using Application.Features.Groups.GetGroups.Query;
 using Application.Features.Groups.GetGroups.Request;
 using Application.Features.Groups.GetGroups.Response;
@@ -53,6 +52,7 @@ using IOU1.Application.Features.Users.Models.Endpoint;
 using IOU1.Application.Mappings;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
+using IOU1.Application.Features.Groups.GetGroups.Handler;
 
 namespace IOU1.API
 {

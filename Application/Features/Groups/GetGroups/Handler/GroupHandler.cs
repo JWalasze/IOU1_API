@@ -1,11 +1,11 @@
-﻿using Application.Features.Groups.GetGroups.Mapper;
-using Application.Features.Groups.GetGroups.Query;
+﻿using Application.Features.Groups.GetGroups.Query;
 using Application.Features.Groups.GetGroups.Request;
 using Application.Features.Groups.GetGroups.Response;
 using FluentValidation;
 using IOU1.Application.Mediator;
+using Mapster;
 
-namespace Application.Features.Groups.GetGroups.Handler;
+namespace IOU1.Application.Features.Groups.GetGroups.Handler;
 
 public class GroupHandler(IGetGroupsQuery repository, IValidator<GroupsRequest> validator) : IRequestHandler<GroupsRequest, GroupsResponse>
 {
@@ -32,7 +32,7 @@ public class GroupHandler(IGetGroupsQuery repository, IValidator<GroupsRequest> 
         //3 return result
         return new GroupsResponse
         {
-            GroupInfoResponse = groupsInfo.MapToDto()
+            GroupInfoResponse = groupsInfo.Adapt<ICollection<GroupInfoResponse>>()
         };
     }
 }

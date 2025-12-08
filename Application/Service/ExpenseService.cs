@@ -1,7 +1,6 @@
 ﻿using Application.Features.Transactions.AddTransaction.Dto;
 using Application.Service;
 using Domain.RepoInterfaces;
-using IOU1.Application.Features.Transactions.AddTransaction.Mapper;
 using IOU1.Application.Features.Transactions.AddTransaction.Request;
 using IOU1.Application.Strategy;
 using IOU1.Domain.Entities;
@@ -9,6 +8,7 @@ using IOU1.Domain.Models;
 using IOU1.Domain.RepoInterfaces;
 using IOU1.Domain.UnitOfWork;
 using IOU1.Persistance.Context;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace IOU1.Application.Service;
@@ -46,7 +46,7 @@ public class ExpenseService(IUnitOfWork unit, IOU1Context context) : IExpenseSer
         }
 
         var currency = await currencyRepository.GetDefaultCurrency();
-        var expense = new Expense(request.Amount, request.Title, request.Description, group, buyer, currency, request.Splits.MapToDto());
+        var expense = new Expense(request.Amount, request.Title, request.Description, group, buyer, currency, request.Splits.Adapt<IEnumerable<Split>>());
 
         var strategy = ChooseStrategy(request, expense);
         strategy.Split();
