@@ -43,16 +43,16 @@ using IOU1.Application.Features.Auth;
 using IOU1.Application.Features.Auth.LogIn.Models;
 using IOU1.Application.Features.Auth.LogIn;
 using IOU1.Infrastructure.Auth;
-using IOU1.Application.Features.Users;
 using IOU1.Domain.Services;
 using MassTransit;
 using IOU1.Infrastructure.Messages;
 using IOU1.Application.Messages;
-using IOU1.Application.Features.Users.Models.Endpoint;
 using IOU1.Application.Mappings;
 using Mapster;
 using Microsoft.Extensions.DependencyInjection;
 using IOU1.Application.Features.Groups.GetGroups.Handler;
+using IOU1.Application.Features.Users.AddUser;
+using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
 
 namespace IOU1.API
 {

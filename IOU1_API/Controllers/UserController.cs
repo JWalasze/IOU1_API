@@ -1,5 +1,5 @@
 ﻿using Application.Mediator;
-using IOU1.Application.Features.Users.Models.Endpoint;
+using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
 using IOU1_API.Controllers;
 using Microsoft.AspNetCore.Mvc;
 

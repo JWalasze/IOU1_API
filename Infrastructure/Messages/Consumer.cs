@@ -1,4 +1,4 @@
-﻿using IOU1.Application.Features.Users;
+﻿using IOU1.Application.Features.Users.AddUser;
 using MassTransit;
 
 namespace IOU1.Infrastructure.Messages;

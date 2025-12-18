@@ -3,13 +3,15 @@ using FluentValidation;
 using FluentValidation.Results;
 using IOU1.Domain.Interfaces;
 using IOU1.Domain.Models;
+using MapsterMapper;
 
 namespace IOU1.Application.Mediator;
 
-public abstract class RequestHandler<TRequest, TResponse>(IValidator<TRequest> validator) : IRequestHandler<TRequest, TResponse>
+public abstract class RequestHandler<TRequest, TResponse>(IValidator<TRequest> validator, IMapper mapper) : IRequestHandler<TRequest, TResponse>
     where TRequest : IRequest where TResponse : IResponse, new()
 {
     protected readonly IValidator<TRequest> _validator = validator;
+    protected readonly IMapper _mapper = mapper;
 
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken = default)
     {
@@ -20,7 +22,7 @@ public abstract class RequestHandler<TRequest, TResponse>(IValidator<TRequest> v
         }
 
         var result = await Do(request, cancellationToken);
-        return (result is not null && result.IsSuccess) switch
+        return result.IsSuccess switch
         {
             true => MapSuccess(result),
             false => MapFailure(result)
@@ -41,9 +43,15 @@ public abstract class RequestHandler<TRequest, TResponse>(IValidator<TRequest> v
         };
     }
 
-    protected abstract TResponse MapSuccess(IResult result);
+    protected virtual TResponse MapSuccess(IResult result)
+    {
+        return _mapper.Map<TResponse>(result);
+    }
 
-    protected abstract TResponse MapFailure(IResult? result);
+    protected virtual TResponse MapFailure(IResult result)
+    {
+        return _mapper.Map<TResponse>(result);
+    }
 
     protected abstract Task<IResult> Do(TRequest request, CancellationToken cancellationToken = default);
 }

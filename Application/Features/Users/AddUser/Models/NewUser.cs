@@ -1,4 +1,4 @@
-﻿namespace IOU1.Application.Features.Users.Models;
+﻿namespace IOU1.Application.Features.Users.AddUser.Models;
 
 public record NewUser(
     string FirstName,

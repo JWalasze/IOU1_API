@@ -2,9 +2,9 @@
 
 namespace IOU1.Domain.Models;
 
-public class Result<T> : IResult<T> where T : class
+public class Result<T> : IResult<T> where T : class?
 {
-    public T Data { get; init; }
+    public T? Data { get; init; }
     public bool IsSuccess { get; init; }
     public string? ErrorMessage { get; init; }
 

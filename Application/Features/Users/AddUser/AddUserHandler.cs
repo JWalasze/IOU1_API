@@ -1,13 +1,14 @@
 ﻿using FluentValidation;
-using IOU1.Application.Features.Users.Models.Endpoint;
+using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
 using IOU1.Application.Mediator;
 using IOU1.Application.Service;
-using IOU1.Domain.Entities;
 using IOU1.Domain.Interfaces;
+using Mapster;
+using MapsterMapper;
 
-namespace IOU1.Application.Features.Users;
+namespace IOU1.Application.Features.Users.AddUser;
 
-public class AddUserHandler(IValidator<AddUserRequest> validator, IUserService userService) : RequestHandler<AddUserRequest, AddUserResponse>(validator)
+public class AddUserHandler(IValidator<AddUserRequest> validator, IUserService userService, IMapper mapper) : RequestHandler<AddUserRequest, AddUserResponse>(validator, mapper)
 {
     private readonly IUserService _userService = userService;
 
@@ -25,13 +26,11 @@ public class AddUserHandler(IValidator<AddUserRequest> validator, IUserService u
 
     protected override AddUserResponse MapFailure(IResult? result)
     {
-        var testMaper = new UserMapper();
-        return testMaper.Map<AddUserResponse>(result);
+        return result.Adapt<AddUserResponse>();
     }
 
     protected override AddUserResponse MapSuccess(IResult result)
     {
-        var testMaper = new UserMapper();
-        return testMaper.Map<AddUserResponse>(((IResult<User>)result).Data); 
+        return result.Adapt<AddUserResponse>();
     }
 }

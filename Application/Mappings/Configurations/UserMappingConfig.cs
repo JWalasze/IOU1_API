@@ -1,4 +1,4 @@
-﻿using IOU1.Application.Features.Users.Models.Endpoint;
+﻿using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
 using IOU1.Domain.Entities;
 using Mapster;
 

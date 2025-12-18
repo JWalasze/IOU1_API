@@ -4,10 +4,11 @@ using IOU1.Application.Features.Auth.LogIn.Models;
 using IOU1.Application.Mediator;
 using IOU1.Domain.Interfaces;
 using IOU1.Domain.Models;
+using MapsterMapper;
 
 namespace IOU1.Application.Features.Auth.LogIn;
 
-public class LogInHandler(IValidator<LogInRequest> validator, IAuthService authService) : RequestHandler<LogInRequest, LogInResponse>(validator)
+public class LogInHandler(IValidator<LogInRequest> validator, IMapper mapper, IAuthService authService) : RequestHandler<LogInRequest, LogInResponse>(validator, mapper)
 {
     private readonly IAuthService _authService = authService;
 
@@ -15,20 +16,5 @@ public class LogInHandler(IValidator<LogInRequest> validator, IAuthService authS
     {
         var token = await _authService.LogIn(new(request.Login, request.Password));
         return Result.Success();
-    }
-
-    protected override LogInResponse MapFailure(IResult? result)
-    {
-        throw new NotImplementedException();
-    }
-
-    protected override LogInResponse MapFailure(ValidationResult result)
-    {
-        throw new NotImplementedException();
-    }
-
-    protected override LogInResponse MapSuccess(IResult result)
-    {
-        throw new NotImplementedException();
     }
 }

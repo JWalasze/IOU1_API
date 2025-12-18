@@ -5,10 +5,11 @@ using IOU1.Application.Mediator;
 using IOU1.Application.Service;
 using IOU1.Domain.Interfaces;
 using IOU1.Domain.Models;
+using MapsterMapper;
 
 namespace IOU1.Application.Features.Invitations.UseInvitationLink;
 
-public class UseInvitationLinkHandler(IInvitationLinkService generateInvitationService, IValidator<UseInvitationLinkRequest> validator) : RequestHandler<UseInvitationLinkRequest, UseInvitationLinkResponse>(validator)
+public class UseInvitationLinkHandler(IValidator<UseInvitationLinkRequest> validator, IMapper mapper, IInvitationLinkService generateInvitationService) : RequestHandler<UseInvitationLinkRequest, UseInvitationLinkResponse>(validator, mapper)
 {
     private readonly IInvitationLinkService _generateInvitationService = generateInvitationService;
 

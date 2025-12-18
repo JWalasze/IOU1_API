@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using IOU1.Application.Features.Users.Models.Endpoint;
+using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
 
-namespace IOU1.Application.Features.Users;
+namespace IOU1.Application.Features.Users.AddUser;
 
 public class AddUserValidator : AbstractValidator<AddUserRequest>
 {

@@ -2,8 +2,6 @@
 using IOU1.Domain.Models;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace IOU1.Infrastructure.Auth;
 
@@ -23,7 +21,8 @@ public class AuthService(IOU1Context context) : IAuthService
                 ?? throw new UserNotFoundException($"User with login {credentials.Login} couldn't be found.");
 
             //Into seperate service to be able to change implementation
-            var hashedInputPassword = BCrypt.Net.BCrypt.HashPassword(credentials.Password);
+            var salt = BCrypt.Net.BCrypt.GenerateSalt();
+            var hashedInputPassword = BCrypt.Net.BCrypt.HashPassword(credentials.Password, salt);
             var isVerified = BCrypt.Net.BCrypt.Verify(credentials.Password, hashedInputPassword);
 
             return Result<Token>.Success(new Token());
