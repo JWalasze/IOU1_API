@@ -49,7 +49,6 @@ using IOU1.Infrastructure.Messages;
 using IOU1.Application.Messages;
 using IOU1.Application.Mappings;
 using Mapster;
-using Microsoft.Extensions.DependencyInjection;
 using IOU1.Application.Features.Groups.GetGroups.Handler;
 using IOU1.Application.Features.Users.AddUser;
 using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
@@ -76,7 +75,10 @@ namespace IOU1.API
             builder.Services.AddSingleton<IValidator<GenerateInvitationKeyRequest>, GenerateInvitationKeyValidator>();
             builder.Services.AddSingleton<IValidator<LogInRequest>, LogInValidator>();
             builder.Services.AddSingleton<IValidator<AddUserRequest>, AddUserValidator>();
-            builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>(); 
+
+            builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            builder.Services.AddSingleton<IPasswordComparer, PasswordComparer>();
+
             builder.Services.AddSingleton<ITokenProvider, JwtTokenProvider>();
 
             #endregion
@@ -181,7 +183,6 @@ namespace IOU1.API
                 .CreateLogger();
 
             Log.Logger.Error("TEST TEST TEST");
-
             
             builder.Host.UseSerilog((ctx, services, cfg) => cfg
                 .MinimumLevel.Debug()
