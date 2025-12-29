@@ -1,5 +1,5 @@
 ﻿using IOU1.Domain.Entities;
-using IOU1.Domain.Services;
+using IOU1.Domain.Services.Crypto;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -7,7 +7,7 @@ namespace IOU1.Infrastructure.Auth;
 
 public class PasswordHasher : IPasswordHasher
 {
-    public static string GenerateHash(string source, string salt)
+    public string GenerateHash(string source, string salt)
     {
         var hash = Rfc2898DeriveBytes.Pbkdf2(
             Encoding.UTF8.GetBytes(source),
@@ -16,28 +16,16 @@ public class PasswordHasher : IPasswordHasher
             HashAlgorithmName.SHA512,
             64);
 
-        var hashedSource = Convert.ToBase64String(hash);
-
-        return hashedSource;
+        return Convert.ToBase64String(hash);
     }
 
-    public static string GenerateSalt()
+    public string GenerateSalt()
     {
         var rng = RandomNumberGenerator.Create();
-        byte[] salt = new byte[User.SaltBytesMaxLength];
+        var salt = new byte[User.SaltBytesMaxLength];
 
         rng.GetBytes(salt);
 
         return Convert.ToBase64String(salt);
-    }
-
-    public string Hash(string password)
-    {
-        return BCrypt.Net.BCrypt.HashPassword(password);
-    }
-
-    public bool Verify(string inputPassword, string hashedPassword)
-    {
-        return BCrypt.Net.BCrypt.Verify(inputPassword, hashedPassword);
     }
 }

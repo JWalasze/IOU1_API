@@ -2,4 +2,5 @@
 
 public record LogInResponse : EndpointResponse
 {
+    public string? Token { get; init; }
 }

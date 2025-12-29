@@ -1,4 +1,5 @@
 ﻿using IOU1.Domain.Entities;
+using IOU1.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -39,11 +40,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasMany(u => u.MemberGroups)
                .WithOne(gm => gm.User);
 
-        builder.ComplexProperty(u => u.Email, u =>
-        {
-            u.Property(e => e.EmailAddress)
-             .HasColumnName("Email")
-             .IsRequired();
-        });
+        builder.Property(u => u.Email)
+               .HasConversion(
+                   v => v.EmailAddress,
+                   v => new Email(v))
+               .HasColumnName("Email")
+               .IsRequired();
     }
 }

@@ -3,6 +3,7 @@ using IOU1.Domain.Entities;
 using IOU1.Domain.Exceptions;
 using IOU1.Domain.Models;
 using IOU1.Domain.Services;
+using IOU1.Domain.Services.Crypto;
 using IOU1.Persistance.Context;
 using Microsoft.Extensions.Logging;
 
@@ -46,12 +47,12 @@ public class UserService(IOU1Context context, ILogger<UserService> logger, IPass
         }
         catch(CreatingUserException ex)
         {
-            _logger.LogError(ex, "An error occurred while adding a new user. User data: {UserData}", @newUser);
+            _logger.LogError(ex, "An error occurred while adding a new user. User data: {@UserData}", newUser);
             return Result<User?>.Failure(ex.Message);
         }
         catch(Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while adding a new user. User data: {UserData}", @newUser);
+            _logger.LogError(ex, "An unexpected error occurred while adding a new user. User data: {@UserData}", newUser);
             return Result<User?>.Failure($"An error occurred while adding the user.");
         }
     }

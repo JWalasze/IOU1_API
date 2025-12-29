@@ -53,6 +53,7 @@ using Microsoft.Extensions.DependencyInjection;
 using IOU1.Application.Features.Groups.GetGroups.Handler;
 using IOU1.Application.Features.Users.AddUser;
 using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
+using IOU1.Domain.Services.Crypto;
 
 namespace IOU1.API
 {
@@ -76,6 +77,8 @@ namespace IOU1.API
             builder.Services.AddSingleton<IValidator<LogInRequest>, LogInValidator>();
             builder.Services.AddSingleton<IValidator<AddUserRequest>, AddUserValidator>();
             builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>(); 
+            builder.Services.AddSingleton<ITokenProvider, JwtTokenProvider>();
+
             #endregion
 
             #region ScopedServices
@@ -124,6 +127,7 @@ namespace IOU1.API
             #region Options
 
             builder.Services.Configure<LinkInvitation>(builder.Configuration.GetSection("LinkInvitation"));
+            builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("Jwt"));
 
             #endregion
 

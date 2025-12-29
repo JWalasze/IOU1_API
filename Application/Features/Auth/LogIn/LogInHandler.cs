@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
 using IOU1.Application.Features.Auth.LogIn.Models;
 using IOU1.Application.Mediator;
 using IOU1.Domain.Interfaces;
@@ -15,6 +14,6 @@ public class LogInHandler(IValidator<LogInRequest> validator, IMapper mapper, IA
     protected override async Task<IResult> Do(LogInRequest request, CancellationToken cancellationToken = default)
     {
         var token = await _authService.LogIn(new(request.Login, request.Password));
-        return Result.Success();
+        return Result<Token?>.Success(token.Data);
     }
 }

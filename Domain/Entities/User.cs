@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using IOU1.Domain.Base;
 using IOU1.Domain.Exceptions;
-using IOU1.Domain.Services;
+using IOU1.Domain.Services.Crypto;
 using IOU1.Domain.ValueObjects;
 
 namespace IOU1.Domain.Entities;
@@ -24,7 +24,28 @@ public class User : Entity
 
     public string FullName => $"{FirstName} {LastName}";
 
-    private User() { }
+    //private User() { }
+
+    public User(
+        long id,
+        string firstName,
+        string lastName,
+        Email email,
+        string login,
+        string passwordHash,
+        string passwordSalt,
+        DateTime createdAt
+    )
+    {
+        Id = id;
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        Login = login;
+        PasswordHash = passwordHash;
+        PasswordSalt = passwordSalt;
+        CreatedAt = createdAt;
+    }
 
     public User(
         string firstName,
@@ -60,12 +81,10 @@ public class User : Entity
             throw new CreatingUserException("Password cannot be empty.");
         }
 
-        PasswordHash = passwordHasher.Hash(password);
+        PasswordSalt = passwordHasher.GenerateSalt();
+        PasswordHash = passwordHasher.GenerateHash(password, PasswordSalt);
         Email = email;
         CreatedAt = DateTime.UtcNow;
-
-        //TEMP
-        PasswordSalt = "1234";
     }
 
     public User(
