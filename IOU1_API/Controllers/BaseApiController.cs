@@ -4,12 +4,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IOU1.API.Controllers;
 
-public class BaseApiController : ControllerBase
+public abstract class BaseApiController : ControllerBase
 {
     [NonAction]
     protected IActionResult CreateEndpointResponse(IHandlerResponse<IResponse> response)
     {
-        //TODO Logic if there is a failure
-        return Ok(response);
+        var errorList = response.Errors.ToList();
+        if (errorList.Count == 0)
+        {
+            return Ok(response);
+        }
+
+        if (errorList.Count == 1)
+        {
+            var problemDetail = errorList[0];
+            //TODO Create a singleton which will hold error code mapped to the endpoint problem details
+            return NotFound(problemDetail);
+        }
+
+        return BadRequest(response.Errors);
     }
 }
