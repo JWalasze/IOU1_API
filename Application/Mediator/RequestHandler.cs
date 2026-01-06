@@ -1,19 +1,21 @@
 ﻿using Application.Mediator;
 using FluentValidation;
-using FluentValidation.Results;
 using IOU1.Domain.Interfaces;
 using IOU1.Domain.Models;
+using Mapster;
 using MapsterMapper;
 
 namespace IOU1.Application.Mediator;
 
-public abstract class RequestHandler<TRequest, TResponse>(IValidator<TRequest> validator, IMapper mapper) : IRequestHandler<TRequest, TResponse>
-    where TRequest : IRequest where TResponse : IResponse, new()
+public abstract class RequestHandler<TRequest, TResponse>(IValidator<TRequest> validator, IMapper mapper)
+    : IRequestHandler<TRequest, TResponse>
+    where TRequest : class, IRequest
+    where TResponse : class, IResponse
 {
     protected readonly IValidator<TRequest> _validator = validator;
     protected readonly IMapper _mapper = mapper;
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken = default)
+    public async Task<IHandlerResponse<TResponse>> Handle(TRequest request, CancellationToken cancellationToken = default)
     {
         var validationResult = await Validate(request, cancellationToken);
         if (!validationResult.IsValid)
@@ -29,28 +31,42 @@ public abstract class RequestHandler<TRequest, TResponse>(IValidator<TRequest> v
         };
     }
 
-    //TODO Validate should't be coupled with ValidationResult but with some abstraction
-    protected virtual async Task<ValidationResult> Validate(TRequest request, CancellationToken cancellationToken = default)
+    protected virtual async Task<IValidateResult> Validate(TRequest request, CancellationToken cancellationToken = default)
     {
-        return await _validator.ValidateAsync(request, cancellationToken);
+        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+        return _mapper.Map<ValidateResult>(validationResult);
     }
 
-    protected virtual TResponse MapFailure(ValidationResult result)
+    protected virtual IHandlerResponse<TResponse> MapFailure(IValidateResult result)
     {
-        return new()
+        return new HandlerResponse<TResponse>
         {
-            Errors = [..result.Errors.Select(e => new ProblemDetails(e.ErrorCode, e.ErrorMessage))]
+            Data = null,
+            Errors = result.Errors
         };
     }
 
-    protected virtual TResponse MapSuccess(IResult result)
+    protected virtual IHandlerResponse<TResponse> MapSuccess(IResult result)
     {
-        return _mapper.Map<TResponse>(result);
+        var handlerResponseData = result.Adapt<TResponse>();
+        return new HandlerResponse<TResponse>
+        {
+            Data = handlerResponseData,
+            Errors = []
+        };
     }
 
-    protected virtual TResponse MapFailure(IResult result)
+    protected virtual IHandlerResponse<TResponse> MapFailure(IResult result)
     {
-        return _mapper.Map<TResponse>(result);
+        return new HandlerResponse<TResponse>
+        {
+            Data = null,
+            Errors = [new ProblemDetails
+            (
+                result.ErrorCode ?? "UNKNOWN_ERROR",
+                result.ErrorMessage ?? "An unknown error occurred."
+            )]
+        };
     }
 
     protected abstract Task<IResult> Do(TRequest request, CancellationToken cancellationToken = default);

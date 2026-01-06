@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
 using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
 using IOU1.Application.Mediator;
 using IOU1.Application.Service;
@@ -19,27 +18,5 @@ public class UseInvitationLinkHandler(IValidator<UseInvitationLinkRequest> valid
         await _generateInvitationService.UseDirectInvitation((long)request.InvitationId);
 
         return Result.Success();
-    }
-
-    protected override UseInvitationLinkResponse MapFailure(IResult? result)
-    {
-        return new UseInvitationLinkResponse()
-        {
-            ErrorMessage = result?.ErrorMessage
-        };
-    }
-
-    protected override UseInvitationLinkResponse MapFailure(ValidationResult result)
-    {
-        return new UseInvitationLinkResponse()
-        {
-            ErrorMessage = result.Errors.FirstOrDefault()?.ErrorMessage,
-        };
-    }
-
-    //If we have a mapper as class...
-    protected override UseInvitationLinkResponse MapSuccess(IResult result)
-    {
-        return new UseInvitationLinkResponse();
     }
 }

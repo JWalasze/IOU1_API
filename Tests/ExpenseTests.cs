@@ -149,7 +149,7 @@ public class ExpenseTests
         sut.Transactions.Count(t => t.Borrower!.Id == alice.Id).Should().Be(2);
         sut.Transactions.Count(t => t.Borrower!.Id == bob.Id).Should().Be(1);
         sut.Transactions.Count(t => t.Borrower!.Id == carol.Id).Should().Be(1);
-
+         
         var aliceTransaction = sut.Transactions.Where(t => t.Borrower!.Id == alice.Id).ToList();
         var bobTransaction = sut.Transactions.First(t => t.Borrower!.Id == bob.Id);
         var carolTransaction = sut.Transactions.First(t => t.Borrower!.Id == carol.Id);

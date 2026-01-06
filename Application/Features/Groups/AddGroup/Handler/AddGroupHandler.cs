@@ -3,30 +3,18 @@ using Application.Features.Groups.AddGroup.Response;
 using Application.Service;
 using FluentValidation;
 using IOU1.Application.Mediator;
+using IOU1.Domain.Interfaces;
+using MapsterMapper;
 
-namespace Application.Features.Groups.AddGroup.Handler;
+namespace IOU1.Application.Features.Groups.AddGroup.Handler;
 
-public class AddGroupHandler(IValidator<AddGroupRequest> validator, IGroupService groupService) : IRequestHandler<AddGroupRequest, AddGroupResponse>
+public class AddGroupHandler(IMapper mapper, IValidator<AddGroupRequest> validator, IGroupService groupService)
+    : RequestHandler<AddGroupRequest, AddGroupResponse>(validator, mapper)
 {
-    private readonly IValidator<AddGroupRequest> _validator = validator;
     private readonly IGroupService _groupService = groupService;
 
-    public async Task<AddGroupResponse> Handle(AddGroupRequest request, CancellationToken cancellationToken)
+    protected override async Task<IResult> Do(AddGroupRequest request, CancellationToken cancellationToken)
     {
-        //1 Validation
-        var validationResult = _validator.Validate(request);
-        if (!validationResult.IsValid)
-        {
-            return new()
-            {
-                ErrorMessage = validationResult.Errors.First().ErrorMessage
-            };
-        }
-
-        //2 Bussiness logic
-        var result = await _groupService.AddGroup(request.MemberIds, request.OwnerId, request.Description, cancellationToken);
-
-        //3 Return response
-        return new AddGroupResponse();
+        return await _groupService.AddGroup(request.MemberIds, request.OwnerId, request.Description, cancellationToken);
     }
 }

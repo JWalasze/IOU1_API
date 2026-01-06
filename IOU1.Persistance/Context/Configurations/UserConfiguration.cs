@@ -1,5 +1,4 @@
 ﻿using IOU1.Domain.Entities;
-using IOU1.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -34,17 +33,21 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                .HasColumnName("AddDate")
                .IsRequired();
 
+        builder.Property(u => u.IsDeleted)
+               .HasColumnName("IsDeleted")
+               .IsRequired();
+
         builder.HasMany(u => u.OwnedGroups)
                .WithOne(g => g.Owner);
 
         builder.HasMany(u => u.MemberGroups)
                .WithOne(gm => gm.User);
 
-        builder.Property(u => u.Email)
-               .HasConversion(
-                   v => v.EmailAddress,
-                   v => new Email(v))
-               .HasColumnName("Email")
-               .IsRequired();
+        builder.OwnsOne(u => u.Email, eb =>
+        {
+            eb.Property(e => e.EmailAddress)
+              .HasColumnName("Email")
+              .IsRequired();
+        });
     }
 }

@@ -3,36 +3,20 @@ using Application.Service;
 using FluentValidation;
 using IOU1.Application.Features.Transactions.AddTransaction.Request;
 using IOU1.Application.Mediator;
+using IOU1.Domain.Interfaces;
+using MapsterMapper;
 
 namespace IOU1.Application.Features.Transactions.AddTransaction.Handler;
 
-public class AddTransactionHandler(IValidator<AddTransactionRequest> validator, IExpenseService expenseService) : IRequestHandler<AddTransactionRequest, AddTransactionResponse>
+public class AddTransactionHandler(
+    IExpenseService expenseService,
+    IValidator<AddTransactionRequest> validator,
+    IMapper mapper) : RequestHandler<AddTransactionRequest, AddTransactionResponse>(validator, mapper)
 {
-    private readonly IValidator<AddTransactionRequest> _validator = validator;
     private readonly IExpenseService _expenseService = expenseService;
 
-    public async Task<AddTransactionResponse> Handle(AddTransactionRequest request, CancellationToken cancellationToken = default)
+    protected override async Task<IResult> Do(AddTransactionRequest request, CancellationToken cancellationToken = default)
     {
-        var validationResult = _validator.Validate(request);
-        if (!validationResult.IsValid)
-        {
-            return new()
-            {
-                ErrorMessage = validationResult.Errors.First().ErrorMessage,
-            };
-        }
-
-        var result = await _expenseService.AddExpense(request);
-        if (!result.IsSuccess)
-        {
-            return new()
-            {
-                ErrorMessage = result.ErrorMessage,
-            };
-        }
-
-        return new()
-        {
-        };
+        return await _expenseService.AddExpense(request);
     }
 }

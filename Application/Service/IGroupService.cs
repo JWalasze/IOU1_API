@@ -6,7 +6,7 @@ namespace Application.Service;
 
 public interface IGroupService
 {
-    Task<Result<AddedGroupDto?>> AddGroup(IEnumerable<long> memberIds, long ownerId, string description, CancellationToken cancellationToken = default);
+    Task<Result<AddedGroupDto?>> AddGroup(IEnumerable<long> memberIds, long ownerId, string? description, CancellationToken cancellationToken = default);
 
     Task<Result<DeleteGroupDto?>> DeleteGroup(long groupId, CancellationToken cancellationToken = default);
 }

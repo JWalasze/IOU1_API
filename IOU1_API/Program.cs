@@ -1,14 +1,11 @@
-using Application.Features.Groups.AddGroup.Handler;
 using Application.Features.Groups.AddGroup.Request;
 using Application.Features.Groups.AddGroup.Response;
-using Application.Features.Groups.DeleteGroup.Handler;
 using Application.Features.Groups.DeleteGroup.Request;
 using Application.Features.Groups.DeleteGroup.Response;
 using Application.Features.Groups.DeleteGroup.Validator;
 using Application.Features.Groups.GetGroups.Query;
 using Application.Features.Groups.GetGroups.Request;
 using Application.Features.Groups.GetGroups.Response;
-using Application.Mediator;
 using Application.Service;
 using Domain.RepoInterfaces;
 using Elastic.Channels;
@@ -16,43 +13,42 @@ using Elastic.Ingest.Elasticsearch;
 using Elastic.Ingest.Elasticsearch.DataStreams;
 using Elastic.Serilog.Sinks;
 using FluentValidation;
-using Infrastructure.Mediator;
+using IOU1.Application.Features.Auth;
+using IOU1.Application.Features.Auth.LogIn;
+using IOU1.Application.Features.Auth.LogIn.Models;
+using IOU1.Application.Features.Groups.AddGroup.Handler;
+using IOU1.Application.Features.Groups.AddGroup.Validator;
+using IOU1.Application.Features.Groups.DeleteGroup.Handler;
+using IOU1.Application.Features.Groups.GetGroups.Handler;
+using IOU1.Application.Features.Groups.GetGroups.Validator;
 using IOU1.Application.Features.Invitations.DirectInvitation;
 using IOU1.Application.Features.Invitations.DirectInvitation.Models;
-using IOU1.Application.Features.Groups.AddGroup.Validator;
-using IOU1.Application.Features.Groups.GetGroups.Validator;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Handler;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Validator;
+using IOU1.Application.Features.Invitations.UseInvitationLink;
+using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
+using IOU1.Application.Features.Users.AddUser;
+using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
+using IOU1.Application.Mappings;
+using IOU1.Application.Mediator;
 using IOU1.Application.Options;
 using IOU1.Application.Service;
 using IOU1.Domain.Entities;
 using IOU1.Domain.RepoInterfaces;
+using IOU1.Domain.Services;
+using IOU1.Domain.Services.Crypto;
 using IOU1.Domain.UnitOfWork;
+using IOU1.Infrastructure.Auth;
+using IOU1.Infrastructure.Mediator;
 using IOU1.Infrastructure.Queries;
 using IOU1.Infrastructure.Repositories;
 using IOU1.Infrastructure.UnitOfWork;
 using IOU1.Persistance.Context;
 using IOU1_API.Services;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
-using IOU1.Application.Features.Invitations.UseInvitationLink;
-using IOU1.Application.Mediator;
-using IOU1.Application.Features.Auth;
-using IOU1.Application.Features.Auth.LogIn.Models;
-using IOU1.Application.Features.Auth.LogIn;
-using IOU1.Infrastructure.Auth;
-using IOU1.Domain.Services;
-using MassTransit;
-using IOU1.Infrastructure.Messages;
-using IOU1.Application.Messages;
-using IOU1.Application.Mappings;
-using Mapster;
-using IOU1.Application.Features.Groups.GetGroups.Handler;
-using IOU1.Application.Features.Users.AddUser;
-using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
-using IOU1.Domain.Services.Crypto;
 
 namespace IOU1.API
 {
@@ -103,27 +99,25 @@ namespace IOU1.API
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserChecker, UserChecker>();
 
-            builder.Services.AddScoped<IRequestHandler<GroupsRequest, GroupsResponse>, GroupHandler>();
-            builder.Services.AddScoped<IRequestHandler<AddGroupRequest, AddGroupResponse>, AddGroupHandler>();
-            builder.Services.AddScoped<IRequestHandler<DirectInvitationCreationRequest, DirectInvitationCreationResponse>, DirectInvitationCreationHandler>();
-            builder.Services.AddScoped<IRequestHandler<DeleteGroupRequest, DeleteGroupResponse>, DeleteGroupHandler>();
-            builder.Services.AddScoped<IRequestHandler<GenerateInvitationKeyRequest, UseInvitationLinkResponse>, GenerateInvitationKeyHandler>();
-            builder.Services.AddScoped<IRequestHandler<UseInvitationLinkRequest, UseInvitationLinkResponse>, UseInvitationLinkHandler>();
-            builder.Services.AddScoped<IRequestHandler<LogInRequest, LogInResponse>, LogInHandler>();
-            builder.Services.AddScoped<IRequestHandler<AddUserRequest, AddUserResponse>, AddUserHandler>();
-
             builder.Services.AddScoped<IValidator<DirectInvitationCreationRequest>, DirectInvitationCreationValidator>();
 
             builder.Services.AddScoped<IGetGroupsQuery, GetGroupsQuery>();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            builder.Services.AddScoped<IServiceBus, ServiceBus>();
+            //builder.Services.AddScoped<IServiceBus, ServiceBus>();
 
             #endregion
 
             #region TransientServices
-
+            builder.Services.AddTransient<IRequestHandler<GroupsRequest, GroupsResponse>, GroupHandler>();
+            builder.Services.AddTransient<IRequestHandler<AddGroupRequest, AddGroupResponse>, AddGroupHandler>();
+            builder.Services.AddTransient<IRequestHandler<DirectInvitationCreationRequest, DirectInvitationCreationResponse>, DirectInvitationCreationHandler>();
+            builder.Services.AddTransient<IRequestHandler<DeleteGroupRequest, DeleteGroupResponse>, DeleteGroupHandler>();
+            builder.Services.AddTransient<IRequestHandler<GenerateInvitationKeyRequest, UseInvitationLinkResponse>, GenerateInvitationKeyHandler>();
+            builder.Services.AddTransient<IRequestHandler<UseInvitationLinkRequest, UseInvitationLinkResponse>, UseInvitationLinkHandler>();
+            builder.Services.AddTransient<IRequestHandler<LogInRequest, LogInResponse>, LogInHandler>();
+            builder.Services.AddTransient<IRequestHandler<AddUserRequest, AddUserResponse>, AddUserHandler>();
             #endregion
 
             #region Options
@@ -135,22 +129,22 @@ namespace IOU1.API
 
             #region MassTransit
 
-            builder.Services.AddMassTransit(x =>
-            {
-                x.AddConsumer<ProductAddedEventConsumer>();
-                x.UsingRabbitMq((context, cfg) =>
-                {
+            //builder.Services.AddMassTransit(x =>
+            //{
+            //    x.AddConsumer<ProductAddedEventConsumer>();
+            //    x.UsingRabbitMq((context, cfg) =>
+            //    {
 
-                    cfg.Host("localhost", "/", h => {
-                        h.Username("kalo");
-                        h.Password("kalo");
-                    });
+            //        cfg.Host("localhost", "/", h => {
+            //            h.Username("kalo");
+            //            h.Password("kalo");
+            //        });
 
-                    //cfg.ConfigureEndpoints(context);
-                    cfg.ReceiveEndpoint("TestQueue",
-                        e => { e.ConfigureConsumer<ProductAddedEventConsumer>(context); });
-                });
-            });
+            //        //cfg.ConfigureEndpoints(context);
+            //        cfg.ReceiveEndpoint("TestQueue",
+            //            e => { e.ConfigureConsumer<ProductAddedEventConsumer>(context); });
+            //    });
+            //});
 
             #endregion
 
@@ -183,7 +177,7 @@ namespace IOU1.API
                 .CreateLogger();
 
             Log.Logger.Error("TEST TEST TEST");
-            
+
             builder.Host.UseSerilog((ctx, services, cfg) => cfg
                 .MinimumLevel.Debug()
                 .Enrich.FromLogContext()

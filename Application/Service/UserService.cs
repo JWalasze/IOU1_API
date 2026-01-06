@@ -32,7 +32,7 @@ public class UserService(IOU1Context context, ILogger<UserService> logger, IPass
                 return Result<User?>.Failure("The email is already taken.");
             }
 
-            var user = new User(
+            var user = User.Create(
                 newUser.FirstName,
                 newUser.LastName,
                 new(newUser.Email),
@@ -45,12 +45,12 @@ public class UserService(IOU1Context context, ILogger<UserService> logger, IPass
 
             return Result<User?>.Success(user);
         }
-        catch(CreatingUserException ex)
+        catch (CreatingUserException ex)
         {
             _logger.LogError(ex, "An error occurred while adding a new user. User data: {@UserData}", newUser);
             return Result<User?>.Failure(ex.Message);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             _logger.LogError(ex, "An unexpected error occurred while adding a new user. User data: {@UserData}", newUser);
             return Result<User?>.Failure($"An error occurred while adding the user.");

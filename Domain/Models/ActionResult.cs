@@ -9,6 +9,8 @@ public class Result : IResult
 
     public IEnumerable<ProblemDetails> Errors { get; } = [];
 
+    public string? ErrorCode => throw new NotImplementedException();
+
     private Result(bool isSuccess, string? errorMessage)
     {
         if (isSuccess && !string.IsNullOrWhiteSpace(errorMessage))

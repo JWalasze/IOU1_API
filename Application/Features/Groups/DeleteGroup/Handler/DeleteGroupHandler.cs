@@ -3,36 +3,17 @@ using Application.Features.Groups.DeleteGroup.Response;
 using Application.Service;
 using FluentValidation;
 using IOU1.Application.Mediator;
+using IOU1.Domain.Interfaces;
+using MapsterMapper;
 
-namespace Application.Features.Groups.DeleteGroup.Handler;
+namespace IOU1.Application.Features.Groups.DeleteGroup.Handler;
 
-public class DeleteGroupHandler(IValidator<DeleteGroupRequest> validator, IGroupService groupService) : IRequestHandler<DeleteGroupRequest, DeleteGroupResponse>
+public class DeleteGroupHandler(IValidator<DeleteGroupRequest> validator, IMapper mapper, IGroupService groupService) : RequestHandler<DeleteGroupRequest, DeleteGroupResponse>(validator, mapper)
 {
-    private readonly IValidator<DeleteGroupRequest> _validator = validator;
     private readonly IGroupService _groupService = groupService;
 
-    public async Task<DeleteGroupResponse> Handle(DeleteGroupRequest request, CancellationToken cancellationToken = default)
+    protected override async Task<IResult> Do(DeleteGroupRequest request, CancellationToken cancellationToken = default)
     {
-        var validationResult = _validator.Validate(request);
-        if (!validationResult.IsValid)
-        {
-            return new()
-            {
-                ErrorMessage = validationResult.Errors.First().ErrorMessage
-            };
-        }
-
-        var result = await _groupService.DeleteGroup(request.GroupId, cancellationToken);
-        if (!result.IsSuccess)
-        {
-            return new()
-            {
-                ErrorMessage = result.ErrorMessage
-            };
-        }
-
-        return new()
-        {
-        };
+        return await _groupService.DeleteGroup(request.GroupId, cancellationToken);
     }
 }

@@ -3,7 +3,8 @@
 namespace IOU1.Application.Mediator;
 
 public interface IRequestHandler<TRequest, TResponse>
-    where TRequest : IRequest where TResponse : IResponse
+    where TRequest : class, IRequest
+    where TResponse : class, IResponse
 {
-    Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken = default);
+    Task<IHandlerResponse<TResponse>> Handle(TRequest request, CancellationToken cancellationToken = default);
 }

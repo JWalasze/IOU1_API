@@ -1,11 +1,13 @@
-﻿using IOU1.Application.Mediator;
-using IOU1.Domain.Models;
+﻿using IOU1.Domain.Models;
 
 namespace IOU1.Application;
 
-//WHat if it would be a generic version like EndpointResponse<TData>
-public record EndpointResponse : IResponse
+public class HandlerResponse<T>
+    : IHandlerResponse<T>
+    where T : class
 {
+    public T? Data { get; init; }
+
     public string? ErrorMessage { get; init; }
 
     public bool IsSuccess => !Errors.Any();

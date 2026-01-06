@@ -18,36 +18,16 @@ public class User : Entity
     public string Login { get; } = null!;
     public string PasswordHash { get; } = null!;
     public string PasswordSalt { get; } = null!;
+    public bool IsDeleted { get; }
 
     public ICollection<Group> OwnedGroups { get; } = [];
     public ICollection<GroupMember> MemberGroups { get; } = [];
 
     public string FullName => $"{FirstName} {LastName}";
 
-    //private User() { }
+    private User() { }
 
-    public User(
-        long id,
-        string firstName,
-        string lastName,
-        Email email,
-        string login,
-        string passwordHash,
-        string passwordSalt,
-        DateTime createdAt
-    )
-    {
-        Id = id;
-        FirstName = firstName;
-        LastName = lastName;
-        Email = email;
-        Login = login;
-        PasswordHash = passwordHash;
-        PasswordSalt = passwordSalt;
-        CreatedAt = createdAt;
-    }
-
-    public User(
+    private User(
         string firstName,
         string lastName,
         Email email,
@@ -87,19 +67,58 @@ public class User : Entity
         CreatedAt = DateTime.UtcNow;
     }
 
-    public User(
-        long id,
+    private User(
+        string firstName,
+        string lastName,
+        Email email,
+        DateTime createdAt,
+        string login,
+        string passwordHash,
+        string passwordSalt)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        CreatedAt = createdAt;
+        Login = login;
+        PasswordHash = passwordHash;
+        PasswordSalt = passwordSalt;
+    }
+
+    public static User Create(
         string firstName,
         string lastName,
         Email email,
         string login,
-        string hashedPassword)
+        string passwordHash,
+        string passwordSalt,
+        DateTime createdAt
+    )
     {
-        Id = id;
-        FirstName = firstName;
-        LastName = lastName;
-        Email = email;
-        Login = login;
-        PasswordHash = hashedPassword;
+        return new User(
+            firstName,
+            lastName,
+            email,
+            createdAt,
+            login,
+            passwordHash,
+            passwordSalt);
+    }
+
+    public static User Create(
+        string firstName,
+        string lastName,
+        Email email,
+        string login,
+        string password,
+        IPasswordHasher passwordHasher)
+    {
+        return new User(
+            firstName,
+            lastName,
+            email,
+            login,
+            password,
+            passwordHasher);
     }
 }

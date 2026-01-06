@@ -10,6 +10,8 @@ public class Result<T> : IResult<T> where T : class?
 
     public IEnumerable<ProblemDetails> Errors { get; } = [];
 
+    public string? ErrorCode => throw new NotImplementedException();
+
     private Result(T data, bool isSuccess, string? errorMessage)
     {
         Data = data;

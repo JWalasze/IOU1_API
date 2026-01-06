@@ -1,7 +1,6 @@
-﻿using Application.Mediator;
-using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
+﻿using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
 using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
-using IOU1_API.Controllers;
+using IOU1.Application.Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOU1.API.Controllers;

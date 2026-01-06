@@ -27,6 +27,7 @@ create table AppUser (
   Login varchar(30) not null,
   PasswordHash varchar(100) not null,
   PasswordSalt varchar(100) not null,
+  IsDeleted bit not null default (0),
   Version rowversion
 );
 

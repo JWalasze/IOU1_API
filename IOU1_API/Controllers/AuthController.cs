@@ -1,6 +1,5 @@
-﻿using Application.Mediator;
-using IOU1.Application.Features.Auth.LogIn.Models;
-using IOU1_API.Controllers;
+﻿using IOU1.Application.Features.Auth.LogIn.Models;
+using IOU1.Application.Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOU1.API.Controllers;

@@ -1,8 +1,5 @@
-﻿using Application.Features.Groups.AddGroup.Request;
-using Application.Mediator;
-using IOU1.Application.Features.Invitations.DirectInvitation.Models;
-using IOU1_API.Controllers;
-using Microsoft.AspNetCore.Components.Forms;
+﻿using IOU1.Application.Features.Invitations.DirectInvitation.Models;
+using IOU1.Application.Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOU1.API.Controllers
@@ -12,6 +9,7 @@ namespace IOU1.API.Controllers
     public class DirectInvitationController(IRequestMediator mediator) : BaseApiController
     {
         private readonly IRequestMediator _mediator = mediator;
+
         [HttpPost]
         public async Task<IActionResult> CreateInvitation([FromBody] DirectInvitationCreationRequest request, CancellationToken cancellationToken = default)
         {

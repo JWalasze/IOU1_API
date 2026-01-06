@@ -14,7 +14,7 @@ public class GroupService(IUnitOfWork unit/*, ILogger logger*/) : IGroupService
     private readonly IUnitOfWork _unit = unit;
     //private readonly ILogger _logger = logger;
 
-    public async Task<Result<AddedGroupDto?>> AddGroup(IEnumerable<long> memberIds, long ownerId, string description, CancellationToken cancellationToken = default)
+    public async Task<Result<AddedGroupDto?>> AddGroup(IEnumerable<long> memberIds, long ownerId, string? description, CancellationToken cancellationToken = default)
     {
         if (!memberIds.Any())
             return Result<AddedGroupDto?>.Failure("Missing member ids.");

@@ -7,7 +7,7 @@ namespace IOU1.Persistance.Context;
 
 public class IOU1Context(DbContextOptions<IOU1Context> options) : DbContext(options)
 {
-    public DbSet<User> Users { get; set; }
+    public virtual DbSet<User> Users { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<GroupMember> GroupMembers { get; set; }
     public DbSet<Currency> Currencies { get; set; }

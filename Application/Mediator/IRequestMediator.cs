@@ -1,9 +1,10 @@
-﻿using IOU1.Application.Mediator;
+﻿using Application.Mediator;
 
-namespace Application.Mediator;
+namespace IOU1.Application.Mediator;
 
 public interface IRequestMediator
 {
-    Task<TResponse> Send<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default) 
-        where TRequest : IRequest where TResponse : IResponse;
+    Task<IHandlerResponse<TResponse>> Send<TRequest, TResponse>(TRequest request, CancellationToken cancellationToken = default)
+        where TRequest : class, IRequest
+        where TResponse : class, IResponse;
 }

@@ -4,5 +4,5 @@ namespace IOU1.Application.Features.Auth;
 
 public interface IAuthService
 {
-    Task<Result<Token>> LogIn(Credentials credentials);
+    Task<Result<Token?>> LogIn(Credentials credentials);
 }
