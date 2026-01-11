@@ -1,6 +1,6 @@
 ﻿using IOU1.Domain.Models;
 
-namespace IOU1.Application.Service;
+namespace IOU1.Application.Services.Members;
 
 public interface IMemberService
 {

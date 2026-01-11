@@ -1,8 +1,8 @@
 ﻿using Application.Features.Transactions.AddTransaction.Response;
-using Application.Service;
 using FluentValidation;
 using IOU1.Application.Features.Transactions.AddTransaction.Request;
 using IOU1.Application.Mediator;
+using IOU1.Application.Services.Expenses;
 using IOU1.Domain.Interfaces;
 using MapsterMapper;
 

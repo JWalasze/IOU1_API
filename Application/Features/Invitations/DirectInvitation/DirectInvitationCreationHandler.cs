@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using IOU1.Application.Features.Invitations.DirectInvitation.Models;
 using IOU1.Application.Mediator;
-using IOU1.Application.Service;
+using IOU1.Application.Services.Invitations;
 using IOU1.Domain.Entities;
 using IOU1.Domain.Exceptions;
 using IOU1.Domain.Interfaces;

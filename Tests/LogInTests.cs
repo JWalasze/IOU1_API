@@ -6,7 +6,6 @@ using IOU1.Domain.Entities;
 using IOU1.Infrastructure.Auth;
 using IOU1.Infrastructure.Repositories;
 using IOU1.Persistance.Context;
-using MassTransit.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -76,8 +75,7 @@ public class LogInTests
         //Arrange
         var users = new List<User>
         {
-            new(
-                id: 1,
+            User.Create(
                 firstName: "Kuba",
                 lastName: "Walaszek",
                 email: new Domain.ValueObjects.Email("walaszek@gmail.com"),

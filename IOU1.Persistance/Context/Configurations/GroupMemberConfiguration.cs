@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using IOU1.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,12 +14,10 @@ public class GroupMemberConfiguration : IEntityTypeConfiguration<GroupMember>
 
         builder.HasOne(gm => gm.Group)
                .WithMany(g => g.Members)
-               .HasForeignKey("GroupId")
-               .OnDelete(DeleteBehavior.Cascade);
+               .HasForeignKey("GroupId");
 
         builder.HasOne(gm => gm.User)
                .WithMany(u => u.MemberGroups)
-               .HasForeignKey("MemberId")
-               .OnDelete(DeleteBehavior.Cascade);
+               .HasForeignKey("MemberId");
     }
 }

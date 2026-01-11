@@ -1,5 +1,4 @@
 ﻿using Application.Features.Transactions.AddTransaction.Dto;
-using Application.Service;
 using Domain.RepoInterfaces;
 using IOU1.Application.Features.Transactions.AddTransaction.Request;
 using IOU1.Application.Strategy;
@@ -11,7 +10,7 @@ using IOU1.Persistance.Context;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 
-namespace IOU1.Application.Service;
+namespace IOU1.Application.Services.Expenses;
 
 public class ExpenseService(IUnitOfWork unit, IOU1Context context) : IExpenseService
 {

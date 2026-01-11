@@ -1,4 +1,4 @@
-﻿using Application.Mediator;
+﻿using IOU1.Application.Mediator;
 
 namespace Application.Features.Groups.GetGroups.Request;
 

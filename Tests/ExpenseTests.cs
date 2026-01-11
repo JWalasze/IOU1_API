@@ -1,20 +1,19 @@
 ﻿using Domain.RepoInterfaces;
+using FluentAssertions;
+using IOU1.Application.Strategy;
+using IOU1.Domain.Entities;
 using IOU1.Domain.RepoInterfaces;
+using IOU1.Domain.ValueObjects;
+using IOU1.Infrastructure.Repositories;
 using IOU1.Persistance.Context;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Tests;
 using Xunit.Abstractions;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using IOU1.Infrastructure.Repositories;
-using Domain.Entities;
-using IOU1.Application.Strategy;
-using IOU1.Domain.Entities;
-using FluentAssertions;
-using IOU1.Domain.ValueObjects;
 
 namespace IOU1.Tests;
 
@@ -66,7 +65,7 @@ public class ExpenseTests
         var bob = User(2, "Bob", "Kowalski");
         var carol = User(3, "Carol", "Wiśniewska");
 
-        var group = new Group(15, "Weekend trip to Mazury", alice);
+        var group = new Group("Nazwa", "Weekend trip to Mazury", alice, new List<User>());
 
         alice.OwnedGroups.Add(group);
 
@@ -103,7 +102,7 @@ public class ExpenseTests
         var bob = User(2, "Bob", "Kowalski");
         var carol = User(3, "Carol", "Wiśniewska");
 
-        var group = new Group(15, "Weekend trip to Mazury", alice);
+        var group = new Group("Nazwa", "Weekend trip to Mazury", alice, new List<User>());
 
         alice.OwnedGroups.Add(group);
 
@@ -149,7 +148,7 @@ public class ExpenseTests
         sut.Transactions.Count(t => t.Borrower!.Id == alice.Id).Should().Be(2);
         sut.Transactions.Count(t => t.Borrower!.Id == bob.Id).Should().Be(1);
         sut.Transactions.Count(t => t.Borrower!.Id == carol.Id).Should().Be(1);
-         
+
         var aliceTransaction = sut.Transactions.Where(t => t.Borrower!.Id == alice.Id).ToList();
         var bobTransaction = sut.Transactions.First(t => t.Borrower!.Id == bob.Id);
         var carolTransaction = sut.Transactions.First(t => t.Borrower!.Id == carol.Id);
@@ -165,13 +164,14 @@ public class ExpenseTests
     public static Email EmailOf(string local) => new($"{local}@test.local");
 
     public static User User(long id, string first, string last, string? login = null)
-        => new(
-            id: id,
+        => Domain.Entities.User.Create(
             firstName: first,
             lastName: last,
             email: EmailOf($"{first.ToLower()}.{last.ToLower()}"),
             login: login ?? $"{first.ToLower()}.{last.ToLower()}",
-            hashedPassword: $"HASH-{id}");
+            passwordHash: $"HASH-{id}",
+            passwordSalt: "SALT",
+            DateTime.Now);
 
     public static (Group Group, User Owner, User[] Members) BasicGroup()
     {
@@ -179,7 +179,7 @@ public class ExpenseTests
         var bob = User(2, "Bob", "Kowalski");
         var carol = User(3, "Carol", "Wiśniewska");
 
-        var group = new Group("Weekend trip to Mazury", alice);
+        var group = new Group("Nazwa", "Weekend trip to Mazury", alice, new List<User>());
 
         alice.OwnedGroups.Add(group);
 
@@ -219,7 +219,7 @@ public class ExpenseTests
 
         Group G(string desc, User owner, params User[] members)
         {
-            var g = new Group(desc, owner);
+            var g = new Group("Nazwa", desc, owner, new List<User>());
             owner.OwnedGroups.Add(g);
             var links = members.Select(u => new GroupMember(g, u)).ToArray();
             g.AddNewMembers(links);

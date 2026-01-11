@@ -2,7 +2,7 @@
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace IOU1.Application.Service;
+namespace IOU1.Application.Services.Users.Checker;
 
 public class UserChecker(IOU1Context context) : IUserChecker
 {

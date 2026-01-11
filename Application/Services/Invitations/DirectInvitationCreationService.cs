@@ -1,10 +1,9 @@
-﻿using Domain.Entities;
-using IOU1.Domain.Entities;
+﻿using IOU1.Domain.Entities;
 using IOU1.Domain.Exceptions;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace IOU1.Application.Service;
+namespace IOU1.Application.Services.Invitations;
 
 public record UserDto(string Name);
 
@@ -21,7 +20,8 @@ public class DirectInvitationCreationService(IOU1Context context) : IDirectInvit
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.EmailAddress == email);
 
-        if (user == null) {
+        if (user == null)
+        {
             throw new UserNotFoundException();
         }
 

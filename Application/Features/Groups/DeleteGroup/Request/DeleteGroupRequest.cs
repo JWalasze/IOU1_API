@@ -1,6 +1,6 @@
-﻿using Application.Mediator;
+﻿using IOU1.Application.Mediator;
 
-namespace Application.Features.Groups.DeleteGroup.Request;
+namespace IOU1.Application.Features.Groups.DeleteGroup.Request;
 
 public sealed record DeleteGroupRequest : IRequest
 {

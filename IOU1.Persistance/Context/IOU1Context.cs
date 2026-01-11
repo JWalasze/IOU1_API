@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using IOU1.Domain.Entities;
+﻿using IOU1.Domain.Entities;
 using IOU1.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,13 +7,13 @@ namespace IOU1.Persistance.Context;
 public class IOU1Context(DbContextOptions<IOU1Context> options) : DbContext(options)
 {
     public virtual DbSet<User> Users { get; set; }
-    public DbSet<Group> Groups { get; set; }
-    public DbSet<GroupMember> GroupMembers { get; set; }
-    public DbSet<Currency> Currencies { get; set; }
-    public DbSet<Transaction> Transactions { get; set; }
-    public DbSet<Expense> Expenses { get; set; }
-    public DbSet<Invitation> Invitations { get; set; }
-    public DbSet<InvitationLink> InvitationLinks { get; set; }
+    public virtual DbSet<Group> Groups { get; set; }
+    public virtual DbSet<GroupMember> GroupMembers { get; set; }
+    public virtual DbSet<Currency> Currencies { get; set; }
+    public virtual DbSet<Transaction> Transactions { get; set; }
+    public virtual DbSet<Expense> Expenses { get; set; }
+    public virtual DbSet<Invitation> Invitations { get; set; }
+    public virtual DbSet<InvitationLink> InvitationLinks { get; set; }
 
     //Runs per new instance of the context
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

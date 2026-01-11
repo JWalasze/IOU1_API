@@ -1,12 +1,8 @@
-using Application.Features.Groups.AddGroup.Request;
-using Application.Features.Groups.AddGroup.Response;
-using Application.Features.Groups.DeleteGroup.Request;
 using Application.Features.Groups.DeleteGroup.Response;
 using Application.Features.Groups.DeleteGroup.Validator;
 using Application.Features.Groups.GetGroups.Query;
 using Application.Features.Groups.GetGroups.Request;
 using Application.Features.Groups.GetGroups.Response;
-using Application.Service;
 using Domain.RepoInterfaces;
 using Elastic.Channels;
 using Elastic.Ingest.Elasticsearch;
@@ -17,8 +13,10 @@ using IOU1.Application.Features.Auth;
 using IOU1.Application.Features.Auth.LogIn;
 using IOU1.Application.Features.Auth.LogIn.Models;
 using IOU1.Application.Features.Groups.AddGroup.Handler;
+using IOU1.Application.Features.Groups.AddGroup.Models.Endpoint;
 using IOU1.Application.Features.Groups.AddGroup.Validator;
 using IOU1.Application.Features.Groups.DeleteGroup.Handler;
+using IOU1.Application.Features.Groups.DeleteGroup.Request;
 using IOU1.Application.Features.Groups.GetGroups.Handler;
 using IOU1.Application.Features.Groups.GetGroups.Validator;
 using IOU1.Application.Features.Invitations.DirectInvitation;
@@ -30,10 +28,16 @@ using IOU1.Application.Features.Invitations.UseInvitationLink;
 using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
 using IOU1.Application.Features.Users.AddUser;
 using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
+using IOU1.Application.Features.Users.DeleteUser;
+using IOU1.Application.Features.Users.DeleteUser.Models.Endpoint;
 using IOU1.Application.Mappings;
 using IOU1.Application.Mediator;
 using IOU1.Application.Options;
-using IOU1.Application.Service;
+using IOU1.Application.Services.Groups;
+using IOU1.Application.Services.Invitations;
+using IOU1.Application.Services.Members;
+using IOU1.Application.Services.Users;
+using IOU1.Application.Services.Users.Checker;
 using IOU1.Domain.Entities;
 using IOU1.Domain.RepoInterfaces;
 using IOU1.Domain.Services;
@@ -71,6 +75,7 @@ namespace IOU1.API
             builder.Services.AddSingleton<IValidator<GenerateInvitationKeyRequest>, GenerateInvitationKeyValidator>();
             builder.Services.AddSingleton<IValidator<LogInRequest>, LogInValidator>();
             builder.Services.AddSingleton<IValidator<AddUserRequest>, AddUserValidator>();
+            builder.Services.AddSingleton<IValidator<DeleteUserRequest>, DeleteUserValidator>();
 
             builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
             builder.Services.AddSingleton<IPasswordComparer, PasswordComparer>();
@@ -118,6 +123,7 @@ namespace IOU1.API
             builder.Services.AddTransient<IRequestHandler<UseInvitationLinkRequest, UseInvitationLinkResponse>, UseInvitationLinkHandler>();
             builder.Services.AddTransient<IRequestHandler<LogInRequest, LogInResponse>, LogInHandler>();
             builder.Services.AddTransient<IRequestHandler<AddUserRequest, AddUserResponse>, AddUserHandler>();
+            builder.Services.AddTransient<IRequestHandler<DeleteGroupRequest, DeleteGroupResponse>, DeleteGroupHandler>();
             #endregion
 
             #region Options

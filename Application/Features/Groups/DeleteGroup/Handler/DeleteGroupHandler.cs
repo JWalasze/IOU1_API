@@ -1,8 +1,8 @@
-﻿using Application.Features.Groups.DeleteGroup.Request;
-using Application.Features.Groups.DeleteGroup.Response;
-using Application.Service;
+﻿using Application.Features.Groups.DeleteGroup.Response;
 using FluentValidation;
+using IOU1.Application.Features.Groups.DeleteGroup.Request;
 using IOU1.Application.Mediator;
+using IOU1.Application.Services.Groups;
 using IOU1.Domain.Interfaces;
 using MapsterMapper;
 

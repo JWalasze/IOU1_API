@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.API", "IOU1_API\IOU1.API.csproj", "{5C57AFE1-CEAE-41D4-A687-3D7569C42C03}"
 EndProject
@@ -18,6 +18,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Persistance", "IOU1.Persistance\IOU1.Persistance.csproj", "{2AAA538A-6283-44BE-94D8-6EBA730A2A39}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Shared", "IOU1.Shared\IOU1.Shared.csproj", "{500FA294-5FFD-4DE4-BF6F-D132F54DCFF2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{41D3EAA2-F627-4E99-9835-9E8A5CE5CCA1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

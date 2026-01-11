@@ -1,9 +1,9 @@
-﻿using Domain.Entities;
+﻿using IOU1.Domain.Entities;
 using IOU1.Domain.Models;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace IOU1.Application.Service;
+namespace IOU1.Application.Services.Members;
 
 public class MemberService(IOU1Context context) : IMemberService
 {

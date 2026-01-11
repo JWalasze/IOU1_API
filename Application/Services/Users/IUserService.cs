@@ -2,9 +2,11 @@
 using IOU1.Domain.Entities;
 using IOU1.Domain.Models;
 
-namespace IOU1.Application.Service;
+namespace IOU1.Application.Services.Users;
 
 public interface IUserService
 {
     Task<Result<User?>> Add(NewUser newUser, CancellationToken cancellationToken = default);
+
+    Task<Result<string>> Delete(long userId, CancellationToken cancellationToken = default);
 }

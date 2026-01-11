@@ -34,14 +34,18 @@ create table AppUser (
 create table CommunityGroup (
   Id bigint primary key identity(1, 1),
   CreatedById bigint not null,
-  Description text,
-  Version rowversion constraint fk_created_by_id_community_group foreign key (CreatedById) references AppUser (Id)
+  Name varchar(50) not null,
+  Description text null,
+  Version rowversion,
+
+  constraint fk_created_by_id_community_group foreign key (CreatedById) references AppUser (Id)
 );
 
 create table GroupMember (
   Id bigint primary key identity(1, 1),
   MemberId bigint not null,
   GroupId bigint not null,
+
   constraint fk_member_id_group_member foreign key (MemberId) references AppUser (Id),
   constraint fk_group_id_group_member foreign key (GroupId) references CommunityGroup (Id)
 );
@@ -183,24 +187,24 @@ values
   );
 
 insert into
-  CommunityGroup (CreatedById, Description)
+  CommunityGroup (CreatedById, Description, Name)
 values
-  (1, 'Group for project Alpha');
+  (1, 'Group for project Alpha', 'AlphaTeam');
 
 insert into
-  CommunityGroup (CreatedById, Description)
+  CommunityGroup (CreatedById, Description, Name)
 values
-  (2, 'Testers group for QA');
+  (2, 'Testers group for QA', 'Testers');
 
 insert into
-  CommunityGroup (CreatedById, Description)
+  CommunityGroup (CreatedById, Description, Name)
 values
-  (3, 'Finance department collaboration');
+  (3, 'Finance department collaboration', 'FDC');
 
 insert into
-  CommunityGroup (CreatedById, Description)
+  CommunityGroup (CreatedById, Description, Name)
 values
-  (4, 'Casual chat group');
+  (4, 'Casual chat group', 'Friends');
 
 -- Group 1 (Alpha): everyone joins
 insert into

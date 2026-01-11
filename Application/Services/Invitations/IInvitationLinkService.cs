@@ -1,7 +1,7 @@
 ﻿using IOU1.Domain.Entities;
 using IOU1.Domain.ValueObjects;
 
-namespace IOU1.Application.Service;
+namespace IOU1.Application.Services.Invitations;
 
 public interface IInvitationLinkService
 {

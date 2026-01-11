@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using IOU1.Domain.Entities;
+﻿using IOU1.Domain.Entities;
 
 namespace IOU1.Application.Strategy;
 
@@ -19,7 +18,7 @@ public class EqualSplitStrategy(Expense expense) : BaseSplitStrategy(expense)
         var buyerTransaction = new Transaction(equalAmount, DateTime.Now, _expense, _expense.Group, _expense.Buyer, _expense.Buyer, _expense.Currency);
         _expense.Transactions.Add(buyerTransaction);
 
-        foreach(var member in _expense.Group.Members.Where(m => m.MemberId != _expense.Buyer.Id))
+        foreach (var member in _expense.Group.Members.Where(m => m.MemberId != _expense.Buyer.Id))
         {
             var borrowerTransaction = new Transaction(-equalAmount, DateTime.Now, _expense, _expense.Group, _expense.Buyer, member.User, _expense.Currency);
             _expense.Transactions.Add(borrowerTransaction);

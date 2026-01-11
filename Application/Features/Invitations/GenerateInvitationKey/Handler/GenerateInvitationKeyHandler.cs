@@ -2,7 +2,7 @@
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
 using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
 using IOU1.Application.Mediator;
-using IOU1.Application.Service;
+using IOU1.Application.Services.Invitations;
 using IOU1.Domain.Entities;
 using IOU1.Domain.Interfaces;
 using IOU1.Domain.Models;

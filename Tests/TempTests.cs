@@ -1,7 +1,8 @@
 using Domain.RepoInterfaces;
 using FluentAssertions;
 using IOU1.Application.Features.Transactions.AddTransaction.Request;
-using IOU1.Application.Service;
+using IOU1.Application.Services.Expenses;
+using IOU1.Application.Services.Groups;
 using IOU1.Domain.RepoInterfaces;
 using IOU1.Infrastructure.Repositories;
 using IOU1.Infrastructure.UnitOfWork;
@@ -79,10 +80,10 @@ public class TempTests
     {
         //Arrange
         var unit = new UnitOfWork(_context, _serviceProvider);
-        var sut = new GroupService(unit);
+        var sut = new GroupService(_context, null);
 
         //Act
-        var result = await sut.AddGroup([1, 2, 3], 1, "TextTextText");
+        var result = await sut.AddGroup([1, 2, 3], 1, "Nazwa", "TextTextText");
 
         //Assert
         result.Should().NotBeNull();
@@ -113,5 +114,5 @@ public class TempTests
         result.Should().NotBeNull();
     }
 
-    
+
 }

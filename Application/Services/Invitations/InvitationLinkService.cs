@@ -1,18 +1,20 @@
-﻿using Application.Service;
-using IOU1.Application.Options;
+﻿using IOU1.Application.Options;
+using IOU1.Application.Services.Members;
 using IOU1.Domain.Entities;
 using IOU1.Domain.ValueObjects;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace IOU1.Application.Service;
+namespace IOU1.Application.Services.Invitations;
 
-public class InvitationLinkService(IOU1Context context, IOptionsMonitor<LinkInvitation> options, IGroupService groupService, IMemberService memberService) : IInvitationLinkService
+public class InvitationLinkService(
+    IOU1Context context,
+    IOptionsMonitor<LinkInvitation> options,
+    IMemberService memberService) : IInvitationLinkService
 {
     private readonly IOU1Context _context = context;
     private readonly LinkInvitation _linkInvitation = options.CurrentValue;
-    private readonly IGroupService _groupService = groupService;
     private readonly IMemberService _memberService = memberService;
 
     public async Task<InvitationLink> For(long groupId, CancellationToken cancellationToken = default)

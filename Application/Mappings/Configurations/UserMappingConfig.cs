@@ -1,4 +1,5 @@
 ﻿using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
+using IOU1.Application.Features.Users.DeleteUser.Models.Endpoint;
 using IOU1.Application.Mappings.Extensions;
 using IOU1.Domain.Entities;
 using IOU1.Domain.Models;
@@ -24,5 +25,9 @@ public class UserMappingConfig : IMappingConfiguration
             .Map(dest => dest.LastName, src => src.Data != null ? src.Data.LastName : null)
             .Map(dest => dest.Email, src => src.Data != null ? src.Data.Email : null)
             .Map(dest => dest.Login, src => src.Data != null ? src.Data.Login : null);
+
+        TypeAdapterConfig<string, DeleteUserResponse>
+            .NewConfig()
+            .Map(dest => dest.Message, src => src);
     }
 }

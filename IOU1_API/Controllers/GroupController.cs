@@ -1,9 +1,8 @@
-﻿using Application.Features.Groups.AddGroup.Request;
-using Application.Features.Groups.AddGroup.Response;
-using Application.Features.Groups.DeleteGroup.Request;
-using Application.Features.Groups.DeleteGroup.Response;
+﻿using Application.Features.Groups.DeleteGroup.Response;
 using Application.Features.Groups.GetGroups.Request;
 using Application.Features.Groups.GetGroups.Response;
+using IOU1.Application.Features.Groups.AddGroup.Models.Endpoint;
+using IOU1.Application.Features.Groups.DeleteGroup.Request;
 using IOU1.Application.Mediator;
 using IOU1_API.Mappers;
 using IOU1_API.Services;

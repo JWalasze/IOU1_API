@@ -1,11 +1,9 @@
 ﻿using IOU1.Domain.Base;
-using IOU1.Domain.Entities;
 
-namespace Domain.Entities;
+namespace IOU1.Domain.Entities;
 
 public class GroupMember : Entity
 {
-    public long Id { get; }
     public Group Group { get; } = null!;
 
     public long MemberId { get; }
@@ -20,8 +18,18 @@ public class GroupMember : Entity
         MemberId = user.Id;
     }
 
-    public GroupMember(long id, Group group, User user) : this(group, user)
+    public GroupMember(long id, Group group, User user)
+        : this(group, user)
     {
         Id = id;
+    }
+
+    public static GroupMember Create(
+        Group group,
+        User user)
+    {
+        return new GroupMember(
+            group,
+            user);
     }
 }

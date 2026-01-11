@@ -1,6 +1,4 @@
-﻿using Application.Mediator;
-
-namespace IOU1.Application.Mediator;
+﻿namespace IOU1.Application.Mediator;
 
 public interface IRequestHandler<TRequest, TResponse>
     where TRequest : class, IRequest

@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using IOU1.Domain.Base;
+﻿using IOU1.Domain.Base;
 using IOU1.Domain.Exceptions;
 using IOU1.Domain.Services.Crypto;
 using IOU1.Domain.ValueObjects;
@@ -11,14 +10,14 @@ public class User : Entity
     public const int SaltBytesMaxLength = 64;
     public const int HashBytesMaxLength = 64;
 
-    public string FirstName { get; } = null!;
-    public string LastName { get; } = null!;
-    public Email Email { get; } = null!;
-    public DateTime CreatedAt { get; }
-    public string Login { get; } = null!;
-    public string PasswordHash { get; } = null!;
-    public string PasswordSalt { get; } = null!;
-    public bool IsDeleted { get; }
+    public string FirstName { get; private set; } = null!;
+    public string LastName { get; private set; } = null!;
+    public Email Email { get; private set; } = null!;
+    public DateTime CreatedAt { get; private set; }
+    public string Login { get; private set; } = null!;
+    public string PasswordHash { get; private set; } = null!;
+    public string PasswordSalt { get; private set; } = null!;
+    public bool IsDeleted { get; private set; }
 
     public ICollection<Group> OwnedGroups { get; } = [];
     public ICollection<GroupMember> MemberGroups { get; } = [];
@@ -120,5 +119,10 @@ public class User : Entity
             login,
             password,
             passwordHasher);
+    }
+
+    public void Delete()
+    {
+        IsDeleted = true;
     }
 }

@@ -1,4 +1,4 @@
-﻿using Application.Mediator;
+﻿using IOU1.Application.Mediator;
 
 namespace IOU1.Application.Features.Invitations.UseInvitationLink.Models;
 
