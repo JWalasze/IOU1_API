@@ -9,6 +9,7 @@ using Elastic.Ingest.Elasticsearch;
 using Elastic.Ingest.Elasticsearch.DataStreams;
 using Elastic.Serilog.Sinks;
 using FluentValidation;
+using IOU1.API.Middlewares;
 using IOU1.Application.Features.Auth;
 using IOU1.Application.Features.Auth.LogIn;
 using IOU1.Application.Features.Auth.LogIn.Models;
@@ -39,6 +40,7 @@ using IOU1.Application.Services.Members;
 using IOU1.Application.Services.Users;
 using IOU1.Application.Services.Users.Checker;
 using IOU1.Domain.Entities;
+using IOU1.Domain.Models;
 using IOU1.Domain.RepoInterfaces;
 using IOU1.Domain.Services;
 using IOU1.Domain.Services.Crypto;
@@ -51,8 +53,12 @@ using IOU1.Infrastructure.UnitOfWork;
 using IOU1.Persistance.Context;
 using IOU1_API.Services;
 using Mapster;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
+using System.Text;
 
 namespace IOU1.API
 {
@@ -67,7 +73,7 @@ namespace IOU1.API
 
             #region SingletonServices
 
-            builder.Services.AddSingleton<IRequestMediator, RequestMediator>();
+            builder.Services.AddScoped<IRequestMediator, RequestMediator>();
 
             builder.Services.AddSingleton<IValidator<GroupsRequest>, GetGroupsValidator>();
             builder.Services.AddSingleton<IValidator<AddGroupRequest>, AddGroupValidator>();
@@ -110,6 +116,7 @@ namespace IOU1.API
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            builder.Services.AddScoped<IAuthUser, AuthUser>();
             //builder.Services.AddScoped<IServiceBus, ServiceBus>();
 
             #endregion
@@ -154,12 +161,43 @@ namespace IOU1.API
 
             #endregion
 
-            MappingConfig.Init();
-
+            #region MappingInit
             builder.Services.AddMapster();
+
+            MappingConfig.Init();
+            #endregion
+
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter: Bearer {your JWT token}"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+            });
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
@@ -182,8 +220,6 @@ namespace IOU1.API
                 })
                 .CreateLogger();
 
-            Log.Logger.Error("TEST TEST TEST");
-
             builder.Host.UseSerilog((ctx, services, cfg) => cfg
                 .MinimumLevel.Debug()
                 .Enrich.FromLogContext()
@@ -204,6 +240,22 @@ namespace IOU1.API
                     // transport.Authentication(new ApiKey(base64EncodedApiKey));
                 }));
 
+            builder.Services.AddScoped<UserSessionMiddleware>();
+            builder.Services.AddAuthorization();
+            builder.Services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(o =>
+                {
+                    o.RequireHttpsMetadata = false;
+                    o.TokenValidationParameters = new()
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)),
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -218,11 +270,10 @@ namespace IOU1.API
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseMiddleware<UserSessionMiddleware>();
             app.MapControllers();
-
             app.Run();
         }
     }

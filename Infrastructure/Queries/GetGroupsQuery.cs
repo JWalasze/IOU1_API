@@ -1,5 +1,5 @@
-﻿using Application.Features.Groups.GetGroups.Dto;
-using Application.Features.Groups.GetGroups.Query;
+﻿using Application.Features.Groups.GetGroups.Query;
+using IOU1.Application.Features.Groups.GetGroups.Dto;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,5 +1,6 @@
-﻿using Application.Features.Groups.GetGroups.Dto;
-using Application.Features.Groups.GetGroups.Response;
+﻿using Application.Features.Groups.GetGroups.Response;
+using IOU1.Application.Features.Groups.GetGroups.Dto;
+using IOU1.Domain.Models;
 using Mapster;
 
 namespace IOU1.Application.Mappings.Configurations;
@@ -14,8 +15,12 @@ public class GroupMappingConfig : IMappingConfiguration
             .Map(dest => dest.Description, src => src.Description)
             .Map(dest => dest.OwnerName, src => src.OwnerName);
 
-        TypeAdapterConfig<IEnumerable<GetGroupsDto>, IEnumerable<GroupInfoResponse>>
+        TypeAdapterConfig<ICollection<GetGroupsDto>, ICollection<GroupInfoResponse>>
             .NewConfig()
             .Map(dest => dest, src => src.Select(s => s.Adapt<GroupInfoResponse>()));
+
+        TypeAdapterConfig<Result<ICollection<GetGroupsDto>>, GroupsResponse>
+            .NewConfig()
+            .Map(dest => dest.GroupInfoResponse, src => src.Data != null ? src.Data.Select(s => s.Adapt<GroupInfoResponse>()) : new List<GroupInfoResponse>());
     }
 }

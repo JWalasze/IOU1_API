@@ -1,4 +1,4 @@
-﻿using Application.Features.Groups.GetGroups.Dto;
+﻿using IOU1.Application.Features.Groups.GetGroups.Dto;
 
 namespace Application.Features.Groups.GetGroups.Query;
 

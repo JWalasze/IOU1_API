@@ -51,7 +51,7 @@ public class Group : Entity
         Members = [.. members.Select(member => GroupMember.Create(this, member))];
 
         if (!Members
-            .Select(m => m.Id)
+            .Select(m => m.User.Id)
             .Contains(owner.Id))
         {
             var ownerMember = GroupMember.Create(this, owner);

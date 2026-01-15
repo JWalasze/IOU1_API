@@ -12,8 +12,7 @@ public class RequestMediator(IServiceProvider serviceProvider) : IRequestMediato
         where TRequest : class, IRequest
         where TResponse : class, IResponse
     {
-        using var scope = _serviceProvider.CreateScope();
-        var service = scope.ServiceProvider.GetRequiredService<IRequestHandler<TRequest, TResponse>>();
+        var service = _serviceProvider.GetRequiredService<IRequestHandler<TRequest, TResponse>>();
         return await service.Handle(request, cancellationToken);
     }
 }

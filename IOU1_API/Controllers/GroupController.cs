@@ -6,11 +6,13 @@ using IOU1.Application.Features.Groups.DeleteGroup.Request;
 using IOU1.Application.Mediator;
 using IOU1_API.Mappers;
 using IOU1_API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOU1.API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class GroupController(IRequestMediator mediator, xdGroupService groupService) : BaseApiController
 {

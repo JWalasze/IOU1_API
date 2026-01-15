@@ -12,5 +12,9 @@ public class ValidationResultMappingConfig : IMappingConfiguration
             .Map(dest => dest.Errors, src => src.Errors)
             .Map(dest => dest.ErrorMessage, src => "Validation errors occured!")
             .Map(dest => dest.IsSuccess, src => src.IsValid);
+
+        TypeAdapterConfig<ValidationResult, ValidateResult>
+            .NewConfig()
+            .Map(dest => dest.Errors, src => src.Errors);
     }
 }

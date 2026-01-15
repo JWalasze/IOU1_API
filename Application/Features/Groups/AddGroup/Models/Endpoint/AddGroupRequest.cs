@@ -10,5 +10,5 @@ public sealed record AddGroupRequest : IRequest
 
     public long OwnerId { get; init; }
 
-    public IEnumerable<long> MemberIds { get; } = [];
+    public IEnumerable<long> MemberIds { get; init; } = [];
 }

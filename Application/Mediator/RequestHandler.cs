@@ -33,7 +33,10 @@ public abstract class RequestHandler<TRequest, TResponse>(IValidator<TRequest> v
     protected virtual async Task<IValidateResult> Validate(TRequest request, CancellationToken cancellationToken = default)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
-        return _mapper.Map<ValidateResult>(validationResult);
+        return new ValidateResult()
+        {
+            Errors = [.. validationResult.Errors.Select(e => new ProblemDetails(e.ErrorCode, e.ErrorMessage))],
+        };
     }
 
     protected virtual IHandlerResponse<TResponse> MapFailure(IValidateResult result)

@@ -38,7 +38,7 @@ public sealed class JwtTokenProvider(IOptions<JwtConfig> options) : ITokenProvid
         {
             Subject = new ClaimsIdentity(
             [
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim("id", user.Id.ToString()),
                 new Claim("login", user.Login),
                 new Claim(JwtRegisteredClaimNames.Name, user.FullName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email.EmailAddress),

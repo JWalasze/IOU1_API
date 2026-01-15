@@ -1,4 +1,4 @@
-﻿namespace Application.Features.Groups.GetGroups.Dto;
+﻿namespace IOU1.Application.Features.Groups.GetGroups.Dto;
 
 public record GetGroupsDto
 {
@@ -6,5 +6,5 @@ public record GetGroupsDto
 
     public required string OwnerName { get; init; }
 
-    public required string Description { get; init; }
+    public string? Description { get; init; }
 }
