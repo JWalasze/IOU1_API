@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.15.2" />
+    <PackageReference Include="Microsoft.OpenApi" Version="2.4.3" />
   </ItemGroup>
 
   <ItemGroup>

@@ -16,13 +16,15 @@ public abstract class RequestHandler<TRequest, TResponse>(IValidator<TRequest> v
 
     public async Task<IHandlerResponse<TResponse>> Handle(TRequest request, CancellationToken cancellationToken = default)
     {
-        var validationResult = await Validate(request, cancellationToken);
+        var validationResult = Validate(request);
         if (!validationResult.IsValid)
         {
+            //Za dużo mapowania
             return MapFailure(validationResult);
         }
 
         var result = await Do(request, cancellationToken);
+        //Za dużo mapowania
         return result.IsSuccess switch
         {
             true => MapSuccess(result),
@@ -30,9 +32,11 @@ public abstract class RequestHandler<TRequest, TResponse>(IValidator<TRequest> v
         };
     }
 
-    protected virtual async Task<IValidateResult> Validate(TRequest request, CancellationToken cancellationToken = default)
+
+    //TODO ValidateAsync to overhead zbędny nakład pracy żeby opakować w Task
+    protected virtual IValidateResult Validate(TRequest request)
     {
-        var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+        var validationResult = _validator.Validate(request);
         return new ValidateResult()
         {
             Errors = [.. validationResult.Errors.Select(e => new ProblemDetails(e.ErrorCode, e.ErrorMessage))],

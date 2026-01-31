@@ -1,4 +1,4 @@
-﻿namespace IOU1.Application.Features.Groups.GetGroups.Dto;
+﻿namespace IOU1.Application.Features.Groups.GetGroups.Models.Dto;
 
 public record GetGroupsDto
 {

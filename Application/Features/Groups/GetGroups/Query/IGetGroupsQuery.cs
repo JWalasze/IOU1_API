@@ -1,6 +1,6 @@
-﻿using IOU1.Application.Features.Groups.GetGroups.Dto;
+﻿using IOU1.Application.Features.Groups.GetGroups.Models.Dto;
 
-namespace Application.Features.Groups.GetGroups.Query;
+namespace IOU1.Application.Features.Groups.GetGroups.Query;
 
 public interface IGetGroupsQuery
 {

@@ -1,5 +1,6 @@
 ﻿using IOU1.Application;
 using IOU1.Application.Mediator;
+using IOU1.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOU1.API.Controllers;
@@ -23,5 +24,16 @@ public abstract class BaseApiController : ControllerBase
         }
 
         return BadRequest(response.Errors);
+    }
+
+    [NonAction]
+    protected IActionResult CreateEndpointResponse<T>(Result<T> result) where T : class
+    {
+        if (result.IsSuccess)
+        {
+            return Ok(result);
+        }
+
+        return BadRequest(result);
     }
 }

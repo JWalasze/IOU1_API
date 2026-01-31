@@ -1,4 +1,4 @@
-﻿
+﻿using IOU1.Domain.Exceptions;
 using IOU1.Domain.Models;
 
 namespace IOU1.API.Middlewares;
@@ -16,12 +16,19 @@ public class UserSessionMiddleware(IAuthUser user) : IMiddleware
         }
         else
         {
-            var userId = context.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
-                ?? throw new InvalidOperationException("Invalid user! ID is missing!");
-
-            _authUser.Id = long.Parse(userId);
-
+            SetUserSession(context);
             await next(context);
         }
+    }
+
+    private void SetUserSession(HttpContext context)
+    {
+        var userId = context.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
+                ?? throw new UserSessionException("Invalid user! ID is missing!");
+
+        if (!long.TryParse(userId, out var parsedUserId))
+            throw new UserSessionException("Invalid user! ID is not a valid long value!");
+
+        _authUser.Id = parsedUserId;
     }
 }

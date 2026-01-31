@@ -1,9 +1,8 @@
-﻿using Application.Features.Groups.GetGroups.Query;
-using IOU1.Application.Features.Groups.GetGroups.Dto;
+﻿using IOU1.Application.Features.Groups.GetGroups.Models.Dto;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace IOU1.Infrastructure.Queries;
+namespace IOU1.Application.Features.Groups.GetGroups.Query;
 
 public class GetGroupsQuery(IOU1Context context) : IGetGroupsQuery
 {
