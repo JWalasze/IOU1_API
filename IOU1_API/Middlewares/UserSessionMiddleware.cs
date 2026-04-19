@@ -1,5 +1,5 @@
 ﻿using IOU1.Domain.Exceptions;
-using IOU1.Domain.Models;
+using IOU1.Domain.Models.Auth.User;
 
 namespace IOU1.API.Middlewares;
 

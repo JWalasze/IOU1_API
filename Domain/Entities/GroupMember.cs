@@ -4,18 +4,22 @@ namespace IOU1.Domain.Entities;
 
 public class GroupMember : Entity
 {
+    public long GroupId { get; }
     public Group Group { get; } = null!;
 
-    public long MemberId { get; }
+    public long UserId { get; }
     public User User { get; } = null!;
+
+    //public ICollection<Transaction> Transactions { get; } = [];
 
     private GroupMember() { }
 
     public GroupMember(Group group, User user)
     {
         Group = group;
+        GroupId = group.Id;
         User = user;
-        MemberId = user.Id;
+        UserId = user.Id;
     }
 
     public GroupMember(long id, Group group, User user)

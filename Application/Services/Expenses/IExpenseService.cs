@@ -1,10 +1,15 @@
-﻿using Application.Features.Transactions.AddTransaction.Dto;
-using IOU1.Application.Features.Transactions.AddTransaction.Request;
+﻿using IOU1.Application.Features.Expenses.AddExpense.Models;
+using IOU1.Domain.Entities;
 using IOU1.Domain.Models;
+using IOU1.Domain.Models.Results;
 
 namespace IOU1.Application.Services.Expenses;
 
 public interface IExpenseService
 {
-    Task<Result<AddedExpenseDto?>> AddExpense(AddTransactionRequest request);
+    Task<Result<Expense?>> AddExpense(
+        NewExpense newExpense,
+        CancellationToken cancellationToken = default);
+
+    Task<Result<GroupExpenseSummary?>> GetSummary(long groupId, CancellationToken cancellationToken = default);
 }

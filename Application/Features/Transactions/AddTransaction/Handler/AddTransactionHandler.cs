@@ -17,6 +17,6 @@ public class AddTransactionHandler(
 
     protected override async Task<IResult> Do(AddTransactionRequest request, CancellationToken cancellationToken = default)
     {
-        return await _expenseService.AddExpense(request);
+        throw new NotImplementedException();
     }
 }

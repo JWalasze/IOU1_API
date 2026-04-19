@@ -1,6 +1,6 @@
 ﻿using IOU1.Application;
 using IOU1.Application.Mediator;
-using IOU1.Domain.Models;
+using IOU1.Domain.Models.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOU1.API.Controllers;
@@ -27,7 +27,7 @@ public abstract class BaseApiController : ControllerBase
     }
 
     [NonAction]
-    protected IActionResult CreateEndpointResponse<T>(Result<T> result) where T : class
+    protected IActionResult CreateEndpointResponse<T>(Result<T> result) where T : class?
     {
         if (result.IsSuccess)
         {

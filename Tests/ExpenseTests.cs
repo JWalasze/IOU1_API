@@ -87,7 +87,7 @@ public class ExpenseTests
                     MemberId = 1
                 },
 
-            ]);
+            ], null);
         };
 
         //Assert
@@ -132,12 +132,12 @@ public class ExpenseTests
                 Amount = -50,
                 MemberId = 1
             }
-        ]);
+        ], null);
 
-        var strategy = new CustomSplitStrategy(sut);
+        var strategy = new CustomSplitStrategy();
 
         //Act
-        strategy.Split();
+        strategy.Split(sut);
 
         //Assert
         sut.Should().NotBeNull();

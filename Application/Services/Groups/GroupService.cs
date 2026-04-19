@@ -2,7 +2,7 @@
 using IOU1.Application.Features.Groups.AddGroup.Models;
 using IOU1.Domain.Entities;
 using IOU1.Domain.Exceptions;
-using IOU1.Domain.Models;
+using IOU1.Domain.Models.Results;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

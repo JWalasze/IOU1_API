@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using IOU1.Domain.Interfaces;
-using IOU1.Domain.Models;
+using IOU1.Domain.Models.Results;
 using Mapster;
 using MapsterMapper;
 

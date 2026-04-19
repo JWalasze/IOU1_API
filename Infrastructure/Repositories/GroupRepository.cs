@@ -6,24 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IOU1.Infrastructure.Repositories;
 
-public class GroupRepository : Repository<Group>, IGroupRepository, IRepository<Group>
+public class GroupRepository(IOU1Context context)
+    : Repository<Group>(context), IGroupRepository, IRepository<Group>
 {
-    private readonly IOU1Context _context;
+    private readonly IOU1Context _context = context;
 
-    public GroupRepository(IOU1Context context) : base(context)
+    public Task<Group?> GetGroupWithMembers(long groupId, CancellationToken cancellationToken = default)
     {
-        _context = context;
-    }
-
-    //Add BaseRepo implementation, this goes there
-    public void Add(Group group)
-    {
-        _context.Add(group);
-    }
-
-    public void Delete(Group group)
-    {
-        _context.Remove(group);
+        return _context.Groups
+            .Include(g => g.Members)
+            .Where(g => g.Id == groupId)
+            .SingleOrDefaultAsync(cancellationToken);
     }
 
     public async Task<Group?> GetByIdAsync(long groupId, CancellationToken cancellationToken = default)

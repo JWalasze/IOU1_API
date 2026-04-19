@@ -9,4 +9,6 @@ public sealed record GetGroupDto
     public string? Description { get; init; }
 
     public required ICollection<GetGroupMemberDto> Members { get; init; } = [];
+
+    public ICollection<GetGroupExpenseDto> Expenses { get; init; } = [];
 }

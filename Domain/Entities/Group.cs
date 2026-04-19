@@ -63,7 +63,7 @@ public class Group : Entity
     {
         foreach (var newMember in newMembers)
         {
-            if (!Members.Any(m => m.MemberId == newMember.MemberId))
+            if (!Members.Any(m => m.UserId == newMember.UserId))
             {
                 Members.Add(newMember);
             }
@@ -72,7 +72,7 @@ public class Group : Entity
 
     public void AddNewMember(GroupMember newMember)
     {
-        if (!Members.Any(m => m.MemberId == newMember.MemberId))
+        if (!Members.Any(m => m.UserId == newMember.UserId))
         {
             Members.Add(newMember);
         }

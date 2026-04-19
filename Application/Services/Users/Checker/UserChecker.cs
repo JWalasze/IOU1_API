@@ -1,4 +1,4 @@
-﻿using IOU1.Domain.Services;
+﻿using IOU1.Domain.Services.Users;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 

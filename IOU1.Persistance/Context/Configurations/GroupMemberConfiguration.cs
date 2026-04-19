@@ -18,6 +18,6 @@ public class GroupMemberConfiguration : IEntityTypeConfiguration<GroupMember>
 
         builder.HasOne(gm => gm.User)
                .WithMany(u => u.MemberGroups)
-               .HasForeignKey("MemberId");
+               .HasForeignKey("UserId");
     }
 }

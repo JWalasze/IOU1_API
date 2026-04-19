@@ -1,9 +1,9 @@
 ﻿using IOU1.Application.Features.Users.AddUser.Models;
 using IOU1.Domain.Entities;
 using IOU1.Domain.Exceptions;
-using IOU1.Domain.Models;
-using IOU1.Domain.Services;
+using IOU1.Domain.Models.Results;
 using IOU1.Domain.Services.Crypto;
+using IOU1.Domain.Services.Users;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

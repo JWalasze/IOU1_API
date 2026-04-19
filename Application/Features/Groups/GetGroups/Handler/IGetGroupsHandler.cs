@@ -1,6 +1,6 @@
 ﻿using IOU1.Application.Features.Groups.GetGroups.Models.Dto;
 using IOU1.Application.Features.Groups.GetGroups.Models.Request;
-using IOU1.Domain.Models;
+using IOU1.Domain.Models.Results;
 
 namespace IOU1.Application.Features.Groups.GetGroups.Handler;
 

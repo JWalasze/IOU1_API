@@ -1,22 +1,25 @@
 ﻿using IOU1.Application.Features.Auth;
-using IOU1.Domain.Models;
+using IOU1.Domain.Models.Auth;
+using IOU1.Domain.Models.Results;
 using IOU1.Domain.Services.Crypto;
 using IOU1.Persistance.Context;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace IOU1.Infrastructure.Auth;
 
 public class AuthService(
-    IOU1Context context, 
-    ITokenProvider tokenProvider, 
+    IOU1Context context,
+    ITokenProvider tokenProvider,
     IPasswordHasher passwordHasher,
-    IPasswordComparer passwordComparer) : IAuthService
+    IPasswordComparer passwordComparer,
+    ILogger<AuthService> logger) : IAuthService
 {
     private readonly IOU1Context _context = context;
     private readonly ITokenProvider _tokenProvider = tokenProvider;
     private readonly IPasswordHasher _passwordHasher = passwordHasher;
     private readonly IPasswordComparer _passwordComparer = passwordComparer;
+    private readonly ILogger<AuthService> _logger = logger;
 
     public async Task<Result<Token?>> LogIn(Credentials credentials)
     {
@@ -37,13 +40,14 @@ public class AuthService(
             var compareResult = _passwordComparer.Compare(passwordHash, user.PasswordHash);
             if (!compareResult)
             {
+                _logger.LogError("Invalid password for provided login: {login}.", credentials.Login);
                 return Result<Token?>.Failure($"Invalid password for provided login: {credentials.Login}.");
             }
 
             var token = _tokenProvider.CreateToken(user);
             return Result<Token?>.Success(new(token));
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return Result<Token?>.Failure(ex.Message);
         }

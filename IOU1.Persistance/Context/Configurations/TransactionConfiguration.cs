@@ -23,16 +23,27 @@ public class TransactionConfiguration : IEntityTypeConfiguration<Transaction>
                .WithMany();
 
         builder.HasOne(t => t.Buyer)
-               .WithMany();
+               .WithMany()
+               .HasForeignKey("BuyerId");
 
         builder.HasOne(t => t.Borrower)
-               .WithMany();
+               .WithMany()
+               .HasForeignKey("BorrowerId");
 
-        builder.HasOne(t => t.Currency)
-               .WithMany();
+        builder.HasOne(e => e.Currency)
+               .WithMany()
+               .HasForeignKey("CurrencyKey");
 
         builder.HasOne(t => t.Expense)
                .WithMany(e => e.Transactions)
                .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(t => t.BuyerMember)
+               .WithMany()
+               .HasForeignKey("BuyerMemberId");
+
+        builder.HasOne(t => t.BorrowerMember)
+               .WithMany()
+               .HasForeignKey("BorrowerMemberId");
     }
 }

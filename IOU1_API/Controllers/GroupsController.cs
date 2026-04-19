@@ -1,6 +1,8 @@
 ﻿using Application.Features.Groups.DeleteGroup.Response;
 using IOU1.Application.Features.Groups.AddGroup.Models.Endpoint;
 using IOU1.Application.Features.Groups.DeleteGroup.Request;
+using IOU1.Application.Features.Groups.GetGroup.Handler;
+using IOU1.Application.Features.Groups.GetGroup.Models.Request;
 using IOU1.Application.Features.Groups.GetGroups.Handler;
 using IOU1.Application.Features.Groups.GetGroups.Models.Request;
 using IOU1.Application.Mediator;
@@ -18,6 +20,16 @@ public class GroupsController : BaseApiController
     public async Task<IActionResult> GetGroups(
         [FromQuery] GetGroupsRequest request,
         [FromServices] IGetGroupsHandler handler,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await handler.Handle(request, cancellationToken);
+        return CreateEndpointResponse(result);
+    }
+
+    [HttpGet("{GroupId}")]
+    public async Task<IActionResult> GetGroup(
+        [FromRoute] GetGroupRequest request,
+        [FromServices] IGetGroupHandler handler,
         CancellationToken cancellationToken = default)
     {
         var result = await handler.Handle(request, cancellationToken);

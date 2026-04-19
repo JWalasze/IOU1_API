@@ -28,6 +28,7 @@ public class UnitOfWork(IOU1Context context, IServiceProvider serviceProvider) :
 
     public async Task CommitTransaction()
     {
+        await _context.SaveChangesAsync();
         await _context.Database.CommitTransactionAsync();
     }
 

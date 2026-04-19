@@ -4,14 +4,22 @@ namespace IOU1.Domain.Entities;
 
 public class Transaction : Entity
 {
-    public long Id { get; }
     public decimal Amount { get; }
     public DateTime CreatedAt { get; }
     public Expense Expense { get; } = null!;
     public Group Group { get; } = null!;
     public User? Buyer { get; }
     public User? Borrower { get; } = null!;
+    public long? BorrowerId { get; }
+
+    public string CurrencyKey { get; } = null!;
     public Currency Currency { get; } = null!;
+
+    public long BuyerMemberId { get; }
+    public GroupMember BuyerMember { get; } = null!;
+
+    public long BorrowerMemberId { get; }
+    public GroupMember BorrowerMember { get; } = null!;
 
     private Transaction() { }
 
@@ -22,7 +30,9 @@ public class Transaction : Entity
         Group group,
         User buyer,
         User borrower,
-        Currency currency)
+        Currency currency,
+        GroupMember buyerMember,
+        GroupMember borrowerMember)
     {
         CreatedAt = addDate;
         Amount = amount;
@@ -31,6 +41,8 @@ public class Transaction : Entity
         Buyer = buyer;
         Borrower = borrower;
         Currency = currency;
+        BuyerMember = buyerMember;
+        BorrowerMember = borrowerMember;
     }
 
     public static Transaction CreateNewTransaction(
@@ -39,7 +51,9 @@ public class Transaction : Entity
         Group group,
         User from,
         User to,
-        Currency currency)
+        Currency currency,
+        GroupMember buyerMember,
+        GroupMember borrowerMember)
     {
         return new Transaction(
             amount,
@@ -48,6 +62,8 @@ public class Transaction : Entity
             group,
             from,
             to,
-            currency);
+            currency,
+            buyerMember,
+            borrowerMember);
     }
 }

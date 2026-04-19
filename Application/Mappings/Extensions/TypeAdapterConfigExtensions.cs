@@ -1,4 +1,4 @@
-﻿using IOU1.Domain.Models;
+﻿using IOU1.Domain.Models.Results;
 using Mapster;
 
 namespace IOU1.Application.Mappings.Extensions;

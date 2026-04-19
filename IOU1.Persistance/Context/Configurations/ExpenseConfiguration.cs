@@ -26,16 +26,17 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
                .HasMaxLength(255);
 
         builder.HasOne(e => e.Group)
-               .WithMany();
+               .WithMany()
+               .HasForeignKey("GroupId");
 
         builder.Ignore(e => e.Splits);
 
         builder.HasOne(e => e.Buyer)
-               .WithMany();
+               .WithMany()
+               .HasForeignKey("BuyerId");
 
         builder.HasOne(e => e.Currency)
-               .WithMany();
-
-        // Transactions navigation is configured on Transaction side
+               .WithMany()
+               .HasForeignKey("CurrencyKey");
     }
 }

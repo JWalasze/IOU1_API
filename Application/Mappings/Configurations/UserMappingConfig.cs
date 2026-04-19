@@ -2,7 +2,7 @@
 using IOU1.Application.Features.Users.DeleteUser.Models.Endpoint;
 using IOU1.Application.Mappings.Extensions;
 using IOU1.Domain.Entities;
-using IOU1.Domain.Models;
+using IOU1.Domain.Models.Results;
 using Mapster;
 
 namespace IOU1.Application.Mappings.Configurations;

@@ -1,27 +1,50 @@
 ﻿using IOU1.Domain.Entities;
+using IOU1.Domain.Services.Splits;
 
 namespace IOU1.Application.Strategy;
 
-public class EqualSplitStrategy(Expense expense) : BaseSplitStrategy(expense)
+public class EqualSplitStrategy : ISplitStrategy
 {
-    public override void Split()
+    public IEnumerable<Transaction> Split(Expense expense)
     {
-        var numberOfMembers = _expense.Group.Members.Count;
+        var numberOfMembers = expense.Group.Members.Count;
         if (numberOfMembers is 0)
         {
-            throw new InvalidOperationException($"Group {_expense.Group.Id} has 0  members.");
+            throw new InvalidOperationException($"Group {expense.Group.Id} has 0 members.");
         }
 
-        var equalAmount = _expense.TotalAmount / numberOfMembers;
+        var equalAmount = expense.TotalAmount / numberOfMembers;
+        var buyerMember = expense.Group.Members.First(m => m.UserId == expense.BuyerId);
 
-        //TODO Dates to expense
-        var buyerTransaction = new Transaction(equalAmount, DateTime.Now, _expense, _expense.Group, _expense.Buyer, _expense.Buyer, _expense.Currency);
-        _expense.Transactions.Add(buyerTransaction);
+        var buyerTransaction = new Transaction(
+            amount: equalAmount,
+            addDate: DateTime.Now,
+            expense: expense,
+            group: expense.Group,
+            buyer: expense.Buyer,
+            borrower: expense.Buyer,
+            currency: expense.Currency,
+            buyerMember: buyerMember,
+            borrowerMember: buyerMember);
 
-        foreach (var member in _expense.Group.Members.Where(m => m.MemberId != _expense.Buyer.Id))
+        expense.Transactions.Add(buyerTransaction);
+
+        foreach (var member in expense.Group.Members)
         {
-            var borrowerTransaction = new Transaction(-equalAmount, DateTime.Now, _expense, _expense.Group, _expense.Buyer, member.User, _expense.Currency);
-            _expense.Transactions.Add(borrowerTransaction);
+            var borrowerTransaction = new Transaction(
+                amount: -1 * equalAmount,
+                addDate: DateTime.Now,
+                expense: expense,
+                group: expense.Group,
+                buyer: expense.Buyer,
+                borrower: member.User,
+                currency: expense.Currency,
+                buyerMember: buyerMember,
+                borrowerMember: member);
+
+            expense.Transactions.Add(borrowerTransaction);
         }
+
+        return expense.Transactions;
     }
 }

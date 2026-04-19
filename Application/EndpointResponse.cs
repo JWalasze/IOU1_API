@@ -1,5 +1,5 @@
 ﻿using IOU1.Application.Mediator;
-using IOU1.Domain.Models;
+using IOU1.Domain.Models.Results;
 
 namespace IOU1.Application;
 

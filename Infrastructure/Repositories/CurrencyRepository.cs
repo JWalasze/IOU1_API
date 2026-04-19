@@ -15,6 +15,6 @@ public class CurrencyRepository : ICurrencyRepository
     }
     public async Task<Currency> GetDefaultCurrency()
     {
-        return await _context.Currencies.FirstAsync(s => s.Name == "USD");
+        return await _context.Currencies.FirstAsync(s => s.Key == "USD");
     }
 }

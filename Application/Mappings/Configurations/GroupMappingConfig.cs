@@ -1,9 +1,4 @@
-﻿using IOU1.Application.Features.Groups.GetGroups.Models.Dto;
-using IOU1.Application.Features.Groups.GetGroups.Models.Response;
-using IOU1.Domain.Models;
-using Mapster;
-
-namespace IOU1.Application.Mappings.Configurations;
+﻿namespace IOU1.Application.Mappings.Configurations;
 
 public class GroupMappingConfig : IMappingConfiguration
 {
@@ -19,8 +14,9 @@ public class GroupMappingConfig : IMappingConfiguration
         //    .NewConfig()
         //    .Map(dest => dest, src => src.Select(s => s.Adapt<GroupInfoResponse>()));
 
-        TypeAdapterConfig<Result<ICollection<GetGroupsDto>>, GetGroupsResponse>
-            .NewConfig()
-            .Map(dest => dest.Groups, src => src.Data != null ? src.Data.Select(s => s) : new List<GetGroupsDto>());
+        //    TypeAdapterConfig<Result<ICollection<GetGroupsDto>>, GetGroupsResponse>
+        //        .NewConfig()
+        //        .Map(dest => dest.Groups, src => src.Data != null ? src.Data.Select(s => s) : new List<GetGroupsDto>());
+        //}
     }
 }

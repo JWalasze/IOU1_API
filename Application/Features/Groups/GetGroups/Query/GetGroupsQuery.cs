@@ -14,7 +14,7 @@ public class GetGroupsQuery(IOU1Context context) : IGetGroupsQuery
             .GroupMembers
             .Include(gm => gm.Group)
                 .ThenInclude(g => g.Owner)
-            .Where(gm => gm.MemberId == userId)
+            .Where(gm => gm.UserId == userId)
             .Select(gm => new GetGroupsDto
             {
                 GroupId = gm.Id,

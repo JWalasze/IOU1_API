@@ -8,6 +8,31 @@ public class GetGroupQuery(IOU1Context context) : IGetGroupQuery
 {
     private readonly IOU1Context _context = context;
 
+    public async Task<IEnumerable<GetGroupExpenseDto>> GetLastExpenses(long groupId, int lastExpenseCount, CancellationToken cancellationToken = default)
+    {
+        return await _context
+            .Expenses
+            .Include(e => e.Transactions)
+            .Where(e => e.GroupId == groupId)
+            .Select(e => new GetGroupExpenseDto
+            {
+                ExpenseId = e.Id,
+                BuyerId = e.BuyerId,
+                Amount = e.TotalAmount,
+                Currency = "PLN",
+                Transactions = e.Transactions
+                    .Select(t => new GetGroupTransactionDto
+                    {
+                        Amount = t.Amount,
+                        BorrowerId = t.BorrowerId,
+                        TransactionId = t.Id,
+                        Currency = "PLN"
+                    })
+                    .ToList()
+            })
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<GetGroupDto?> GetGroup(long groupId, CancellationToken cancellationToken = default)
     {
         return await _context

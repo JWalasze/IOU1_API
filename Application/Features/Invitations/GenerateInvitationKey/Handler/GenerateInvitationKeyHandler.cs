@@ -5,7 +5,7 @@ using IOU1.Application.Mediator;
 using IOU1.Application.Services.Invitations;
 using IOU1.Domain.Entities;
 using IOU1.Domain.Interfaces;
-using IOU1.Domain.Models;
+using IOU1.Domain.Models.Results;
 using MapsterMapper;
 
 namespace IOU1.Application.Features.Invitations.GenerateInvitationKey.Handler;

@@ -1,97 +1,34 @@
-﻿using Domain.RepoInterfaces;
-using IOU1_API.DTOs;
-using IOU1_API.Services;
+﻿using IOU1.Application.Features.Expenses.AddExpense.Handler;
+using IOU1.Application.Features.Expenses.AddExpense.Models;
+using IOU1.Application.Features.Expenses.GetExpenses.Handler;
+using IOU1.Application.Features.Expenses.GetExpenses.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IOU1_API.Controllers;
-
-public record MemberAmountPair(long MemberId, decimal Amount);
-
-public record GroupTransactionRequest(
-    long BuyerId,
-    long GroupId,
-    decimal AmountTotal,
-    string Title,
-    string? Description,
-    bool DivideEqually,
-    IEnumerable<MemberAmountPair>? Splits,
-    IEnumerable<long>? MemberIds
-);
+namespace IOU1.API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
-public class ExpensesController : ControllerBase
+public class ExpensesController : BaseApiController
 {
-    private readonly ExpensesService _transactionService;
-    private readonly xdGroupService _groupService;
-
-    public ExpensesController(ExpensesService transactionService, xdGroupService groupService)
-    {
-        _transactionService = transactionService;
-        _groupService = groupService;
-    }
-
-    /*
-    Example 1
-    {
-      "buyerId": 1,
-      "groupId": 1,
-      "title": "Food",
-      "amountTotal": 100,
-      "divideEqually": true,
-      "splits": null,
-      "memberIds": [1,2,3,4]
-    }
-
-    Example 2
-    {
-      "buyerId": 1,
-      "groupId": 1,
-      "title": "Food",
-      "amountTotal": 100,
-      "divideEqually": false,
-      "splits": [
-        {
-          "memberId": 1,
-          "amount": 30
-        }
-      ],
-      "memberIds": null
-    }
-    */
     [HttpPost]
-    public async Task<IActionResult> CreateTransaction([FromBody] GroupTransactionRequest request)
+    public async Task<IActionResult> AddExpense(
+        [FromServices] IAddExpenseHandler handler,
+        [FromBody] AddExpenseRequest request,
+        CancellationToken cancellationToken = default)
     {
-        var result = await _transactionService
-            .CreateGroupTransactionsAsync(request);
-
-        return CreatedAtAction(
-            nameof(GetGroupExpenses),
-            new { groupId = request.GroupId },
-            result
-        );
+        var result = await handler.Handle(request, cancellationToken);
+        return CreateEndpointResponse(result);
     }
 
-    [HttpGet("{groupId:long}")]
+    [HttpGet("{GroupId:long}")]
     public async Task<IActionResult> GetGroupExpenses(
-        long groupId,
-        int pageNumber = 1,
-        int pageSize = 20,
-        string sorting = "newest")
+        [FromRoute] GetExpensesRequest request,
+        [FromServices] IGetExpensesHandler handler,
+        CancellationToken cancellationToken = default)
     {
-        var transactions = await _transactionService
-            .GetExpensesByGroupIdAsync(groupId, pageNumber, pageSize, toSortingEnum(sorting));
-
-        return Ok(transactions);
-    }
-
-    private SortingOptions toSortingEnum(string sortString)
-    {
-        return sortString switch
-        {
-            ("newest") => SortingOptions.Newest,
-            ("oldest") => SortingOptions.Oldest,
-            _ => SortingOptions.Newest,
-        };
+        var result = await handler.Handle(request, cancellationToken);
+        return CreateEndpointResponse(result);
     }
 }

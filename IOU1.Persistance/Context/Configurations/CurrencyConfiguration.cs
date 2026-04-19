@@ -10,10 +10,13 @@ namespace IOU1.Persistance.Context.Configurations
         {
             builder.ToTable("Currency");
 
-            builder.HasKey(c => c.Id);
+            builder.HasKey(c => c.Key);
 
-            builder.Property(c => c.Name)
+            builder.Property(c => c.Id)
                    .IsRequired();
+
+            builder.Property(x => x.Key)
+                .HasColumnName("CurrencyKey");
         }
     }
 }

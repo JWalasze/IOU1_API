@@ -2,14 +2,22 @@ using Application.Features.Groups.DeleteGroup.Response;
 using Application.Features.Groups.DeleteGroup.Validator;
 using Domain.RepoInterfaces;
 using Elastic.Channels;
+using Elastic.CommonSchema.Serilog;
 using Elastic.Ingest.Elasticsearch;
 using Elastic.Ingest.Elasticsearch.DataStreams;
 using Elastic.Serilog.Sinks;
 using FluentValidation;
 using IOU1.API.Middlewares;
 using IOU1.Application.Features.Auth;
-using IOU1.Application.Features.Auth.LogIn;
+using IOU1.Application.Features.Auth.LogIn.Handler;
 using IOU1.Application.Features.Auth.LogIn.Models;
+using IOU1.Application.Features.Auth.LogIn.Validator;
+using IOU1.Application.Features.Expenses.AddExpense.Handler;
+using IOU1.Application.Features.Expenses.AddExpense.Models;
+using IOU1.Application.Features.Expenses.AddExpense.Validator;
+using IOU1.Application.Features.Expenses.GetExpenses.Handler;
+using IOU1.Application.Features.Expenses.GetExpenses.Models;
+using IOU1.Application.Features.Expenses.GetExpenses.Validator;
 using IOU1.Application.Features.Groups.AddGroup.Handler;
 using IOU1.Application.Features.Groups.AddGroup.Models.Endpoint;
 using IOU1.Application.Features.Groups.AddGroup.Validator;
@@ -17,7 +25,6 @@ using IOU1.Application.Features.Groups.DeleteGroup.Handler;
 using IOU1.Application.Features.Groups.DeleteGroup.Request;
 using IOU1.Application.Features.Groups.GetGroup.Handler;
 using IOU1.Application.Features.Groups.GetGroup.Models.Request;
-using IOU1.Application.Features.Groups.GetGroup.Models.Response;
 using IOU1.Application.Features.Groups.GetGroup.Query;
 using IOU1.Application.Features.Groups.GetGroup.Validator;
 using IOU1.Application.Features.Groups.GetGroups.Handler;
@@ -31,6 +38,9 @@ using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Validator;
 using IOU1.Application.Features.Invitations.UseInvitationLink;
 using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
+using IOU1.Application.Features.Members.AddMember.Handler;
+using IOU1.Application.Features.Members.AddMember.Models;
+using IOU1.Application.Features.Members.AddMember.Validator;
 using IOU1.Application.Features.Users.AddUser;
 using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
 using IOU1.Application.Features.Users.DeleteUser;
@@ -38,30 +48,31 @@ using IOU1.Application.Features.Users.DeleteUser.Models.Endpoint;
 using IOU1.Application.Mappings;
 using IOU1.Application.Mediator;
 using IOU1.Application.Options;
+using IOU1.Application.Services.Expenses;
 using IOU1.Application.Services.Groups;
 using IOU1.Application.Services.Invitations;
 using IOU1.Application.Services.Members;
+using IOU1.Application.Services.Members.Debts;
 using IOU1.Application.Services.Users;
 using IOU1.Application.Services.Users.Checker;
 using IOU1.Domain.Entities;
-using IOU1.Domain.Models;
+using IOU1.Domain.Models.Auth.User;
 using IOU1.Domain.RepoInterfaces;
-using IOU1.Domain.Services;
 using IOU1.Domain.Services.Crypto;
+using IOU1.Domain.Services.Users;
 using IOU1.Domain.UnitOfWork;
 using IOU1.Infrastructure.Auth;
 using IOU1.Infrastructure.Mediator;
-using IOU1.Infrastructure.Queries;
 using IOU1.Infrastructure.Repositories;
 using IOU1.Infrastructure.UnitOfWork;
 using IOU1.Persistance.Context;
-using IOU1_API.Services;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Serilog.Events;
 using System.Text;
 
 namespace IOU1.API
@@ -76,28 +87,29 @@ namespace IOU1.API
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             #region SingletonServices
-
-            builder.Services.AddScoped<IRequestMediator, RequestMediator>();
-
-            builder.Services.AddSingleton<IValidator<GetGroupsRequest>, GetGroupsValidator>();
-            builder.Services.AddSingleton<IValidator<AddGroupRequest>, AddGroupValidator>();
-            builder.Services.AddSingleton<IValidator<DeleteGroupRequest>, DeleteGroupValidator>();
-            builder.Services.AddSingleton<IValidator<GenerateInvitationKeyRequest>, GenerateInvitationKeyValidator>();
-            builder.Services.AddSingleton<IValidator<LogInRequest>, LogInValidator>();
-            builder.Services.AddSingleton<IValidator<AddUserRequest>, AddUserValidator>();
-            builder.Services.AddSingleton<IValidator<DeleteUserRequest>, DeleteUserValidator>();
-            builder.Services.AddSingleton<IValidator<GetGroupRequest>, GetGroupValidator>();
-
             builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
             builder.Services.AddSingleton<IPasswordComparer, PasswordComparer>();
 
             builder.Services.AddSingleton<ITokenProvider, JwtTokenProvider>();
+            #endregion
 
+            #region ScopedServices - Validators
+            builder.Services.AddScoped<IValidator<GetGroupsRequest>, GetGroupsValidator>();
+            builder.Services.AddScoped<IValidator<AddGroupRequest>, AddGroupValidator>();
+            builder.Services.AddScoped<IValidator<DeleteGroupRequest>, DeleteGroupValidator>();
+            builder.Services.AddScoped<IValidator<GenerateInvitationKeyRequest>, GenerateInvitationKeyValidator>();
+            builder.Services.AddScoped<IValidator<LogInRequest>, LogInValidator>();
+            builder.Services.AddScoped<IValidator<AddUserRequest>, AddUserValidator>();
+            builder.Services.AddScoped<IValidator<DeleteUserRequest>, DeleteUserValidator>();
+            builder.Services.AddScoped<IValidator<GetGroupRequest>, GetGroupValidator>();
+            builder.Services.AddScoped<IValidator<AddMemberRequest>, AddMemberValidator>();
+            builder.Services.AddScoped<IValidator<AddExpenseRequest>, AddExpenseValidator>();
+            builder.Services.AddScoped<IValidator<GetExpensesRequest>, GetExpensesValidator>();
             #endregion
 
             #region ScopedServices
-
             builder.Services.AddScoped<IRepository<Group>, GroupRepository>();
+
             builder.Services.AddScoped<IGroupRepository, GroupRepository>();
             builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -105,13 +117,16 @@ namespace IOU1.API
 
             builder.Services.AddScoped<IValidator<UseInvitationLinkRequest>, UseInvitationLinkValidator>();
 
-            builder.Services.AddScoped<xdGroupService>();
-            builder.Services.AddScoped<ExpensesService>();
+            builder.Services.AddScoped<IExpenseService, ExpenseService>();
             builder.Services.AddScoped<IGroupService, GroupService>();
             builder.Services.AddScoped<IDirectInvitationCreationService, DirectInvitationCreationService>();
             builder.Services.AddScoped<IInvitationLinkService, InvitationLinkService>();
+
             builder.Services.AddScoped<IMemberService, MemberService>();
+            builder.Services.AddScoped<IMemberDebtService, MemberDebtService>();
+
             builder.Services.AddScoped<IAuthService, AuthService>();
+
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserChecker, UserChecker>();
 
@@ -125,20 +140,26 @@ namespace IOU1.API
             builder.Services.AddScoped<IAuthUser, AuthUser>();
             //builder.Services.AddScoped<IServiceBus, ServiceBus>();
 
+            builder.Services.AddScoped<IRequestMediator, RequestMediator>();
+
+
             #endregion
 
             #region TransientServices
             builder.Services.AddTransient<IGetGroupsHandler, GetGroupsHandler>();
+            builder.Services.AddTransient<IGetGroupHandler, GetGroupHandler>();
+            builder.Services.AddTransient<IAddMemberHandler, AddMemberHandler>();
+            builder.Services.AddTransient<IAddExpenseHandler, AddExpenseHandler>();
+            builder.Services.AddTransient<IGetExpensesHandler, GetExpensesHandler>();
+            builder.Services.AddTransient<ILogInHandler, LogInHandler>();
 
             builder.Services.AddTransient<IRequestHandler<AddGroupRequest, AddGroupResponse>, AddGroupHandler>();
             builder.Services.AddTransient<IRequestHandler<DirectInvitationCreationRequest, DirectInvitationCreationResponse>, DirectInvitationCreationHandler>();
             builder.Services.AddTransient<IRequestHandler<DeleteGroupRequest, DeleteGroupResponse>, DeleteGroupHandler>();
             builder.Services.AddTransient<IRequestHandler<GenerateInvitationKeyRequest, UseInvitationLinkResponse>, GenerateInvitationKeyHandler>();
             builder.Services.AddTransient<IRequestHandler<UseInvitationLinkRequest, UseInvitationLinkResponse>, UseInvitationLinkHandler>();
-            builder.Services.AddTransient<IRequestHandler<LogInRequest, LogInResponse>, LogInHandler>();
             builder.Services.AddTransient<IRequestHandler<AddUserRequest, AddUserResponse>, AddUserHandler>();
             builder.Services.AddTransient<IRequestHandler<DeleteGroupRequest, DeleteGroupResponse>, DeleteGroupHandler>();
-            builder.Services.AddTransient<IRequestHandler<GetGroupRequest, GetGroupResponse>, GetGroupHandler>();
             #endregion
 
             #region Options
@@ -176,6 +197,8 @@ namespace IOU1.API
             #endregion
 
             builder.Services.AddControllers();
+
+            #region Swagger
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
@@ -206,34 +229,17 @@ namespace IOU1.API
                     }
                 });
             });
+            #endregion
 
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .Enrich.FromLogContext()
-                .WriteTo.Elasticsearch([new Uri("http://localhost:9200")], opts =>
-                {
-                    opts.DataStream = new DataStreamName("logs", "console-example", "demo");
-                    opts.BootstrapMethod = BootstrapMethod.Failure;
-                    opts.ConfigureChannel = channelOpts =>
-                    {
-                        channelOpts.BufferOptions = new BufferOptions
-                        {
-
-                        };
-                    };
-                }, transport =>
-                {
-                    // transport.Authentication(new BasicAuthentication(username, password));
-                    // transport.Authentication(new ApiKey(base64EncodedApiKey));
-                })
-                .CreateLogger();
-
+            #region Serilog
             builder.Host.UseSerilog((ctx, services, cfg) => cfg
                 .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Error)
                 .Enrich.FromLogContext()
                 .WriteTo.Elasticsearch([new Uri("http://localhost:9200")], opts =>
                 {
-                    opts.DataStream = new DataStreamName("logs", "console-example", "demo");
+                    opts.DataStream = new DataStreamName("logs", "iou1", "api");
                     opts.BootstrapMethod = BootstrapMethod.Failure;
                     opts.ConfigureChannel = channelOpts =>
                     {
@@ -242,11 +248,17 @@ namespace IOU1.API
 
                         };
                     };
-                }, transport =>
-                {
-                    // transport.Authentication(new BasicAuthentication(username, password));
-                    // transport.Authentication(new ApiKey(base64EncodedApiKey));
+
+                    opts.TextFormatting = new EcsTextFormatterConfiguration<LogEventEcsDocument>
+                    {
+                        IncludeHost = false,
+                        IncludeProcess = false,
+                        IncludeUser = false,
+                        IncludeActivityData = false
+                    };
+
                 }));
+            #endregion
 
             builder.Services.AddScoped<UserSessionMiddleware>();
             builder.Services.AddAuthorization();
@@ -282,6 +294,8 @@ namespace IOU1.API
                 );
             });
 
+            //builder.Services.AddOpenApi();
+
             var app = builder.Build();
 
             app.UseCors("DevCors");
@@ -292,9 +306,10 @@ namespace IOU1.API
                 app.UseSwaggerUI();
 
                 app.UseCors(builder =>
-                builder.WithOrigins("http://localhost:5173")
-                       .AllowAnyHeader()
-                       .AllowAnyMethod());
+                    builder
+                        .WithOrigins("http://localhost:5173")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
             }
 
             //app.MapOpenApi();

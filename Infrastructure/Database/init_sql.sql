@@ -43,11 +43,23 @@ create table CommunityGroup (
 
 create table GroupMember (
   Id bigint primary key identity(1, 1),
-  MemberId bigint not null,
+  UserId bigint not null,
   GroupId bigint not null,
 
   constraint fk_member_id_group_member foreign key (MemberId) references AppUser (Id),
   constraint fk_group_id_group_member foreign key (GroupId) references CommunityGroup (Id)
+);
+
+create table GroupMemberDebt (
+  Id bigint primary key identity(1, 1),
+  MemberId bigint not null,
+  DebtorId bigint not null,
+  GroupId bigint not null,
+  Balance decimal not null,
+
+  constraint fk_member_id_gm_debt foreign key (MemberId) references GroupMember (Id),
+  constraint fk_debtor_id_gm_debt foreign key (DebtorId) references GroupMember (Id),
+  constraint fk_group_id_gm_debt foreign key (GroupId) references CommunityGroup (Id)
 );
 
 create table Invitation(
@@ -62,8 +74,8 @@ create table Invitation(
 );
 
 create table Currency (
-  Id bigint primary key identity(1, 1),
-  Name varchar(10) not null,
+  Id bigint identity(1, 1) not null,
+  CurrencyKey nvarchar(3) primary key not null,
 );
 
 create table GroupExpense (
@@ -73,12 +85,12 @@ create table GroupExpense (
   TotalAmount decimal(10, 2) not null,
   Title nvarchar(50) not null,
   Description nvarchar(255) null,
-  CurrencyId bigint not null,
+  CurrencyKey nvarchar(3) not null,
   CreatedAt date not null,
   Version rowversion,
   constraint fk_group_id_group_expense foreign key (GroupId) references CommunityGroup (Id),
   constraint fk_buyer_id_group_expense foreign key (BuyerId) references AppUser (Id),
-  constraint fk_currency_id_group_expense foreign key (CurrencyId) references Currency (Id)
+  constraint fk_currency_key_group_expense foreign key (CurrencyKey) references Currency (CurrencyKey)
 );
 
 create table GroupTransaction (
@@ -89,13 +101,17 @@ create table GroupTransaction (
   BorrowerId bigint not null,
   AddDate datetime not null constraint df_add_date_group_transaction default getdate(),
   Amount decimal(10, 2) not null,
-  CurrencyId bigint not null,
+  CurrencyKey nvarchar(3) not null,
+  BuyerMember bigint not null,
+  BorrowerMember bigint not null,
   Version rowversion,
   constraint fk_expense_id_group_transaction foreign key (ExpenseId) references GroupExpense (Id),
   constraint fk_group_id_group_transaction foreign key (GroupId) references CommunityGroup (Id),
   constraint fk_buyer_id_group_transaction foreign key (BuyerId) references AppUser (Id),
   constraint fk_borrower_id_group_transaction foreign key (BorrowerId) references AppUser (Id),
-  constraint fk_currency_id_group_transaction foreign key (CurrencyId) references Currency (Id),
+  constraint fk_currency_key_group_transaction foreign key (CurrencyKey) references Currency (CurrencyKey),
+  constraint fk_borrower_mem_group_transaction foreign key (BorrowerMember) references GroupMember (Id),
+  constraint fk_buyer_mem_group_transaction foreign key (BuyerMember) references GroupMember (Id)
 );
 
 create table InvitationLink (
@@ -111,370 +127,24 @@ create table InvitationLink (
 
 
 insert into
-  AppUser (
-    FirstName,
-    LastName,
-    Email,
-    Login,
-    PasswordHash,
-    PasswordSalt
-  )
-values
-  (
-    'Alice',
-    'Johnson',
-    'alice.johnson@example.com',
-    'alicej',
-    'P@ssword1',
-    'Salt'
-  );
-
-insert into
-  AppUser (
-    FirstName,
-    LastName,
-    Email,
-    Login,
-    PasswordHash,
-    PasswordSalt
-  )
-values
-  (
-    'Bob',
-    'Smith',
-    'bob.smith@example.com',
-    'bobsmith',
-    'P@ssword1',
-    'Salt'
-  );
-
-insert into
-  AppUser (
-    FirstName,
-    LastName,
-    Email,
-    Login,
-    PasswordHash,
-    PasswordSalt
-  )
-values
-  (
-    'Charlie',
-    'Brown',
-    'charlie.brown@example.com',
-    'cbrown',
-    'P@ssword1',
-    'Salt'
-  );
-
-insert into
-  AppUser (
-    FirstName,
-    LastName,
-    Email,
-    Login,
-    PasswordHash,
-    PasswordSalt
-  )
-values
-  (
-    'Diana',
-    'Evans',
-    'diana.evans@example.com',
-    'dianae',
-    'P@ssword1',
-    'Salt'
-  );
-
-insert into
-  CommunityGroup (CreatedById, Description, Name)
-values
-  (1, 'Group for project Alpha', 'AlphaTeam');
-
-insert into
-  CommunityGroup (CreatedById, Description, Name)
-values
-  (2, 'Testers group for QA', 'Testers');
-
-insert into
-  CommunityGroup (CreatedById, Description, Name)
-values
-  (3, 'Finance department collaboration', 'FDC');
-
-insert into
-  CommunityGroup (CreatedById, Description, Name)
-values
-  (4, 'Casual chat group', 'Friends');
-
--- Group 1 (Alpha): everyone joins
-insert into
-  GroupMember (MemberId, GroupId)
-values
-  (1, 1);
-
-insert into
-  GroupMember (MemberId, GroupId)
-values
-  (2, 1);
-
-insert into
-  GroupMember (MemberId, GroupId)
-values
-  (3, 1);
-
-insert into
-  GroupMember (MemberId, GroupId)
-values
-  (4, 1);
-
--- Group 2 (QA): Bob + Charlie
-insert into
-  GroupMember (MemberId, GroupId)
-values
-  (2, 2);
-
-insert into
-  GroupMember (MemberId, GroupId)
-values
-  (3, 2);
-
--- Group 3 (Finance): Charlie + Alice
-insert into
-  GroupMember (MemberId, GroupId)
-values
-  (3, 3);
-
-insert into
-  GroupMember (MemberId, GroupId)
-values
-  (1, 3);
-
--- Group 4 (Casual chat): Diana + Bob
-insert into
-  GroupMember (MemberId, GroupId)
-values
-  (4, 4);
-
-insert into
-  GroupMember (MemberId, GroupId)
-values
-  (2, 4);
-
--- 1) Lookup tables
-insert into
-  Currency (Name)
+  Currency (CurrencyKey)
 values
   ('PLN');
 
 -- Id = 1
 insert into
-  Currency (Name)
+  Currency (CurrencyKey)
 values
   ('EUR');
 
 -- Id = 2
 insert into
-  Currency (Name)
+  Currency (CurrencyKey)
 values
   ('USD');
 
 -- Id = 3
 insert into
-  Currency (Name)
+  Currency (CurrencyKey)
 values
   ('GBP');
-
--- Id = 4
--- 2) Sample transactions
--- Group 1 (Alpha: members 1,2,3,4)
-declare @ExpenseId bigint;
-
--- Alice paid for others in Group 1
-insert into
-  GroupExpense (
-    GroupId,
-    BuyerId,
-    TotalAmount,
-    Title,
-    CurrencyId,
-    CreatedAt
-  )
-values
-  (1, 1, 120.50, 'Beer', 1, '2025-09-28 18:45:22');
-
--- Alice total
-set
-  @ExpenseId = SCOPE_IDENTITY();
-
-insert into
-  GroupTransaction (
-    ExpenseId,
-    GroupId,
-    BuyerId,
-    BorrowerId,
-    Amount,
-    CurrencyId,
-    AddDate
-  )
-values
-  (
-    @ExpenseId,
-    1,
-    1,
-    2,
-    -65.50,
-    1,
-    '2025-09-28 18:45:22'
-  ), -- Alice bought for Bob
-  (
-    @ExpenseId,
-    1,
-    1,
-    1,
-    -55.00,
-    1,
-    '2025-09-28 18:45:22'
-  ), -- Alice bought for herself
-  (
-    @ExpenseId,
-    1,
-    1,
-    1,
-    55.00,
-    1,
-    '2025-09-28 18:45:22'
-  );
-
--- With positive compensation
--- Bob paid for Charlie in Group 1
-insert into
-  GroupExpense (
-    GroupId,
-    BuyerId,
-    TotalAmount,
-    Title,
-    CurrencyId,
-    CreatedAt
-  )
-values
-  (
-    1,
-    2,
-    45.00,
-    'Charlie''s drinks',
-    1,
-    '2025-09-29 20:15:07'
-  );
-
-set
-  @ExpenseId = SCOPE_IDENTITY();
-
-insert into
-  GroupTransaction (
-    ExpenseId,
-    GroupId,
-    BuyerId,
-    BorrowerId,
-    Amount,
-    CurrencyId,
-    AddDate
-  )
-values
-  (
-    @ExpenseId,
-    1,
-    2,
-    3,
-    -45.00,
-    1,
-    '2025-09-29 20:15:07'
-  );
-
--- Diana paid for Alice in Group 1
-insert into
-  GroupExpense (
-    GroupId,
-    BuyerId,
-    TotalAmount,
-    Title,
-    CurrencyId,
-    CreatedAt
-  )
-values
-  (
-    1,
-    4,
-    9.99,
-    'Alice''s Big Mac',
-    1,
-    '2025-09-30 19:42:55'
-  );
-
-set
-  @ExpenseId = SCOPE_IDENTITY();
-
-insert into
-  GroupTransaction (
-    ExpenseId,
-    GroupId,
-    BuyerId,
-    BorrowerId,
-    Amount,
-    CurrencyId,
-    AddDate
-  )
-values
-  (
-    @ExpenseId,
-    1,
-    4,
-    1,
-    -9.99,
-    1,
-    '2025-09-30 19:42:55'
-  );
-
--- Charlie paid for Diana in Group 1
-insert into
-  GroupExpense (
-    GroupId,
-    BuyerId,
-    TotalAmount,
-    Title,
-    CurrencyId,
-    CreatedAt
-  )
-values
-  (
-    1,
-    3,
-    72.10,
-    'Groceries for Diana',
-    1,
-    '2025-10-01 21:10:36'
-  );
-
-set
-  @ExpenseId = SCOPE_IDENTITY();
-
-insert into
-  GroupTransaction (
-    ExpenseId,
-    GroupId,
-    BuyerId,
-    BorrowerId,
-    Amount,
-    CurrencyId,
-    AddDate
-  )
-values
-  (
-    @ExpenseId,
-    1,
-    3,
-    4,
-    -72.10,
-    1,
-    '2025-10-01 21:10:36'
-  );
-  

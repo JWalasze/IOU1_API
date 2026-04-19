@@ -1,5 +1,5 @@
 ﻿using IOU1.Domain.Entities;
-using IOU1.Domain.Models;
+using IOU1.Domain.Models.Results;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,28 +9,48 @@ public class MemberService(IOU1Context context) : IMemberService
 {
     private readonly IOU1Context _context = context;
 
-    public async Task<Result> AddMember(long groupId, long memberId, CancellationToken cancellationToken = default)
+    public async Task<Result<GroupMember?>> AddMember(long groupId, long memberId, CancellationToken cancellationToken = default)
     {
-        var groupp = await _context.Groups
-            .Include(g => g.Members)
-            .FirstOrDefaultAsync(g => g.Id == groupId, cancellationToken);
-
         var group = await _context.Groups.FindAsync([groupId], cancellationToken);
         if (group is null)
         {
-            return Result.Failure($"Group with id {groupId} doesn't exist.");
+            return Result<GroupMember?>.Failure($"Group with id {groupId} doesn't exist.");
         }
 
         var user = await _context.Users.FindAsync([memberId], cancellationToken);
         if (user is null)
         {
-            return Result.Failure($"User with id {memberId} doesn't exist.");
+            return Result<GroupMember?>.Failure($"User with id {memberId} doesn't exist.");
+        }
+
+        if (group.Members
+                .Select(m => m.UserId)
+                .Contains(user.Id))
+        {
+            var existingMember = await _context.GroupMembers
+                .FirstOrDefaultAsync(gm =>
+                    gm.GroupId == groupId &&
+                    gm.UserId == user.Id,
+                    cancellationToken);
+
+            if (existingMember is null)
+            {
+                return Result<GroupMember?>.Failure($"inconsistent data around user {user.Id} in group {group.Id}.");
+            }
+
+            return Result<GroupMember?>.Success(existingMember);
         }
 
         var newMember = new GroupMember(group, user);
-
         group.AddNewMember(newMember);
 
-        return Result.Success();
+        return Result<GroupMember?>.Success(newMember);
+    }
+
+    public Task<bool> IsMemberOfGroup(long groupId, long memberId, CancellationToken cancellationToken = default)
+    {
+        return _context
+            .GroupMembers
+            .AnyAsync(gm => gm.UserId == memberId && gm.GroupId == groupId, cancellationToken);
     }
 }

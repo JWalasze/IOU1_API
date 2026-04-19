@@ -1,19 +1,20 @@
-﻿using IOU1.Application.Features.Auth.LogIn.Models;
-using IOU1.Application.Mediator;
+﻿using IOU1.Application.Features.Auth.LogIn.Handler;
+using IOU1.Application.Features.Auth.LogIn.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOU1.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController(IRequestMediator mediator) : BaseApiController
+public class AuthController : BaseApiController
 {
-    private readonly IRequestMediator _mediator = mediator;
-
     [HttpPost]
-    public async Task<IActionResult> Login([FromBody] LogInRequest logInRequest, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Login(
+        [FromBody] LogInRequest logInRequest,
+        [FromServices] ILogInHandler handler,
+        CancellationToken cancellationToken = default)
     {
-        var result = await _mediator.Send<LogInRequest, LogInResponse>(logInRequest, cancellationToken);
+        var result = await handler.Handle(logInRequest, cancellationToken);
         return CreateEndpointResponse(result);
     }
 }

@@ -38,7 +38,7 @@ public class DirectInvitationCreationValidator: AbstractValidator<DirectInvitati
                 var exists = await _context.Groups
                     .AnyAsync(g =>
                         g.Id == model.GroupId &&
-                        g.Members.Any(m => m.MemberId == model.SenderId),
+                        g.Members.Any(m => m.UserId == model.SenderId),
                         ct);
 
                 return exists;

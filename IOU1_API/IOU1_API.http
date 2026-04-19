@@ -1,6 +1,22 @@
-@IOU1_API_HostAddress = http://localhost:5052
+@IOU1_API_HostAddress = https://localhost:7033/api
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJsb2dpbiI6IlJhY2hldDEyMzQiLCJuYW1lIjoiSmFrdWIgV2FsYXN6ZWsiLCJlbWFpbCI6IndhbGFzemVrQGdtYWlsLmNvbSIsImF1ZCI6ImFwcGxpY2F0aW9uIiwiaXNzIjoiSU9VMV9BUEkiLCJleHAiOjE3NzA1ODEyOTAsImlhdCI6MTc3MDU3NzY5MCwibmJmIjoxNzcwNTc3NjkwfQ.cMbGcSCzQackFTSO_IG5UDmILMYvScM_F4ADM3jZPRQ
 
-GET {{IOU1_API_HostAddress}}/weatherforecast/
+POST {{IOU1_API_HostAddress}}/Expenses
 Accept: application/json
-
+Content-Type: application/json
+Authorization:Bearer {{token}}
+{
+  "buyerId": 5,
+  "groupId": 10002,
+  "amount": 1000,
+  "title": "Wakacje",
+  "description": "Wakacje na Majorce w lipcu!",
+  "splitType": "Equal",
+  "splits": [
+    {
+      "memberId": 0,
+      "amount": 0
+    }
+  ]
+}
 ###

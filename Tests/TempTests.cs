@@ -3,6 +3,7 @@ using FluentAssertions;
 using IOU1.Application.Features.Transactions.AddTransaction.Request;
 using IOU1.Application.Services.Expenses;
 using IOU1.Application.Services.Groups;
+using IOU1.Application.Services.Members;
 using IOU1.Domain.RepoInterfaces;
 using IOU1.Infrastructure.Repositories;
 using IOU1.Infrastructure.UnitOfWork;
@@ -114,5 +115,10 @@ public class TempTests
         result.Should().NotBeNull();
     }
 
-
+    [Fact]
+    public async Task CheckHowEFAnyAsyncQueryLooksLike()
+    {
+        var memberService = new MemberService(_context);
+        await memberService.IsMemberOfGroup(1, 1);
+    }
 }

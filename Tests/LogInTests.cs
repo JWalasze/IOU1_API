@@ -31,8 +31,6 @@ public class LogInTests
 
     public LogInTests(ITestOutputHelper output)
     {
-
-
         _output = output;
 
         var config = TestConfig.InitConfiguration();
@@ -93,7 +91,12 @@ public class LogInTests
         ctxMock.Setup(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(1);
 
-        var sut = new AuthService(ctxMock.Object, new JwtTokenProvider(_jwtOptionsMock.Object), new PasswordHasher(), new PasswordComparer());
+        var sut = new AuthService(
+            ctxMock.Object,
+            new JwtTokenProvider(_jwtOptionsMock.Object),
+            new PasswordHasher(),
+            new PasswordComparer(),
+            null);
 
         //Act
         var result = await sut.LogIn(new Credentials("Rachet1234", "moje_silne_haslo"));
