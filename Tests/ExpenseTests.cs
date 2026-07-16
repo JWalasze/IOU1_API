@@ -1,4 +1,4 @@
-﻿using Domain.RepoInterfaces;
+using Domain.RepoInterfaces;
 using FluentAssertions;
 using IOU1.Application.Strategy;
 using IOU1.Domain.Entities;
@@ -19,6 +19,8 @@ namespace IOU1.Tests;
 
 public class ExpenseTests
 {
+    private static readonly Currency Pln = new("PLN");
+
     private readonly IOU1Context _context;
     private readonly IServiceProvider _serviceProvider;
 
@@ -65,7 +67,7 @@ public class ExpenseTests
         var bob = User(2, "Bob", "Kowalski");
         var carol = User(3, "Carol", "Wiśniewska");
 
-        var group = new Group("Nazwa", "Weekend trip to Mazury", alice, new List<User>());
+        var group = new Group("Nazwa", "Weekend trip to Mazury", alice, Pln, new List<User>());
 
         alice.OwnedGroups.Add(group);
 
@@ -76,10 +78,12 @@ public class ExpenseTests
         bob.MemberGroups.Add(gmBob);
         carol.MemberGroups.Add(gmCarol);
 
+        var aliceMember = group.Members.First(m => m.UserId == alice.Id);
+
         //Act
         var action = () =>
         {
-            var sut = new Expense(100, "Tytul", "Description", group, alice, null,
+            var sut = new Expense(100, "Tytul", "Description", group, aliceMember,
             [
                 new()
                 {
@@ -87,7 +91,7 @@ public class ExpenseTests
                     MemberId = 1
                 },
 
-            ], null);
+            ], null!);
         };
 
         //Assert
@@ -95,14 +99,14 @@ public class ExpenseTests
     }
 
     [Fact]
-    public void SplitStrategy_SplitsAreValid_CreatesProperTransactions()
+    public void SplitStrategy_SplitsAreValid_CreatesProperExpenseShares()
     {
         //Arrange
         var alice = User(1, "Alice", "Nowak");
         var bob = User(2, "Bob", "Kowalski");
         var carol = User(3, "Carol", "Wiśniewska");
 
-        var group = new Group("Nazwa", "Weekend trip to Mazury", alice, new List<User>());
+        var group = new Group("Nazwa", "Weekend trip to Mazury", alice, Pln, new List<User>());
 
         alice.OwnedGroups.Add(group);
 
@@ -115,7 +119,9 @@ public class ExpenseTests
         carol.MemberGroups.Add(gmCarol);
         alice.MemberGroups.Add(gmAlice);
 
-        var sut = new Expense(200, "Tytul", "Description", group, alice, null,
+        var aliceMember = group.Members.First(m => m.UserId == alice.Id);
+
+        var sut = new Expense(200, "Tytul", "Description", group, aliceMember,
         [
             new()
             {
@@ -132,33 +138,24 @@ public class ExpenseTests
                 Amount = -50,
                 MemberId = 1
             }
-        ], null);
-
-        var strategy = new CustomSplitStrategy();
-
-        //Act
-        strategy.Split(sut);
+        ], new CustomSplitStrategy());
 
         //Assert
         sut.Should().NotBeNull();
-        sut.Transactions.Should().NotBeNullOrEmpty();
-        sut.Transactions.Should().NotContainNulls();
-        sut.Transactions.Count.Should().Be(4);
-        sut.Transactions.Should().OnlyContain(t => t.Buyer!.Id == alice.Id);
-        sut.Transactions.Count(t => t.Borrower!.Id == alice.Id).Should().Be(2);
-        sut.Transactions.Count(t => t.Borrower!.Id == bob.Id).Should().Be(1);
-        sut.Transactions.Count(t => t.Borrower!.Id == carol.Id).Should().Be(1);
+        sut.ExpenseShares.Should().NotBeNullOrEmpty();
+        sut.ExpenseShares.Should().NotContainNulls();
+        sut.ExpenseShares.Count.Should().Be(3);
+        sut.ExpenseShares.Count(es => es.Member.UserId == alice.Id).Should().Be(1);
+        sut.ExpenseShares.Count(es => es.Member.UserId == bob.Id).Should().Be(1);
+        sut.ExpenseShares.Count(es => es.Member.UserId == carol.Id).Should().Be(1);
 
-        var aliceTransaction = sut.Transactions.Where(t => t.Borrower!.Id == alice.Id).ToList();
-        var bobTransaction = sut.Transactions.First(t => t.Borrower!.Id == bob.Id);
-        var carolTransaction = sut.Transactions.First(t => t.Borrower!.Id == carol.Id);
+        var aliceShare = sut.ExpenseShares.First(es => es.Member.UserId == alice.Id);
+        var bobShare = sut.ExpenseShares.First(es => es.Member.UserId == bob.Id);
+        var carolShare = sut.ExpenseShares.First(es => es.Member.UserId == carol.Id);
 
-        aliceTransaction.Should().NotBeNullOrEmpty();
-        aliceTransaction.Should().ContainSingle(t => t.Amount == 50);
-        aliceTransaction.Should().ContainSingle(t => t.Amount == -1 * 50);
-
-        bobTransaction.Amount.Should().Be(-1 * 100);
-        carolTransaction.Amount.Should().Be(-1 * 50);
+        aliceShare.Amount.Should().Be(50);
+        bobShare.Amount.Should().Be(100);
+        carolShare.Amount.Should().Be(50);
     }
 
     public static Email EmailOf(string local) => new($"{local}@test.local");
@@ -179,7 +176,7 @@ public class ExpenseTests
         var bob = User(2, "Bob", "Kowalski");
         var carol = User(3, "Carol", "Wiśniewska");
 
-        var group = new Group("Nazwa", "Weekend trip to Mazury", alice, new List<User>());
+        var group = new Group("Nazwa", "Weekend trip to Mazury", alice, Pln, new List<User>());
 
         alice.OwnedGroups.Add(group);
 
@@ -219,7 +216,7 @@ public class ExpenseTests
 
         Group G(string desc, User owner, params User[] members)
         {
-            var g = new Group("Nazwa", desc, owner, new List<User>());
+            var g = new Group("Nazwa", desc, owner, Pln, new List<User>());
             owner.OwnedGroups.Add(g);
             var links = members.Select(u => new GroupMember(g, u)).ToArray();
             g.AddNewMembers(links);

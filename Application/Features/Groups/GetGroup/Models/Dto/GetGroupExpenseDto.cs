@@ -1,4 +1,4 @@
-﻿namespace IOU1.Application.Features.Groups.GetGroup.Models.Dto;
+namespace IOU1.Application.Features.Groups.GetGroup.Models.Dto;
 
 public sealed record GetGroupExpenseDto
 {
@@ -10,5 +10,5 @@ public sealed record GetGroupExpenseDto
 
     public string? Currency { get; init; }
 
-    public required ICollection<GetGroupTransactionDto> Transactions { get; init; } = [];
+    public required ICollection<GetGroupExpenseShareDto> ExpenseShares { get; init; } = [];
 }

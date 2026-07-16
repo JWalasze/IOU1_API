@@ -23,8 +23,8 @@ public class UserSessionMiddleware(IAuthUser user) : IMiddleware
 
     private void SetUserSession(HttpContext context)
     {
-        var userId = context.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
-                ?? throw new UserSessionException("Invalid user! ID is missing!");
+        var userId = context.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value ??
+            throw new UserSessionException("Invalid user! ID is missing!");
 
         if (!long.TryParse(userId, out var parsedUserId))
             throw new UserSessionException("Invalid user! ID is not a valid long value!");

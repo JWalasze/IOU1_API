@@ -1,4 +1,4 @@
-﻿using Domain.RepoInterfaces;
+using Domain.RepoInterfaces;
 using IOU1.Domain.Entities;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
@@ -17,24 +17,19 @@ public class ExpenseRepository : Repository<Expense>, IExpenseRepository
 
     public async Task AddAsync(Expense expense, CancellationToken cancellationToken = default)
     {
-        // Add Expense with related Transactions
+        // Add Expense with related ExpenseShares
         await _context.Expenses.AddAsync(expense, cancellationToken);
     }
 
     public async Task<IEnumerable<Expense>> GetByGroupIdAsync(long groupId, CancellationToken cancellationToken = default)
     {
         return await _context.Expenses
-            .Include(e => e.Transactions)
-                .ThenInclude(t => t.Group)
-            .Include(e => e.Transactions)
-                .ThenInclude(t => t.Buyer)
-            .Include(e => e.Transactions)
-                .ThenInclude(t => t.Borrower)
-            .Include(e => e.Transactions)
-                .ThenInclude(t => t.Currency)
+            .Include(e => e.ExpenseShares)
+                .ThenInclude(es => es.Member)
+                    .ThenInclude(m => m.User)
             .Include(e => e.Group)
-            .Include(e => e.Buyer)
-            .Include(e => e.Currency)
+            .Include(e => e.Payer)
+                .ThenInclude(p => p.User)
             .Where(e => e.Group.Id == groupId)
             .ToListAsync(cancellationToken);
     }
@@ -42,27 +37,24 @@ public class ExpenseRepository : Repository<Expense>, IExpenseRepository
     public async Task<Expense?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
     {
         return await _context.Expenses
-            .Include(e => e.Transactions)   // eager load related transactions
+            .Include(e => e.ExpenseShares)   // eager load related expense shares
+                .ThenInclude(es => es.Member)
+                    .ThenInclude(m => m.User)
             .Include(e => e.Group)
-            .Include(e => e.Buyer)
-            .Include(e => e.Currency)
+            .Include(e => e.Payer)
+                .ThenInclude(p => p.User)
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
 
     public IQueryable<Expense> GetByGroupIdQuery(long groupId)
     {
         return _context.Expenses
-            .Include(e => e.Transactions)
-                .ThenInclude(t => t.Group)
-            .Include(e => e.Transactions)
-                .ThenInclude(t => t.Buyer)
-            .Include(e => e.Transactions)
-                .ThenInclude(t => t.Borrower)
-            .Include(e => e.Transactions)
-                .ThenInclude(t => t.Currency)
+            .Include(e => e.ExpenseShares)
+                .ThenInclude(es => es.Member)
+                    .ThenInclude(m => m.User)
             .Include(e => e.Group)
-            .Include(e => e.Buyer)
-            .Include(e => e.Currency)
+            .Include(e => e.Payer)
+                .ThenInclude(p => p.User)
             .Where(e => e.Group.Id == groupId)
             .AsQueryable();
     }

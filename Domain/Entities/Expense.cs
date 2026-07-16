@@ -1,26 +1,25 @@
-﻿using IOU1.Domain.Base;
+using IOU1.Domain.Base;
 using IOU1.Domain.Models;
 using IOU1.Domain.Services.Splits;
 
 namespace IOU1.Domain.Entities;
 
-public class Expense : Entity
+public sealed class Expense : Entity
 {
-    public decimal TotalAmount { get; }
     public string Title { get; } = null!;
     public string? Description { get; } = null!;
+    public decimal Amount { get; }
     public DateTime CreatedAt { get; }
+    public bool IsDeleted { get; private set; }
+    public bool IsSettled { get; private set; }
 
     public Group Group { get; } = null!;
     public long GroupId { get; }
 
-    public User Buyer { get; } = null!;
-    public long BuyerId { get; }
+    public GroupMember Payer { get; } = null!;
+    public long PayerId { get; }
 
-    public string CurrencyKey { get; } = null!;
-    public Currency Currency { get; } = null!;
-
-    public ICollection<Transaction> Transactions { get; } = [];
+    public ICollection<ExpenseShare> ExpenseShares { get; } = [];
     public ICollection<Split> Splits { get; } = [];
 
     private Expense() { }
@@ -30,22 +29,21 @@ public class Expense : Entity
         string title,
         string? description,
         Group group,
-        User buyer,
-        Currency currency,
+        GroupMember payer,
         IEnumerable<Split> splits,
         ISplitStrategy splitStrategy)
     {
-        TotalAmount = totalAmount;
+        Amount = totalAmount;
         Title = title;
         Description = description;
         Group = group;
-        Buyer = buyer;
-        BuyerId = buyer.Id;
-        Currency = currency;
+        Payer = payer;
+        PayerId = payer.Id;
+        CreatedAt = DateTime.UtcNow;
 
         ValidateSplits(splits);
         Splits = [.. splits];
-        Transactions = [.. splitStrategy.Split(this)];
+        ExpenseShares = [.. splitStrategy.Split(this)];
     }
 
     private void ValidateSplits(IEnumerable<Split> splits)
@@ -57,5 +55,15 @@ public class Expense : Entity
                 throw new InvalidOperationException($"Member {member.MemberId} doesn't belong to the group {Group.Id}");
             }
         }
+    }
+
+    public void Delete()
+    {
+        IsDeleted = true;
+    }
+
+    public void MarkAsSettled()
+    {
+        IsSettled = true;
     }
 }

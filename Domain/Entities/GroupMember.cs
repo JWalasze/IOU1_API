@@ -10,8 +10,6 @@ public class GroupMember : Entity
     public long UserId { get; }
     public User User { get; } = null!;
 
-    //public ICollection<Transaction> Transactions { get; } = [];
-
     private GroupMember() { }
 
     public GroupMember(Group group, User user)

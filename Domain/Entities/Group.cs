@@ -13,11 +13,14 @@ public class Group : Entity
 
     public User Owner { get; private set; } = null!;
 
+    public string CurrencyKey { get; private set; } = null!;
+    public Currency Currency { get; private set; } = null!;
+
     public ICollection<GroupMember> Members { get; } = [];
 
     private Group() { }
 
-    public Group(string name, string? description, User owner, ICollection<GroupMember> members)
+    public Group(string name, string? description, User owner, Currency currency, ICollection<GroupMember> members)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -27,6 +30,8 @@ public class Group : Entity
         Name = name;
         Description = description;
         Owner = owner;
+        Currency = currency;
+        CurrencyKey = currency.Key;
         Members = members;
 
         if (!Members
@@ -38,7 +43,7 @@ public class Group : Entity
         }
     }
 
-    public Group(string name, string? description, User owner, ICollection<User> members)
+    public Group(string name, string? description, User owner, Currency currency, ICollection<User> members)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -48,6 +53,8 @@ public class Group : Entity
         Name = name;
         Description = description;
         Owner = owner;
+        Currency = currency;
+        CurrencyKey = currency.Key;
         Members = [.. members.Select(member => GroupMember.Create(this, member))];
 
         if (!Members
@@ -82,12 +89,14 @@ public class Group : Entity
         string name,
         string? description,
         User owner,
+        Currency currency,
         ICollection<GroupMember> members)
     {
         return new Group(
             name,
             description,
             owner,
+            currency,
             members);
     }
 
@@ -95,12 +104,14 @@ public class Group : Entity
         string name,
         string? description,
         User owner,
+        Currency currency,
         ICollection<User> users)
     {
         return new Group(
             name,
             description,
             owner,
+            currency,
             users);
     }
 }

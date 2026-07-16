@@ -73,6 +73,7 @@ var roommates = new Group(
     name: "Roommates",
     description: "Shared apartment expenses",
     owner: users[0],
+    currency: currencies["PLN"],
     members: [users[0], users[1], users[2]]);
 
 // "Weekend Trip" — Bob owns, Bob + Charlie + Diana + Eve are members
@@ -80,6 +81,7 @@ var trip = new Group(
     name: "Weekend Trip",
     description: "Prague trip 2025",
     owner: users[1],
+    currency: currencies["EUR"],
     members: [users[1], users[2], users[3], users[4]]);
 
 // "Office Lunch" — Diana owns, Diana + Alice are members
@@ -87,6 +89,7 @@ var lunch = new Group(
     name: "Office Lunch",
     description: null,
     owner: users[3],
+    currency: currencies["PLN"],
     members: [users[3], users[0]]);
 
 context.Groups.AddRange(roommates, trip, lunch);
@@ -107,10 +110,9 @@ lunch = await context.Groups
     .Include(g => g.Members).ThenInclude(m => m.User)
     .SingleAsync(g => g.Id == lunch.Id);
 
-var pln = currencies["PLN"];
-var eur = currencies["EUR"];
-
 ISplitStrategy equal = new EqualSplitStrategy();
+
+static GroupMember PayerOf(Group group, User user) => group.Members.First(m => m.UserId == user.Id);
 
 List<Expense> expenses =
 [
@@ -120,8 +122,7 @@ List<Expense> expenses =
         title: "Groceries",
         description: "Monthly grocery run",
         group: roommates,
-        buyer: users[0],
-        currency: pln,
+        payer: PayerOf(roommates, users[0]),
         splits: roommates.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
         splitStrategy: equal),
 
@@ -130,8 +131,7 @@ List<Expense> expenses =
         title: "Internet bill",
         description: null,
         group: roommates,
-        buyer: users[1],
-        currency: pln,
+        payer: PayerOf(roommates, users[1]),
         splits: roommates.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
         splitStrategy: equal),
 
@@ -140,8 +140,7 @@ List<Expense> expenses =
         title: "Cleaning supplies",
         description: null,
         group: roommates,
-        buyer: users[2],
-        currency: pln,
+        payer: PayerOf(roommates, users[2]),
         splits: roommates.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
         splitStrategy: equal),
 
@@ -151,8 +150,7 @@ List<Expense> expenses =
         title: "Hotel",
         description: "2 nights in Prague",
         group: trip,
-        buyer: users[1],
-        currency: eur,
+        payer: PayerOf(trip, users[1]),
         splits: trip.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
         splitStrategy: equal),
 
@@ -161,8 +159,7 @@ List<Expense> expenses =
         title: "Train tickets",
         description: "Round trip",
         group: trip,
-        buyer: users[3],
-        currency: eur,
+        payer: PayerOf(trip, users[3]),
         splits: trip.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
         splitStrategy: equal),
 
@@ -171,8 +168,7 @@ List<Expense> expenses =
         title: "Restaurants",
         description: "Meals during the trip",
         group: trip,
-        buyer: users[2],
-        currency: eur,
+        payer: PayerOf(trip, users[2]),
         splits: trip.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
         splitStrategy: equal),
 
@@ -182,14 +178,13 @@ List<Expense> expenses =
         title: "Team lunch",
         description: "Italian restaurant",
         group: lunch,
-        buyer: users[3],
-        currency: pln,
+        payer: PayerOf(lunch, users[3]),
         splits: lunch.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
         splitStrategy: equal),
 ];
 
 context.Expenses.AddRange(expenses);
 await context.SaveChangesAsync();
-Console.WriteLine($"Expenses seeded: {expenses.Count} expenses, {expenses.Sum(e => e.Transactions.Count)} transactions");
+Console.WriteLine($"Expenses seeded: {expenses.Count} expenses, {expenses.Sum(e => e.ExpenseShares.Count)} expense shares");
 
 Console.WriteLine("Database seeding completed successfully!");

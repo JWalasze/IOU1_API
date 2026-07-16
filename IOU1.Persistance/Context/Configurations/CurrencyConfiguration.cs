@@ -12,9 +12,6 @@ namespace IOU1.Persistance.Context.Configurations
 
             builder.HasKey(c => c.Key);
 
-            builder.Property(c => c.Id)
-                   .IsRequired();
-
             builder.Property(x => x.Key)
                 .HasColumnName("CurrencyKey");
         }

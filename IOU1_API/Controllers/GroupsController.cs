@@ -3,6 +3,8 @@ using IOU1.Application.Features.Groups.AddGroup.Models.Endpoint;
 using IOU1.Application.Features.Groups.DeleteGroup.Request;
 using IOU1.Application.Features.Groups.GetGroup.Handler;
 using IOU1.Application.Features.Groups.GetGroup.Models.Request;
+using IOU1.Application.Features.Groups.GetGroupSummary.Handler;
+using IOU1.Application.Features.Groups.GetGroupSummary.Models.Request;
 using IOU1.Application.Features.Groups.GetGroups.Handler;
 using IOU1.Application.Features.Groups.GetGroups.Models.Request;
 using IOU1.Application.Mediator;
@@ -53,6 +55,16 @@ public class GroupsController : BaseApiController
         CancellationToken cancellationToken = default)
     {
         var result = await mediator.Send<DeleteGroupRequest, DeleteGroupResponse>(request, cancellationToken);
+        return CreateEndpointResponse(result);
+    }
+
+    [HttpGet("{GroupId}/summary")]
+    public async Task<IActionResult> GetGroupSummary(
+        [FromRoute] GetGroupSummaryRequest request,
+        [FromServices] IGetGroupSummaryHandler handler,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);
     }
 }

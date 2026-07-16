@@ -22,6 +22,7 @@ public class AddGroupHandler(
             request.OwnerId,
             request.Name,
             request.Description,
+            request.CurrencyKey,
             cancellationToken);
     }
 }

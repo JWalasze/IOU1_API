@@ -8,6 +8,8 @@ public sealed record AddGroupRequest : IRequest
 
     public string? Description { get; init; }
 
+    public required string CurrencyKey { get; init; }
+
     public long OwnerId { get; init; }
 
     public IEnumerable<long> MemberIds { get; init; } = [];

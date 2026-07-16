@@ -19,6 +19,10 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
                .WithMany(u => u.OwnedGroups)
                .HasForeignKey("CreatedById");
 
+        builder.HasOne(g => g.Currency)
+               .WithMany()
+               .HasForeignKey(g => g.CurrencyKey);
+
         builder.HasMany(g => g.Members)
                .WithOne(m => m.Group)
                .OnDelete(DeleteBehavior.Cascade);

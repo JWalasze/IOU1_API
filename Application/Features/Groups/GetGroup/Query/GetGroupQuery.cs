@@ -12,20 +12,20 @@ public class GetGroupQuery(IOU1Context context) : IGetGroupQuery
     {
         return await _context
             .Expenses
-            .Include(e => e.Transactions)
+            .Include(e => e.ExpenseShares)
             .Where(e => e.GroupId == groupId)
             .Select(e => new GetGroupExpenseDto
             {
                 ExpenseId = e.Id,
-                BuyerId = e.BuyerId,
-                Amount = e.TotalAmount,
+                BuyerId = e.Payer.UserId,
+                Amount = e.Amount,
                 Currency = "PLN",
-                Transactions = e.Transactions
-                    .Select(t => new GetGroupTransactionDto
+                ExpenseShares = e.ExpenseShares
+                    .Select(es => new GetGroupExpenseShareDto
                     {
-                        Amount = t.Amount,
-                        BorrowerId = t.BorrowerId,
-                        TransactionId = t.Id,
+                        Amount = es.Amount,
+                        MemberId = es.Member.UserId,
+                        ExpenseShareId = es.Id,
                         Currency = "PLN"
                     })
                     .ToList()

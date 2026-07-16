@@ -22,6 +22,7 @@ public class GroupService(
         long ownerId,
         string name,
         string? description,
+        string currencyKey,
         CancellationToken cancellationToken = default)
     {
         if (!memberIds.Any())
@@ -47,10 +48,19 @@ public class GroupService(
                 return Result<AddedGroup?>.Failure($"Could not find those user ids: {string.Concat(missingUsersFromDB)}");
             }
 
+            var currency = await _context.Currencies
+                .SingleOrDefaultAsync(c => c.Key == currencyKey, cancellationToken);
+
+            if (currency is null)
+            {
+                return Result<AddedGroup?>.Failure($"Currency {currencyKey} not found.");
+            }
+
             var newGroup = Group.Create(
                 name,
                 description,
                 owner: users.First(m => m.Id == ownerId),
+                currency: currency,
                 users: users);
 
             _context.Groups.Add(newGroup);

@@ -8,11 +8,11 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
 {
     public void Configure(EntityTypeBuilder<Expense> builder)
     {
-        builder.ToTable("GroupExpense");
+        builder.ToTable("Expense");
 
         builder.HasKey(e => e.Id);
 
-        builder.Property(e => e.TotalAmount)
+        builder.Property(e => e.Amount)
                .IsRequired();
 
         builder.Property(e => e.Title)
@@ -20,6 +20,12 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
                .HasMaxLength(50);
 
         builder.Property(e => e.CreatedAt)
+               .IsRequired();
+
+        builder.Property(e => e.IsDeleted)
+               .IsRequired();
+
+        builder.Property(e => e.IsSettled)
                .IsRequired();
 
         builder.Property(e => e.Description)
@@ -31,12 +37,12 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
 
         builder.Ignore(e => e.Splits);
 
-        builder.HasOne(e => e.Buyer)
+        builder.HasOne(e => e.Payer)
                .WithMany()
-               .HasForeignKey("BuyerId");
+               .HasForeignKey("PayerId");
 
-        builder.HasOne(e => e.Currency)
-               .WithMany()
-               .HasForeignKey("CurrencyKey");
+        builder.HasMany(e => e.ExpenseShares)
+               .WithOne(es => es.Expense)
+               .HasForeignKey(es => es.ExpenseId);
     }
 }

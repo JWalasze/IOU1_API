@@ -18,16 +18,9 @@ public class ExpenseService(IOU1Context context) : IExpenseService
         NewExpense newExpense,
         CancellationToken cancellationToken = default)
     {
-        var buyer = await _context.Users.FindAsync([newExpense.BuyerId], cancellationToken);
-        if (buyer is null)
-        {
-            return Result<Expense?>.Failure($"Buyer {newExpense.BuyerId} not found.");
-        }
-
         var group = await _context.Groups
             .Include(g => g.Members)
                 .ThenInclude(m => m.User)
-            .Include(g => g.Members)
             .FirstOrDefaultAsync(g => g.Id == newExpense.GroupId, cancellationToken);
 
         if (group is null)
@@ -35,13 +28,18 @@ public class ExpenseService(IOU1Context context) : IExpenseService
             return Result<Expense?>.Failure($"Group {newExpense.GroupId} not found.");
         }
 
+        var payer = group.Members.FirstOrDefault(m => m.UserId == newExpense.BuyerId);
+        if (payer is null)
+        {
+            return Result<Expense?>.Failure($"Buyer {newExpense.BuyerId} not found in group {newExpense.GroupId}.");
+        }
+
         var expense = new Expense(
             totalAmount: newExpense.Amount,
             newExpense.Title,
             newExpense.Description,
             group,
-            buyer,
-            currency: await _context.Currencies.SingleAsync(c => c.Key == "PLN", cancellationToken: cancellationToken),
+            payer,
             newExpense.Splits.Where(s => s.MemberId != 0),
             splitStrategy: ChooseStrategy(newExpense.SplitType));
 
@@ -62,24 +60,25 @@ public class ExpenseService(IOU1Context context) : IExpenseService
             return Result<GroupExpenseSummary?>.Failure($"Group with id: {groupId} doesn't exist.");
 
         var summary = await _context
-            .Transactions
-            .Include(t => t.Expense)
-            .Include(t => t.Borrower)
-            .Include(t => t.Buyer)
-            .Where(t => t.Expense.GroupId == groupId)
-            .GroupBy(t => new
+            .ExpenseShares
+            .Include(es => es.Expense)
+                .ThenInclude(e => e.Payer)
+                    .ThenInclude(p => p.User)
+            .Include(es => es.Member)
+            .Where(es => es.Expense.GroupId == groupId && es.Member.Id != es.Expense.PayerId)
+            .GroupBy(es => new
             {
-                t.BorrowerMemberId,
-                BorrowerName = t.Borrower.FirstName,
-                t.BuyerMemberId,
-                BuyerName = t.Buyer.FirstName
+                es.MemberId,
+                BorrowerName = es.Member.User.FirstName,
+                es.Expense.PayerId,
+                BuyerName = es.Expense.Payer.User.FirstName
             })
             .Select(gr => new Debt(
-                gr.Key.BorrowerMemberId,
+                gr.Key.MemberId,
                 gr.Key.BorrowerName,
-                gr.Key.BuyerMemberId,
+                gr.Key.PayerId,
                 gr.Key.BuyerName,
-                gr.Sum(t => t.Amount)))
+                gr.Sum(es => es.Amount)))
             .ToListAsync(cancellationToken);
 
         return Result<GroupExpenseSummary?>.Success(new GroupExpenseSummary(

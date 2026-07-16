@@ -28,5 +28,10 @@ public class AddGroupValidator : AbstractValidator<AddGroupRequest>
             .MaximumLength(Group.DescMaxLength)
             .WithErrorCode("MAX_LENGTH_DESC_ERROR")
             .WithMessage($"The description is too long. Max: {Group.DescMaxLength} chars.");
+
+        RuleFor(ag => ag.CurrencyKey)
+            .NotEmpty()
+            .WithErrorCode("EMPTY_GROUP_CURRENCY_KEY_ERROR")
+            .WithMessage("CurrencyKey cannot be empty.");
     }
 }
