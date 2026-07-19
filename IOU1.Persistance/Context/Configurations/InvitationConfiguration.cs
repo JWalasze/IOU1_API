@@ -12,6 +12,9 @@ public class InvitationConfiguration : IEntityTypeConfiguration<Invitation>
 
         builder.HasKey(g => g.Id);
 
+        builder.Property(g => g.Version)
+               .IsRowVersion();
+
         builder.HasOne(g => g.Group)
                .WithMany()
                .HasForeignKey("GroupId")

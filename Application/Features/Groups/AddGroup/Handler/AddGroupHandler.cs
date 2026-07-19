@@ -1,28 +1,40 @@
-﻿using FluentValidation;
+using FluentValidation;
 using IOU1.Application.Features.Groups.AddGroup.Models.Endpoint;
-using IOU1.Application.Mediator;
 using IOU1.Application.Services.Groups;
-using IOU1.Domain.Interfaces;
-using MapsterMapper;
+using IOU1.Domain.Models.Results;
 
 namespace IOU1.Application.Features.Groups.AddGroup.Handler;
 
-public class AddGroupHandler(
-    IGroupService groupService,
+public sealed class AddGroupHandler(
     IValidator<AddGroupRequest> validator,
-    IMapper mapper)
-    : RequestHandler<AddGroupRequest, AddGroupResponse>(validator, mapper)
+    IGroupService groupService)
+    : IAddGroupHandler
 {
+    private readonly IValidator<AddGroupRequest> _validator = validator;
     private readonly IGroupService _groupService = groupService;
 
-    protected override async Task<IResult> Do(AddGroupRequest request, CancellationToken cancellationToken)
+    public async Task<Result<AddGroupResponse?>> Handle(AddGroupRequest request, CancellationToken cancellationToken = default)
     {
-        return await _groupService.AddGroup(
+        var validationResult = _validator.Validate(request);
+        if (!validationResult.IsValid)
+        {
+            return Result<AddGroupResponse?>.Failure(
+                validationResult.Errors.Select(e => new ProblemDetails(e.ErrorMessage, e.ErrorCode)));
+        }
+
+        var result = await _groupService.AddGroup(
             request.MemberIds,
             request.OwnerId,
             request.Name,
             request.Description,
             request.CurrencyKey,
             cancellationToken);
+
+        if (!result.IsSuccess || result.Data is null)
+        {
+            return Result<AddGroupResponse?>.Failure(result.ErrorMessage ?? "Unexpected error occured!");
+        }
+
+        return Result<AddGroupResponse?>.Success(new AddGroupResponse { GroupId = result.Data.GroupId });
     }
 }

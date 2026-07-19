@@ -4,5 +4,5 @@ namespace IOU1.Application.Features.Settlements.GetSettlementsOverview.Models;
 
 public record GetSettlementOverviewRequest : IRequest
 {
-    public long GroupId { get; init; }
+    public int GroupId { get; init; }
 }

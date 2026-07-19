@@ -1,22 +1,30 @@
-﻿using FluentValidation;
+using FluentValidation;
 using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
-using IOU1.Application.Mediator;
 using IOU1.Application.Services.Invitations;
-using IOU1.Domain.Interfaces;
 using IOU1.Domain.Models.Results;
-using MapsterMapper;
 
 namespace IOU1.Application.Features.Invitations.UseInvitationLink;
 
-public class UseInvitationLinkHandler(IValidator<UseInvitationLinkRequest> validator, IMapper mapper, IInvitationLinkService generateInvitationService) : RequestHandler<UseInvitationLinkRequest, UseInvitationLinkResponse>(validator, mapper)
+public sealed class UseInvitationLinkHandler(
+    IValidator<UseInvitationLinkRequest> validator,
+    IInvitationLinkService generateInvitationService)
+    : IUseInvitationLinkHandler
 {
+    private readonly IValidator<UseInvitationLinkRequest> _validator = validator;
     private readonly IInvitationLinkService _generateInvitationService = generateInvitationService;
 
-    protected override async Task<IResult> Do(UseInvitationLinkRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result<UseInvitationLinkResponse?>> Handle(UseInvitationLinkRequest request, CancellationToken cancellationToken = default)
     {
-        //Add logic here
-        await _generateInvitationService.UseDirectInvitation((long)request.InvitationId);
+        var validationResult = _validator.Validate(request);
+        if (!validationResult.IsValid)
+        {
+            return Result<UseInvitationLinkResponse?>.Failure(
+                validationResult.Errors.Select(e => new ProblemDetails(e.ErrorMessage, e.ErrorCode)));
+        }
 
-        return Result.Success();
+        //Add logic here
+        await _generateInvitationService.UseDirectInvitation((int)request.InvitationId!, cancellationToken);
+
+        return Result<UseInvitationLinkResponse?>.Success(new UseInvitationLinkResponse());
     }
 }

@@ -4,5 +4,5 @@ namespace IOU1.Application.Features.Groups.GetGroups.Query;
 
 public interface IGetGroupsQuery
 {
-    Task<ICollection<GetGroupsDto>> GetGroups(long userId, CancellationToken cancellationToken = default);
+    Task<ICollection<GetGroupsDto>> GetGroups(int userId, CancellationToken cancellationToken = default);
 }

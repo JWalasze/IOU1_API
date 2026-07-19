@@ -3,7 +3,7 @@
 namespace IOU1.Application.Features.Invitations.DirectInvitation.Models;
 
 public sealed record DirectInvitationCreationRequest(
-    long GroupId,
-    long SenderId,
+    int GroupId,
+    int SenderId,
     string email
 ) : IRequest;

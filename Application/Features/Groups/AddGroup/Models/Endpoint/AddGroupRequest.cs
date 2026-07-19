@@ -10,7 +10,7 @@ public sealed record AddGroupRequest : IRequest
 
     public required string CurrencyKey { get; init; }
 
-    public long OwnerId { get; init; }
+    public int OwnerId { get; init; }
 
-    public IEnumerable<long> MemberIds { get; init; } = [];
+    public IEnumerable<int> MemberIds { get; init; } = [];
 }

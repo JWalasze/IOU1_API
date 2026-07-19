@@ -4,13 +4,13 @@ namespace IOU1.Domain.Entities;
 
 public sealed class Settlement : Entity
 {
-    public long GroupId { get; }
+    public int GroupId { get; }
     public Group Group { get; } = null!;
 
-    public long FromMemberId { get; }
+    public int FromMemberId { get; }
     public GroupMember FromMember { get; } = null!;
 
-    public long ToMemberId { get; }
+    public int ToMemberId { get; }
     public GroupMember ToMember { get; } = null!;
 
     public decimal Amount { get; }

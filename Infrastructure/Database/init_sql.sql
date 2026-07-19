@@ -8,13 +8,14 @@
 --    IX_Tabela_Kolumny
 -- =============================================================================
 
-drop table if exists MemberBalance;
 drop table if exists ExpenseShare;
 drop table if exists Settlement;
 drop table if exists Expense;
 drop table if exists InvitationLink;
 drop table if exists Invitation;
+drop table if exists MemberBalance;
 drop table if exists GroupMember;
+drop table if exists ExpenseCategory;
 drop table if exists CommunityGroup;
 drop table if exists Currency;
 drop table if exists AppUser;
@@ -154,24 +155,60 @@ go
 create index IX_InvitationLink_GroupId on InvitationLink (GroupId);
 go
 
+create table ExpenseCategory (
+  Id            int             identity(1, 1) not null,
+  Title         nvarchar(20)    not null,
+  Description   nvarchar(255)   null,
+  GroupId       int             null,
+
+  CreatedAt     datetime2(3)    not null constraint DF_ExpenseCategory_CreatedAt default sysutcdatetime(),
+  IsDeleted     bit             not null constraint DF_ExpenseCategory_IsDeleted default 0,
+  Version       rowversion,
+
+  constraint PK_ExpenseCategory                        primary key (Id),
+  constraint FK_ExpenseCategory_CommunityGroup_GroupId foreign key (GroupId) references CommunityGroup (Id)
+);
+go
+
+create index IX_ExpenseCategory_CommunityGroup_GroupId on ExpenseCategory (GroupId);
+go
+
+create table ExpenseSplit (
+  Id            int             identity(1, 1) not null,
+  Title         nvarchar(20)    not null,
+  Description   nvarchar(255)   null,
+  
+  CreatedAt     datetime2(3)    not null constraint DF_ExpenseSplit_CreatedAt default sysutcdatetime(),
+  IsDeleted     bit             not null constraint DF_ExpenseSplit_IsDeleted default 0,
+  Version       rowversion,
+
+  constraint PK_ExpenseSplit    primary key (Id)
+);
+go
+
 create table Expense (
-  Id           int             identity(1, 1) not null,
-  GroupId      int             not null,
-  PayerId      int             not null,
+  Id            int             identity(1, 1) not null,
+  GroupId       int             not null,
+  PayerId       int             not null,
 
-  Amount       decimal(10, 2)  not null,
-  Title        nvarchar(50)    not null,
-  Description  nvarchar(255)   null,
-  IsSettled    bit             not null constraint DF_Expense_IsSettled default 0,
+  Amount        decimal(10, 2)  not null,
+  Title         nvarchar(50)    not null,
+  Description   nvarchar(255)   null,
+  CategoryId    int             not null,
 
-  CreatedAt    datetime2(3)    not null constraint DF_Expense_CreatedAt default sysutcdatetime(),
-  IsDeleted    bit             not null constraint DF_Expense_IsDeleted default 0,
-  Version      rowversion,
+  SplitMethodId int             not null,
+  IsSettled     bit             not null constraint DF_Expense_IsSettled default 0,
 
-  constraint PK_Expense                         primary key (Id),
-  constraint FK_Expense_CommunityGroup_GroupId  foreign key (GroupId) references CommunityGroup (Id),
-  constraint FK_Expense_GroupMember_PayerId     foreign key (PayerId) references GroupMember (Id),
-  constraint CK_Expense_Amount_Positive         check (Amount > 0)
+  CreatedAt     datetime2(3)    not null constraint DF_Expense_CreatedAt default sysutcdatetime(),
+  IsDeleted     bit             not null constraint DF_Expense_IsDeleted default 0,
+  Version       rowversion,
+
+  constraint PK_Expense                            primary key (Id),
+  constraint FK_Expense_CommunityGroup_GroupId     foreign key (GroupId) references CommunityGroup (Id),
+  constraint FK_Expense_GroupMember_PayerId        foreign key (PayerId) references GroupMember (Id),
+  constraint FK_Expense_ExpenseCategory_CategoryId foreign key (CategoryId) references ExpenseCategory (Id),
+  constraint FK_Expense_ExpenseSplit_SplitMethodId foreign key (SplitMethodId) references ExpenseSplit (Id),
+  constraint CK_Expense_Amount_Positive            check (Amount > 0)
 );
 go
 

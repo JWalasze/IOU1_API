@@ -8,16 +8,14 @@ using FluentValidation;
 using IOU1.API.Middlewares;
 using IOU1.Application;
 using IOU1.Application.Features.Auth;
-using IOU1.Application.Features.Groups.GetGroup.Query;
-using IOU1.Application.Features.Groups.GetGroups.Query;
 using IOU1.Application.Mappings;
-using IOU1.Application.Mediator;
 using IOU1.Application.Options;
+using IOU1.Application.Services.Balances;
 using IOU1.Application.Services.Expenses;
 using IOU1.Application.Services.Groups;
+using IOU1.Application.Services.Groups.Summary;
 using IOU1.Application.Services.Invitations;
 using IOU1.Application.Services.Members;
-using IOU1.Application.Services.Groups.Summary;
 using IOU1.Application.Services.Settlements;
 using IOU1.Application.Services.Users;
 using IOU1.Application.Services.Users.Checker;
@@ -28,7 +26,6 @@ using IOU1.Domain.Services.Crypto;
 using IOU1.Domain.Services.Users;
 using IOU1.Domain.UnitOfWork;
 using IOU1.Infrastructure.Auth;
-using IOU1.Infrastructure.Mediator;
 using IOU1.Infrastructure.Repositories;
 using IOU1.Infrastructure.UnitOfWork;
 using IOU1.Persistance.Context;
@@ -74,6 +71,16 @@ public class Program
             .UsingRegistrationStrategy(RegistrationStrategy.Throw)
             .AsImplementedInterfaces()
             .WithTransientLifetime());
+
+        //Queries
+        builder.Services
+            .Scan(scan => scan
+            .FromAssemblies(typeof(ValidateResult).Assembly)
+            .AddClasses(
+                filter => filter.Where(f => f.Name.EndsWith("Query")))
+            .UsingRegistrationStrategy(RegistrationStrategy.Throw)
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
         #endregion
 
         #region SingletonServices
@@ -96,25 +103,18 @@ public class Program
         builder.Services.AddScoped<IDirectInvitationCreationService, DirectInvitationCreationService>();
         builder.Services.AddScoped<IInvitationLinkService, InvitationLinkService>();
 
+        builder.Services.AddScoped<IBalanceService, BalanceService>();
         builder.Services.AddScoped<IMemberService, MemberService>();
         builder.Services.AddScoped<ISettlementService, SettlementService>();
         builder.Services.AddScoped<IGroupSummaryService, GroupSummaryService>();
 
+        builder.Services.AddScoped<IAuthUser, AuthUser>();
         builder.Services.AddScoped<IAuthService, AuthService>();
-
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IUserChecker, UserChecker>();
 
-        builder.Services.AddScoped<IGetGroupsQuery, GetGroupsQuery>();
-        builder.Services.AddScoped<IGetGroupQuery, GetGroupQuery>();
-
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-        builder.Services.AddScoped<IAuthUser, AuthUser>();
         //builder.Services.AddScoped<IServiceBus, ServiceBus>();
-
-        builder.Services.AddScoped<IRequestMediator, RequestMediator>();
-
 
         #endregion
 

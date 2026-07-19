@@ -1,27 +1,32 @@
-﻿using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
+using IOU1.Application.Features.Invitations.GenerateInvitationKey.Handler;
+using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
+using IOU1.Application.Features.Invitations.UseInvitationLink;
 using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
-using IOU1.Application.Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOU1.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class InvitationController(IRequestMediator mediator) : BaseApiController
+public class InvitationController : BaseApiController
 {
-    private readonly IRequestMediator _mediator = mediator;
-
     [HttpPost("[action]")]
-    public async Task<IActionResult> CreateInvitationLink([FromBody] GenerateInvitationKeyRequest request, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> CreateInvitationLink(
+        [FromBody] GenerateInvitationKeyRequest request,
+        [FromServices] IGenerateInvitationKeyHandler handler,
+        CancellationToken cancellationToken = default)
     {
-        var result = await _mediator.Send<GenerateInvitationKeyRequest, UseInvitationLinkResponse>(request, cancellationToken);
+        var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> UseInvitationLink([FromBody] UseInvitationLinkRequest request, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> UseInvitationLink(
+        [FromBody] UseInvitationLinkRequest request,
+        [FromServices] IUseInvitationLinkHandler handler,
+        CancellationToken cancellationToken = default)
     {
-        var result = await _mediator.Send<UseInvitationLinkRequest, UseInvitationLinkResponse>(request, cancellationToken);
+        var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);
     }
 }

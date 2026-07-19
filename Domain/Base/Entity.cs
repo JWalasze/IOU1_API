@@ -2,5 +2,6 @@
 
 public abstract class Entity
 {
-    public long Id { get; protected set; }
+    public int Id { get; protected set; }
+    public byte[] Version { get; protected set; } = null!;
 }

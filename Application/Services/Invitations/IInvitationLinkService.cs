@@ -5,9 +5,9 @@ namespace IOU1.Application.Services.Invitations;
 
 public interface IInvitationLinkService
 {
-    Task<InvitationLink> For(long groupId, CancellationToken cancellationToken = default);
+    Task<InvitationLink> For(int groupId, CancellationToken cancellationToken = default);
 
     Task UseInvitationKey(InvitationKey invitationKey, CancellationToken cancellationToken = default);
 
-    Task UseDirectInvitation(long invitationId, CancellationToken cancellationToken = default);
+    Task UseDirectInvitation(int invitationId, CancellationToken cancellationToken = default);
 }

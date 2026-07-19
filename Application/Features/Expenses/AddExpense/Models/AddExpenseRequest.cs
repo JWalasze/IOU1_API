@@ -5,8 +5,8 @@ namespace IOU1.Application.Features.Expenses.AddExpense.Models;
 
 public sealed record AddExpenseRequest
 {
-    public required long BuyerId { get; init; }
-    public required long GroupId { get; init; }
+    public required int BuyerId { get; init; }
+    public required int GroupId { get; init; }
     public required decimal Amount { get; init; }
     public required string Title { get; init; }
     public string? Description { get; init; }
@@ -18,5 +18,5 @@ public sealed record AddExpenseRequest
 }
 
 public sealed record SplitRequest(
-    long MemberId,
+    int MemberId,
     decimal Amount);

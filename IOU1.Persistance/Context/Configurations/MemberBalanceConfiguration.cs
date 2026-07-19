@@ -18,6 +18,9 @@ public class MemberBalanceConfiguration : IEntityTypeConfiguration<MemberBalance
         builder.Property(mb => mb.UpdatedAt)
                .IsRequired();
 
+        builder.Property(mb => mb.Version)
+               .IsRowVersion();
+
         builder.HasOne(mb => mb.Member)
                .WithMany()
                .HasForeignKey(mb => mb.MemberId)

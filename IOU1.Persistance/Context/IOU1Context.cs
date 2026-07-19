@@ -1,5 +1,4 @@
 ﻿using IOU1.Domain.Entities;
-using IOU1.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace IOU1.Persistance.Context;
@@ -8,14 +7,17 @@ public class IOU1Context(DbContextOptions<IOU1Context> options) : DbContext(opti
 {
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<Group> Groups { get; set; }
-
     public virtual DbSet<GroupMember> GroupMembers { get; set; }
+    public virtual DbSet<MemberBalance> MemberBalances { get; set; }
 
-    public virtual DbSet<Currency> Currencies { get; set; }
+
     public virtual DbSet<Expense> Expenses { get; set; }
     public virtual DbSet<ExpenseShare> ExpenseShares { get; set; }
+    public virtual DbSet<ExpenseCategory> ExpenseCategories { get; set; }
+    public virtual DbSet<ExpenseSplit> ExpenseSplits { get; set; }
+    public virtual DbSet<Currency> Currencies { get; set; }
     public virtual DbSet<Settlement> Settlements { get; set; }
-    public virtual DbSet<MemberBalance> MemberBalances { get; set; }
+
     public virtual DbSet<Invitation> Invitations { get; set; }
     public virtual DbSet<InvitationLink> InvitationLinks { get; set; }
 
@@ -29,9 +31,6 @@ public class IOU1Context(DbContextOptions<IOU1Context> options) : DbContext(opti
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        // Ensure Email value object is treated as owned type globally so EF can materialize it for constructor binding
-        modelBuilder.Owned<Email>();
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(IOU1Context).Assembly);
 

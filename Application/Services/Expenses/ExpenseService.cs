@@ -49,7 +49,7 @@ public class ExpenseService(IOU1Context context) : IExpenseService
         return Result<Expense?>.Success(expense);
     }
 
-    public async Task<Result<GroupExpenseSummary?>> GetSummary(long groupId, CancellationToken cancellationToken = default)
+    public async Task<Result<GroupExpenseSummary?>> GetSummary(int groupId, CancellationToken cancellationToken = default)
     {
         var group = await _context
             .Groups

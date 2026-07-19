@@ -23,6 +23,7 @@ public sealed class GetGroupHandler(
                 validationResult.Errors.Select(e => new ProblemDetails(e.ErrorMessage, e.ErrorCode)));
         }
 
+        //Walidacja groupId
         var group = await _repository.GetGroup(request.GroupId, cancellationToken);
         if (group is null)
         {

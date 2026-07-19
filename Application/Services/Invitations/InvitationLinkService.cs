@@ -17,7 +17,7 @@ public class InvitationLinkService(
     private readonly LinkInvitation _linkInvitation = options.CurrentValue;
     private readonly IMemberService _memberService = memberService;
 
-    public async Task<InvitationLink> For(long groupId, CancellationToken cancellationToken = default)
+    public async Task<InvitationLink> For(int groupId, CancellationToken cancellationToken = default)
     {
         var foundGroup = await _context.Groups.FirstOrDefaultAsync(g => g.Id == groupId, cancellationToken)
             ?? throw new Exception($"Group {groupId} couldn't be found.");
@@ -30,7 +30,7 @@ public class InvitationLinkService(
         return invitationLink;
     }
 
-    public async Task UseDirectInvitation(long invitationId, CancellationToken cancellationToken = default)
+    public async Task UseDirectInvitation(int invitationId, CancellationToken cancellationToken = default)
     {
         var invitation = await _context.Invitations.FirstOrDefaultAsync(i => i.Id == invitationId);
         await _memberService.AddMember(invitation.GroupId, invitation.UserId, cancellationToken);

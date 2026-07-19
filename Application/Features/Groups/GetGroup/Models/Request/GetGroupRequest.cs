@@ -2,5 +2,5 @@
 
 public sealed record GetGroupRequest
 {
-    public required long GroupId { get; init; }
+    public required int GroupId { get; init; }
 }

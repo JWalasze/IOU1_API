@@ -4,10 +4,10 @@ namespace IOU1.Domain.Entities;
 
 public sealed class ExpenseShare : Entity
 {
-    public long ExpenseId { get; }
+    public int ExpenseId { get; }
     public Expense Expense { get; } = null!;
 
-    public long MemberId { get; }
+    public int MemberId { get; }
     public GroupMember Member { get; } = null!;
 
     public decimal Amount { get; }

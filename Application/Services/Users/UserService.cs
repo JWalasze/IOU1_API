@@ -80,7 +80,7 @@ public class UserService(
         }
     }
 
-    public async Task<Result<string>> Delete(long userId, CancellationToken cancellationToken = default)
+    public async Task<Result<string>> Delete(int userId, CancellationToken cancellationToken = default)
     {
         try
         {

@@ -2,14 +2,14 @@
 
 public class GetExpensesResponse
 {
-    public long GroupId { get; set; }
+    public int GroupId { get; set; }
 
     public IEnumerable<GetExpensesDetailsResponse> Expenses { get; set; } = [];
 }
 
 public class GetExpensesDetailsResponse
 {
-    public long ExpenseId { get; set; }
+    public int ExpenseId { get; set; }
 
     public string Description { get; set; } = string.Empty;
 

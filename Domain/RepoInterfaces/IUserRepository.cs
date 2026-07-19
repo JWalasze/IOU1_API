@@ -5,6 +5,6 @@ namespace Domain.RepoInterfaces;
 
 public interface IUserRepository : IRepository<User>
 {
-    Task<User?> GetByIdAsync(long userId, CancellationToken cancellation = default);
-    Task<IEnumerable<User>> GetByIdsAsync(IEnumerable<long> memberIds, CancellationToken cancellation = default);
+    Task<User?> GetByIdAsync(int userId, CancellationToken cancellation = default);
+    Task<IEnumerable<User>> GetByIdsAsync(IEnumerable<int> memberIds, CancellationToken cancellation = default);
 }

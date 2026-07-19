@@ -21,7 +21,7 @@ public class ExpenseRepository : Repository<Expense>, IExpenseRepository
         await _context.Expenses.AddAsync(expense, cancellationToken);
     }
 
-    public async Task<IEnumerable<Expense>> GetByGroupIdAsync(long groupId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Expense>> GetByGroupIdAsync(int groupId, CancellationToken cancellationToken = default)
     {
         return await _context.Expenses
             .Include(e => e.ExpenseShares)
@@ -34,7 +34,7 @@ public class ExpenseRepository : Repository<Expense>, IExpenseRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Expense?> GetByIdAsync(long id, CancellationToken cancellationToken = default)
+    public async Task<Expense?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _context.Expenses
             .Include(e => e.ExpenseShares)   // eager load related expense shares
@@ -46,7 +46,7 @@ public class ExpenseRepository : Repository<Expense>, IExpenseRepository
             .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
 
-    public IQueryable<Expense> GetByGroupIdQuery(long groupId)
+    public IQueryable<Expense> GetByGroupIdQuery(int groupId)
     {
         return _context.Expenses
             .Include(e => e.ExpenseShares)

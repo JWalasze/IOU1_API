@@ -15,6 +15,9 @@ public class ExpenseShareConfiguration : IEntityTypeConfiguration<ExpenseShare>
         builder.Property(es => es.Amount)
                .IsRequired();
 
+        builder.Property(es => es.Version)
+               .IsRowVersion();
+
         builder.HasOne(es => es.Expense)
                .WithMany(e => e.ExpenseShares)
                .HasForeignKey(es => es.ExpenseId)

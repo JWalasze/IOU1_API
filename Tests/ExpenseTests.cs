@@ -160,7 +160,7 @@ public class ExpenseTests
 
     public static Email EmailOf(string local) => new($"{local}@test.local");
 
-    public static User User(long id, string first, string last, string? login = null)
+    public static User User(int id, string first, string last, string? login = null)
         => Domain.Entities.User.Create(
             firstName: first,
             lastName: last,
@@ -190,7 +190,7 @@ public class ExpenseTests
         return (group, alice, new[] { bob, carol });
     }
 
-    public static List<User> NUsers(int n, long startId = 1)
+    public static List<User> NUsers(int n, int startId = 1)
     {
         var list = new List<User>(n);
         for (int i = 0; i < n; i++)

@@ -11,12 +11,12 @@ public class DirectInvitationCreationService(IOU1Context context) : IDirectInvit
 {
     IOU1Context _context = context;
 
-    public async Task<UserDto?> CheckInvitationPossible(string email, long groupId, long senderId)
+    public async Task<UserDto?> CheckInvitationPossible(string email, int groupId, int senderId)
     {
         throw new NotImplementedException();
     }
 
-    public async Task<Invitation> MakeInvitation(string email, long groupId, long senderId)
+    public async Task<Invitation> MakeInvitation(string email, int groupId, int senderId)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.EmailAddress == email);
 

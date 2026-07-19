@@ -1,19 +1,34 @@
-﻿using Application.Features.Groups.DeleteGroup.Response;
+using Application.Features.Groups.DeleteGroup.Response;
 using FluentValidation;
 using IOU1.Application.Features.Groups.DeleteGroup.Request;
-using IOU1.Application.Mediator;
 using IOU1.Application.Services.Groups;
-using IOU1.Domain.Interfaces;
-using MapsterMapper;
+using IOU1.Domain.Models.Results;
 
 namespace IOU1.Application.Features.Groups.DeleteGroup.Handler;
 
-public class DeleteGroupHandler(IValidator<DeleteGroupRequest> validator, IMapper mapper, IGroupService groupService) : RequestHandler<DeleteGroupRequest, DeleteGroupResponse>(validator, mapper)
+public sealed class DeleteGroupHandler(
+    IValidator<DeleteGroupRequest> validator,
+    IGroupService groupService)
+    : IDeleteGroupHandler
 {
+    private readonly IValidator<DeleteGroupRequest> _validator = validator;
     private readonly IGroupService _groupService = groupService;
 
-    protected override async Task<IResult> Do(DeleteGroupRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result<DeleteGroupResponse?>> Handle(DeleteGroupRequest request, CancellationToken cancellationToken = default)
     {
-        return await _groupService.DeleteGroup(request.GroupId, cancellationToken);
+        var validationResult = _validator.Validate(request);
+        if (!validationResult.IsValid)
+        {
+            return Result<DeleteGroupResponse?>.Failure(
+                validationResult.Errors.Select(e => new ProblemDetails(e.ErrorMessage, e.ErrorCode)));
+        }
+
+        var result = await _groupService.DeleteGroup(request.GroupId, cancellationToken);
+        if (!result.IsSuccess)
+        {
+            return Result<DeleteGroupResponse?>.Failure(result.ErrorMessage ?? "Unexpected error occured!");
+        }
+
+        return Result<DeleteGroupResponse?>.Success(new DeleteGroupResponse());
     }
 }

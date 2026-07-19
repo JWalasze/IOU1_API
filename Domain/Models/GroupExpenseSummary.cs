@@ -2,10 +2,10 @@
 
 public class GroupExpenseSummary
 {
-    public long GroupId { get; set; }
+    public int GroupId { get; set; }
     public IEnumerable<Debt> GroupDebts { get; } = [];
 
-    public GroupExpenseSummary(long groupId, IEnumerable<Debt> groupDebts)
+    public GroupExpenseSummary(int groupId, IEnumerable<Debt> groupDebts)
     {
         GroupId = groupId;
         GroupDebts = groupDebts;
@@ -14,16 +14,16 @@ public class GroupExpenseSummary
 
 public class Debt
 {
-    public long DebtorId { get; set; }
+    public int DebtorId { get; set; }
     public string DebtorName { get; set; }
-    public long CreditorId { get; set; }
+    public int CreditorId { get; set; }
     public string CreditorName { get; set; }
     public decimal Amount { get; set; }
 
     public Debt(
-        long debtorId,
+        int debtorId,
         string debtorName,
-        long creditorId,
+        int creditorId,
         string creditorName,
         decimal amount)
     {

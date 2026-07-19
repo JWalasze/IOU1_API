@@ -28,8 +28,14 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
         builder.Property(e => e.IsSettled)
                .IsRequired();
 
+        builder.Property(e => e.SplitId)
+               .HasColumnName("SplitMethodId");
+
         builder.Property(e => e.Description)
                .HasMaxLength(255);
+
+        builder.Property(e => e.Version)
+               .IsRowVersion();
 
         builder.HasOne(e => e.Group)
                .WithMany()
@@ -44,5 +50,13 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
         builder.HasMany(e => e.ExpenseShares)
                .WithOne(es => es.Expense)
                .HasForeignKey(es => es.ExpenseId);
+
+        builder.HasOne(e => e.Category)
+               .WithMany()
+               .HasForeignKey("CategoryId");
+
+        builder.HasOne(e => e.Split)
+               .WithMany()
+               .HasForeignKey("SplitId");
     }
 }

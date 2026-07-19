@@ -2,5 +2,5 @@
 
 public sealed record AddGroupResponse : EndpointResponse
 {
-    public long GroupId { get; init; }
+    public int GroupId { get; init; }
 }

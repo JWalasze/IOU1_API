@@ -1,31 +1,38 @@
-﻿using FluentValidation;
+using FluentValidation;
 using IOU1.Application.Features.Invitations.GenerateInvitationKey.Request;
 using IOU1.Application.Features.Invitations.UseInvitationLink.Models;
-using IOU1.Application.Mediator;
 using IOU1.Application.Services.Invitations;
-using IOU1.Domain.Entities;
-using IOU1.Domain.Interfaces;
 using IOU1.Domain.Models.Results;
-using MapsterMapper;
 
 namespace IOU1.Application.Features.Invitations.GenerateInvitationKey.Handler;
 
-public class GenerateInvitationKeyHandler(
+public sealed class GenerateInvitationKeyHandler(
     IInvitationLinkService generateInvitationService,
-    IValidator<GenerateInvitationKeyRequest> validator,
-    IMapper mapper)
-    : RequestHandler<GenerateInvitationKeyRequest, UseInvitationLinkResponse>(validator, mapper)
+    IValidator<GenerateInvitationKeyRequest> validator)
+    : IGenerateInvitationKeyHandler
 {
     private readonly IInvitationLinkService _generateInvitationService = generateInvitationService;
+    private readonly IValidator<GenerateInvitationKeyRequest> _validator = validator;
 
-    protected override async Task<IResult> Do(GenerateInvitationKeyRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result<UseInvitationLinkResponse?>> Handle(GenerateInvitationKeyRequest request, CancellationToken cancellationToken = default)
     {
+        var validationResult = _validator.Validate(request);
+        if (!validationResult.IsValid)
+        {
+            return Result<UseInvitationLinkResponse?>.Failure(
+                validationResult.Errors.Select(e => new ProblemDetails(e.ErrorMessage, e.ErrorCode)));
+        }
+
         var createdInvitationLink = await _generateInvitationService.For(request.GroupId, cancellationToken);
         if (createdInvitationLink is null)
         {
-            return Result<InvitationLink?>.Failure("Invitation link couldn't be created.");
+            return Result<UseInvitationLinkResponse?>.Failure("Invitation link couldn't be created.");
         }
 
-        return Result<InvitationLink?>.Success(createdInvitationLink);
+        return Result<UseInvitationLinkResponse?>.Success(new UseInvitationLinkResponse
+        {
+            HashedKey = createdInvitationLink.InvitationKey.Key,
+            ExpirationDate = createdInvitationLink.ExpirationDate.ExpirationDate
+        });
     }
 }

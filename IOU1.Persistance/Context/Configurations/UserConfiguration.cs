@@ -23,10 +23,14 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.PasswordHash)
                .HasColumnName("PasswordHash")
+               .HasConversion(v => Convert.FromBase64String(v), v => Convert.ToBase64String(v))
+               .HasMaxLength(User.HashBytesMaxLength)
                .IsRequired();
 
         builder.Property(u => u.PasswordSalt)
                .HasColumnName("PasswordSalt")
+               .HasConversion(v => Convert.FromBase64String(v), v => Convert.ToBase64String(v))
+               .HasMaxLength(User.SaltBytesMaxLength)
                .IsRequired();
 
         builder.Property(u => u.CreatedAt)
@@ -36,6 +40,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.IsDeleted)
                .HasColumnName("IsDeleted")
                .IsRequired();
+
+        builder.Property(u => u.Version)
+               .IsRowVersion();
 
         builder.HasMany(u => u.OwnedGroups)
                .WithOne(g => g.Owner);

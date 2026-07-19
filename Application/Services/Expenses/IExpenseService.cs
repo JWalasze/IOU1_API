@@ -11,5 +11,5 @@ public interface IExpenseService
         NewExpense newExpense,
         CancellationToken cancellationToken = default);
 
-    Task<Result<GroupExpenseSummary?>> GetSummary(long groupId, CancellationToken cancellationToken = default);
+    Task<Result<GroupExpenseSummary?>> GetSummary(int groupId, CancellationToken cancellationToken = default);
 }

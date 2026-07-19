@@ -8,7 +8,7 @@ public class GetGroupQuery(IOU1Context context) : IGetGroupQuery
 {
     private readonly IOU1Context _context = context;
 
-    public async Task<IEnumerable<GetGroupExpenseDto>> GetLastExpenses(long groupId, int lastExpenseCount, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<GetGroupExpenseDto>> GetLastExpenses(int groupId, int lastExpenseCount, CancellationToken cancellationToken = default)
     {
         return await _context
             .Expenses
@@ -33,7 +33,7 @@ public class GetGroupQuery(IOU1Context context) : IGetGroupQuery
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<GetGroupDto?> GetGroup(long groupId, CancellationToken cancellationToken = default)
+    public async Task<GetGroupDto?> GetGroup(int groupId, CancellationToken cancellationToken = default)
     {
         return await _context
             .Groups

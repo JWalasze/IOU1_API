@@ -2,7 +2,7 @@
 
 public sealed record GetGroupMemberDto
 {
-    public required long UserId { get; init; }
+    public required int UserId { get; init; }
 
     public required string UserName { get; init; }
 }

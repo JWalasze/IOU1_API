@@ -22,7 +22,7 @@ public class ExpensesController : BaseApiController
         return CreateEndpointResponse(result);
     }
 
-    [HttpGet("{GroupId:long}")]
+    [HttpGet("{GroupId:int}")]
     public async Task<IActionResult> GetGroupExpenses(
         [FromRoute] GetExpensesRequest request,
         [FromServices] IGetExpensesHandler handler,

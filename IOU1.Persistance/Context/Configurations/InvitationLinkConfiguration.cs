@@ -19,6 +19,9 @@ public class InvitationLinkConfiguration : IEntityTypeConfiguration<InvitationLi
         builder.Property(il => il.AddDate)
                .IsRequired();
 
+        builder.Property(il => il.Version)
+               .IsRowVersion();
+
         builder.ComplexProperty(cp => cp.InvitationKey, cp =>
         {
             cp.Property(ik => ik.Key)

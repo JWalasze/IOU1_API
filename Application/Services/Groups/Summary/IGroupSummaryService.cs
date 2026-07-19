@@ -4,5 +4,5 @@ namespace IOU1.Application.Services.Groups.Summary;
 
 public interface IGroupSummaryService
 {
-    Task<GroupSummary> GetGroupSummary(long groupId, CancellationToken cancellationToken = default);
+    Task<GroupSummary> GetGroupSummary(int groupId, CancellationToken cancellationToken = default);
 }

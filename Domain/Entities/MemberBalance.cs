@@ -4,10 +4,10 @@ namespace IOU1.Domain.Entities;
 
 public sealed class MemberBalance : Entity
 {
-    public long MemberId { get; }
+    public int MemberId { get; }
     public GroupMember Member { get; } = null!;
 
-    public long CounterpartyMemberId { get; }
+    public int CounterpartyMemberId { get; }
     public GroupMember CounterpartyMember { get; } = null!;
 
     public decimal Amount { get; private set; }

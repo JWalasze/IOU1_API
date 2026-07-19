@@ -28,12 +28,6 @@ using var scope = provider.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<IOU1Context>();
 var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
 
-if (await context.Users.AnyAsync())
-{
-    Console.WriteLine("Database already contains users. Skipping seed.");
-    return;
-}
-
 Console.WriteLine("Seeding database...");
 
 // --- Currencies ---
@@ -56,11 +50,11 @@ Console.WriteLine($"Currencies ready: {string.Join(", ", currencies.Keys)}");
 // --- Users ---
 var users = new List<User>
 {
-    User.Create("Alice",   "Smith",  new Email("alice@example.com"),   "alice",   "Password123!", hasher),
-    User.Create("Bob",     "Jones",  new Email("bob@example.com"),     "bob",     "Password123!", hasher),
-    User.Create("Charlie", "Brown",  new Email("charlie@example.com"), "charlie", "Password123!", hasher),
-    User.Create("Diana",   "Prince", new Email("diana@example.com"),   "diana",   "Password123!", hasher),
-    User.Create("Eve",     "Miller", new Email("eve@example.com"),     "eve",     "Password123!", hasher),
+    User.Create("Alice",   "Smith",  new Email("alice@example.com"),   "alice",   "123456", hasher),
+    User.Create("Bob",     "Jones",  new Email("bob@example.com"),     "bob",     "123456", hasher),
+    User.Create("Charlie", "Brown",  new Email("charlie@example.com"), "charlie", "123456", hasher),
+    User.Create("Diana",   "Prince", new Email("diana@example.com"),   "diana",   "123456", hasher),
+    User.Create("Eve",     "Miller", new Email("eve@example.com"),     "eve",     "123456", hasher),
 };
 
 context.Users.AddRange(users);
@@ -114,6 +108,17 @@ ISplitStrategy equal = new EqualSplitStrategy();
 
 static GroupMember PayerOf(Group group, User user) => group.Members.First(m => m.UserId == user.Id);
 
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Jedzenie', 'SYSTEM_FOOD')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Transport', 'SYSTEM_TRANSPORT')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Nocleg', 'SYSTEM_ACCOMODATION')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Rozrywka', 'SYSTEM_FUN')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Rachunki', 'SYSTEM_BILLS')");
+
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseSplit (Title,IconKey) values('Równo', 'EQUAL')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseSplit (Title,IconKey) values('Nierówno', 'CUSTOM')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseSplit (Title,IconKey) values('Procentowo', 'PERCENTAGE')");
+await context.SaveChangesAsync();
+
 List<Expense> expenses =
 [
     // Roommates group
@@ -124,7 +129,8 @@ List<Expense> expenses =
         group: roommates,
         payer: PayerOf(roommates, users[0]),
         splits: roommates.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal),
+        splitStrategy: equal,
+        1,1),
 
     new(
         totalAmount: 90.00m,
@@ -133,7 +139,8 @@ List<Expense> expenses =
         group: roommates,
         payer: PayerOf(roommates, users[1]),
         splits: roommates.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal),
+        splitStrategy: equal,
+        1,1),
 
     new(
         totalAmount: 60.00m,
@@ -142,7 +149,8 @@ List<Expense> expenses =
         group: roommates,
         payer: PayerOf(roommates, users[2]),
         splits: roommates.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal),
+        splitStrategy: equal,
+        1,1),
 
     // Weekend Trip group
     new(
@@ -152,7 +160,8 @@ List<Expense> expenses =
         group: trip,
         payer: PayerOf(trip, users[1]),
         splits: trip.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal),
+        splitStrategy: equal,
+        1,1),
 
     new(
         totalAmount: 160.00m,
@@ -161,7 +170,8 @@ List<Expense> expenses =
         group: trip,
         payer: PayerOf(trip, users[3]),
         splits: trip.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal),
+        splitStrategy: equal,
+        1,1),
 
     new(
         totalAmount: 200.00m,
@@ -170,7 +180,8 @@ List<Expense> expenses =
         group: trip,
         payer: PayerOf(trip, users[2]),
         splits: trip.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal),
+        splitStrategy: equal,
+        1,1),
 
     // Office Lunch group
     new(
@@ -180,7 +191,8 @@ List<Expense> expenses =
         group: lunch,
         payer: PayerOf(lunch, users[3]),
         splits: lunch.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal),
+        splitStrategy: equal,
+        1,1),
 ];
 
 context.Expenses.AddRange(expenses);

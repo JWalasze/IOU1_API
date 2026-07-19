@@ -18,8 +18,8 @@ public class GroupService(
     private readonly ILogger<GroupService> _logger = logger;
 
     public async Task<Result<AddedGroup?>> AddGroup(
-        IEnumerable<long> memberIds,
-        long ownerId,
+        IEnumerable<int> memberIds,
+        int ownerId,
         string name,
         string? description,
         string currencyKey,
@@ -79,7 +79,7 @@ public class GroupService(
         }
     }
 
-    public async Task<Result<DeleteGroupDto?>> DeleteGroup(long groupId, CancellationToken cancellationToken)
+    public async Task<Result<DeleteGroupDto?>> DeleteGroup(int groupId, CancellationToken cancellationToken)
     {
         try
         {

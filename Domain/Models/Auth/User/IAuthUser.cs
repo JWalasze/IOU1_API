@@ -2,5 +2,5 @@
 
 public interface IAuthUser
 {
-    public long Id { get; set; }
+    public int Id { get; set; }
 }

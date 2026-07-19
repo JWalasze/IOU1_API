@@ -1,42 +1,45 @@
-﻿using FluentValidation;
+using FluentValidation;
 using IOU1.Application.Features.Invitations.DirectInvitation.Models;
-using IOU1.Application.Mediator;
 using IOU1.Application.Services.Invitations;
-using IOU1.Domain.Entities;
 using IOU1.Domain.Exceptions;
-using IOU1.Domain.Interfaces;
 using IOU1.Domain.Models.Results;
-using MapsterMapper;
 
 namespace IOU1.Application.Features.Invitations.DirectInvitation;
 
-public class DirectInvitationCreationHandler(
+public sealed class DirectInvitationCreationHandler(
     IValidator<DirectInvitationCreationRequest> validator,
-    IMapper mapper,
     IDirectInvitationCreationService service)
-    : RequestHandler<DirectInvitationCreationRequest, DirectInvitationCreationResponse>(validator, mapper)
+    : IDirectInvitationCreationHandler
 {
+    private readonly IValidator<DirectInvitationCreationRequest> _validator = validator;
     private readonly IDirectInvitationCreationService _service = service;
 
-    protected override async Task<IResult> Do(DirectInvitationCreationRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result<DirectInvitationCreationResponse?>> Handle(DirectInvitationCreationRequest request, CancellationToken cancellationToken = default)
     {
+        var validationResult = _validator.Validate(request);
+        if (!validationResult.IsValid)
+        {
+            return Result<DirectInvitationCreationResponse?>.Failure(
+                validationResult.Errors.Select(e => new ProblemDetails(e.ErrorMessage, e.ErrorCode)));
+        }
+
         try
         {
             var result = await _service.MakeInvitation(request.email, request.GroupId, request.SenderId);
-            if (result == null)
+            if (result is null)
             {
-                return Result<Invitation>.Failure("Failed to create invitation!");
+                return Result<DirectInvitationCreationResponse?>.Failure("Failed to create invitation!");
             }
 
-            return Result<Invitation>.Success(result);
+            return Result<DirectInvitationCreationResponse?>.Success(new DirectInvitationCreationResponse());
         }
         catch (UserNotFoundException)
         {
-            return Result<Invitation>.Failure("Could not find user with this email!");
+            return Result<DirectInvitationCreationResponse?>.Failure("Could not find user with this email!");
         }
         catch (Exception)
         {
-            return Result<Invitation>.Failure("An unexpected error occured!");
+            return Result<DirectInvitationCreationResponse?>.Failure("An unexpected error occured!");
         }
     }
 }

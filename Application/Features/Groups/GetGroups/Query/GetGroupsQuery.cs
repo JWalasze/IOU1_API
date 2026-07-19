@@ -8,7 +8,7 @@ public class GetGroupsQuery(IOU1Context context) : IGetGroupsQuery
 {
     private readonly IOU1Context _context = context;
 
-    public async Task<ICollection<GetGroupsDto>> GetGroups(long userId, CancellationToken cancellationToken = default)
+    public async Task<ICollection<GetGroupsDto>> GetGroups(int userId, CancellationToken cancellationToken = default)
     {
         return await _context
             .GroupMembers

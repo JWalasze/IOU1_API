@@ -4,7 +4,7 @@ namespace IOU1.Application.Services.Groups.Summary;
 
 public class GroupSummaryService : IGroupSummaryService
 {
-    public Task<GroupSummary> GetGroupSummary(long groupId, CancellationToken cancellationToken = default)
+    public Task<GroupSummary> GetGroupSummary(int groupId, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }

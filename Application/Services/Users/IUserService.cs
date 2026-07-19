@@ -8,5 +8,5 @@ public interface IUserService
 {
     Task<Result<User?>> Add(NewUser newUser, CancellationToken cancellationToken = default);
 
-    Task<Result<string>> Delete(long userId, CancellationToken cancellationToken = default);
+    Task<Result<string>> Delete(int userId, CancellationToken cancellationToken = default);
 }

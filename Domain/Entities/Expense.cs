@@ -13,11 +13,17 @@ public sealed class Expense : Entity
     public bool IsDeleted { get; private set; }
     public bool IsSettled { get; private set; }
 
+    public int GroupId { get; }
     public Group Group { get; } = null!;
-    public long GroupId { get; }
 
+    public int PayerId { get; }
     public GroupMember Payer { get; } = null!;
-    public long PayerId { get; }
+
+    public int CategoryId { get; }
+    public ExpenseCategory Category { get; } = null!;
+
+    public int SplitId { get; }
+    public ExpenseSplit Split { get; } = null!;
 
     public ICollection<ExpenseShare> ExpenseShares { get; } = [];
     public ICollection<Split> Splits { get; } = [];
@@ -31,7 +37,9 @@ public sealed class Expense : Entity
         Group group,
         GroupMember payer,
         IEnumerable<Split> splits,
-        ISplitStrategy splitStrategy)
+        ISplitStrategy splitStrategy,
+        int? categoryId = null,
+        int? splitId = null)
     {
         Amount = totalAmount;
         Title = title;
@@ -44,6 +52,9 @@ public sealed class Expense : Entity
         ValidateSplits(splits);
         Splits = [.. splits];
         ExpenseShares = [.. splitStrategy.Split(this)];
+
+        CategoryId = (int)categoryId!;
+        SplitId = (int)splitId!;
     }
 
     private void ValidateSplits(IEnumerable<Split> splits)

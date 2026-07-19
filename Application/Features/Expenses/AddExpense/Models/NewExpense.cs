@@ -4,8 +4,8 @@ using IOU1.Domain.Models;
 namespace IOU1.Application.Features.Expenses.AddExpense.Models;
 
 public sealed record NewExpense(
-    long BuyerId,
-    long GroupId,
+    int BuyerId,
+    int GroupId,
     decimal Amount,
     string Title,
     string? Description,

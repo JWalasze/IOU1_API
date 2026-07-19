@@ -9,7 +9,7 @@ public class MemberService(IOU1Context context) : IMemberService
 {
     private readonly IOU1Context _context = context;
 
-    public async Task<Result<GroupMember?>> AddMember(long groupId, long memberId, CancellationToken cancellationToken = default)
+    public async Task<Result<GroupMember?>> AddMember(int groupId, int memberId, CancellationToken cancellationToken = default)
     {
         var group = await _context.Groups.FindAsync([groupId], cancellationToken);
         if (group is null)
@@ -34,9 +34,7 @@ public class MemberService(IOU1Context context) : IMemberService
                     cancellationToken);
 
             if (existingMember is null)
-            {
-                return Result<GroupMember?>.Failure($"inconsistent data around user {user.Id} in group {group.Id}.");
-            }
+                return Result<GroupMember?>.Failure($"Inconsistent data around user {user.Id} in group {group.Id}.");
 
             return Result<GroupMember?>.Success(existingMember);
         }
@@ -47,7 +45,7 @@ public class MemberService(IOU1Context context) : IMemberService
         return Result<GroupMember?>.Success(newMember);
     }
 
-    public Task<bool> IsMemberOfGroup(long groupId, long memberId, CancellationToken cancellationToken = default)
+    public Task<bool> IsMemberOfGroup(int groupId, int memberId, CancellationToken cancellationToken = default)
     {
         return _context
             .GroupMembers

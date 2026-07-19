@@ -18,6 +18,9 @@ public class SettlementConfiguration : IEntityTypeConfiguration<Settlement>
         builder.Property(s => s.SettledAt)
                .IsRequired();
 
+        builder.Property(s => s.Version)
+               .IsRowVersion();
+
         builder.HasOne(s => s.Group)
                .WithMany()
                .HasForeignKey(s => s.GroupId)

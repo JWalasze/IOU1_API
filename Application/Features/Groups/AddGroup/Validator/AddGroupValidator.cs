@@ -14,7 +14,7 @@ public class AddGroupValidator : AbstractValidator<AddGroupRequest>
             .WithMessage("MemberIds cannot be empty.")
             .Must(ids => ids.All(id => id > 0))
             .WithErrorCode("INVALID_GROUP_MEMBER_IDS_ERROR")
-            .WithMessage("All MemberIds must be positive long values.");
+            .WithMessage("All MemberIds must be positive int values.");
 
         RuleFor(ag => ag.Name)
             .NotEmpty()

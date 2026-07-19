@@ -25,7 +25,7 @@ public class Repository<T>(IOU1Context context) : IRepository<T> where T : Entit
         _context.Update(entity);
     }
 
-    public async Task<T?> Find(long id, CancellationToken cancellationToken = default)
+    public async Task<T?> Find(int id, CancellationToken cancellationToken = default)
     {
         return await _context.Set<T>().FindAsync([id], cancellationToken);
     }
@@ -52,7 +52,7 @@ public class Repository<T>(IOU1Context context) : IRepository<T> where T : Entit
         return await query.ToListAsync(cancellationToken);
     }
 
-    public async Task<T?> GetById(long id, CancellationToken cancellationToken = default)
+    public async Task<T?> GetById(int id, CancellationToken cancellationToken = default)
     {
         return await _context.Set<T>().FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }

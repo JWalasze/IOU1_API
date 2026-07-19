@@ -7,7 +7,7 @@ namespace IOU1.Domain.Entities;
 
 public class User : Entity
 {
-    public const int SaltBytesMaxLength = 64;
+    public const int SaltBytesMaxLength = 32;
     public const int HashBytesMaxLength = 64;
 
     public string FirstName { get; private set; } = null!;

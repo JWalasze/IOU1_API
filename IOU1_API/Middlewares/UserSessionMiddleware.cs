@@ -26,8 +26,8 @@ public class UserSessionMiddleware(IAuthUser user) : IMiddleware
         var userId = context.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value ??
             throw new UserSessionException("Invalid user! ID is missing!");
 
-        if (!long.TryParse(userId, out var parsedUserId))
-            throw new UserSessionException("Invalid user! ID is not a valid long value!");
+        if (!int.TryParse(userId, out var parsedUserId))
+            throw new UserSessionException("Invalid user! ID is not a valid int value!");
 
         _authUser.Id = parsedUserId;
     }

@@ -6,15 +6,15 @@ namespace IOU1.Domain.Entities;
 public class Invitation : Entity
 {
     public Group Group { get; } = null!;
-    public long GroupId { get; }
+    public int GroupId { get; }
     public User User { get; } = null!;
-    public long UserId { get; }
+    public int UserId { get; }
     public User Sender { get; } = null!;
-    public long SenderId { get; }
+    public int SenderId { get; }
 
     public InvitationStatus InvitationStatus;
 
-    public Invitation(long groupId, long userId, long senderId)
+    public Invitation(int groupId, int userId, int senderId)
     {
         GroupId = groupId;
         UserId = userId;

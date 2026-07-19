@@ -15,12 +15,12 @@ public class UserRepository : Repository<User>, IUserRepository, IRepository<Use
         _context = context;
     }
 
-    public async Task<User?> GetByIdAsync(long userId, CancellationToken cancellation = default)
+    public async Task<User?> GetByIdAsync(int userId, CancellationToken cancellation = default)
     {
         return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
     }
 
-    public async Task<IEnumerable<User>> GetByIdsAsync(IEnumerable<long> memberIds, CancellationToken cancellation = default)
+    public async Task<IEnumerable<User>> GetByIdsAsync(IEnumerable<int> memberIds, CancellationToken cancellation = default)
     {
         if (memberIds is null || !memberIds.Any())
             return [];

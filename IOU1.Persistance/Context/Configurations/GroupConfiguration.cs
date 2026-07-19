@@ -15,6 +15,9 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
         builder.Property(g => g.Description)
                .IsRequired();
 
+        builder.Property(g => g.Version)
+               .IsRowVersion();
+
         builder.HasOne(g => g.Owner)
                .WithMany(u => u.OwnedGroups)
                .HasForeignKey("CreatedById");

@@ -5,8 +5,8 @@ namespace Domain.RepoInterfaces;
 
 public interface IGroupRepository : IRepository<Group>
 {
-    Task<Group?> GetByIdAsync(long groupId, CancellationToken cancellationToken = default);
-    Task<Group?> GetGroupWithMembersAsync(long groupId, CancellationToken cancellationToken = default);
+    Task<Group?> GetByIdAsync(int groupId, CancellationToken cancellationToken = default);
+    Task<Group?> GetGroupWithMembersAsync(int groupId, CancellationToken cancellationToken = default);
 }
 
 

@@ -9,12 +9,12 @@ public class AddMemberValidator : AbstractValidator<AddMemberRequest>
     {
         RuleFor(am => am.UserId)
             .GreaterThan(0)
-            .WithErrorCode("INVALID_USER_ID_NUMBER_ERROR")
+            .WithErrorCode("INVALID_USER_ID_ERROR")
             .WithMessage($"User ID must be greater than zero!");
 
         RuleFor(am => am.GroupId)
             .GreaterThan(0)
-            .WithErrorCode("INVALID_GROUP_ID_NUMBER_ERROR")
+            .WithErrorCode("INVALID_GROUP_ID_ERROR")
             .WithMessage($"Group ID must be greater than zero!");
     }
 }

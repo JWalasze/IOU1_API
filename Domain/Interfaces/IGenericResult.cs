@@ -2,5 +2,5 @@
 
 public interface IResult<T> : IResult
 {
-    T? Data { get; init; }
+    T Data { get; init; }
 }

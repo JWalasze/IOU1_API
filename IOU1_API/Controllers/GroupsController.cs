@@ -1,5 +1,6 @@
-﻿using Application.Features.Groups.DeleteGroup.Response;
+﻿using IOU1.Application.Features.Groups.AddGroup.Handler;
 using IOU1.Application.Features.Groups.AddGroup.Models.Endpoint;
+using IOU1.Application.Features.Groups.DeleteGroup.Handler;
 using IOU1.Application.Features.Groups.DeleteGroup.Request;
 using IOU1.Application.Features.Groups.GetGroup.Handler;
 using IOU1.Application.Features.Groups.GetGroup.Models.Request;
@@ -7,7 +8,6 @@ using IOU1.Application.Features.Groups.GetGroupSummary.Handler;
 using IOU1.Application.Features.Groups.GetGroupSummary.Models.Request;
 using IOU1.Application.Features.Groups.GetGroups.Handler;
 using IOU1.Application.Features.Groups.GetGroups.Models.Request;
-using IOU1.Application.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,20 +41,20 @@ public class GroupsController : BaseApiController
     [HttpPost]
     public async Task<IActionResult> AddGroup(
         [FromBody] AddGroupRequest request,
-        [FromServices] IRequestMediator mediator,
+        [FromServices] IAddGroupHandler handler,
         CancellationToken cancellationToken = default)
     {
-        var result = await mediator.Send<AddGroupRequest, AddGroupResponse>(request, cancellationToken);
+        var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);
     }
 
     [HttpDelete("{GroupId}")]
     public async Task<IActionResult> DeleteGroup(
         [FromRoute] DeleteGroupRequest request,
-        [FromServices] IRequestMediator mediator,
+        [FromServices] IDeleteGroupHandler handler,
         CancellationToken cancellationToken = default)
     {
-        var result = await mediator.Send<DeleteGroupRequest, DeleteGroupResponse>(request, cancellationToken);
+        var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);
     }
 
