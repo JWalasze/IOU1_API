@@ -19,7 +19,7 @@ public class ExpenseShareConfiguration : IEntityTypeConfiguration<ExpenseShare>
                .IsRowVersion();
 
         builder.HasOne(es => es.Expense)
-               .WithMany(e => e.ExpenseShares)
+               .WithMany(e => e.Shares)
                .HasForeignKey(es => es.ExpenseId)
                .OnDelete(DeleteBehavior.Cascade);
 

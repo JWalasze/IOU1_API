@@ -6,11 +6,12 @@ namespace IOU1.Domain.Entities;
 public class Group : Entity
 {
     public const int NameMaxLength = 50;
-    public const int DescMaxLength = 300;
+    public const int DescriptionMaxLength = 300;
 
     public string Name { get; private set; } = null!;
     public string? Description { get; private set; } = null!;
 
+    public int OwnerId { get; private set; }
     public User Owner { get; private set; } = null!;
 
     public string CurrencyKey { get; private set; } = null!;
@@ -23,9 +24,7 @@ public class Group : Entity
     public Group(string name, string? description, User owner, Currency currency, ICollection<GroupMember> members)
     {
         if (string.IsNullOrWhiteSpace(name))
-        {
             throw new CreateGroupException($"Name cannot be null or empty.");
-        }
 
         Name = name;
         Description = description;
@@ -46,9 +45,7 @@ public class Group : Entity
     public Group(string name, string? description, User owner, Currency currency, ICollection<User> members)
     {
         if (string.IsNullOrWhiteSpace(name))
-        {
             throw new CreateGroupException($"Name cannot be null or empty.");
-        }
 
         Name = name;
         Description = description;

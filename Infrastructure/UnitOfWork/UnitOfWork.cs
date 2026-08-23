@@ -1,25 +1,11 @@
-﻿using IOU1.Domain.Base;
-using IOU1.Domain.RepoInterfaces;
-using IOU1.Domain.UnitOfWork;
+﻿using IOU1.Domain.UnitOfWork;
 using IOU1.Persistance.Context;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace IOU1.Infrastructure.UnitOfWork;
 
-public class UnitOfWork(IOU1Context context, IServiceProvider serviceProvider) : IUnitOfWork
+public class UnitOfWork(IOU1Context context) : IUnitOfWork
 {
     private readonly IOU1Context _context = context;
-    private readonly IServiceProvider _serviceProvider = serviceProvider;
-
-    public IRepository<T> Repository<T>() where T : Entity
-    {
-        return _serviceProvider.GetRequiredService<IRepository<T>>();
-    }
-
-    public TRepo Get<TRepo>() where TRepo : IRepository
-    {
-        return _serviceProvider.GetRequiredService<TRepo>();
-    }
 
     public async Task BeginTransaction()
     {

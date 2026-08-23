@@ -1,5 +1,6 @@
 ﻿using FluentValidation.Results;
 using IOU1.Domain.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace IOU1.Domain.Models.Results;
 
@@ -11,6 +12,7 @@ public class Result<T> : IResult<T> where T : class?
 
     public IEnumerable<ProblemDetails> Errors { get; } = [];
 
+    [JsonIgnore]
     public Exception? Exception { get; init; }
 
     public string? ErrorCode => Errors.FirstOrDefault()?.Code;

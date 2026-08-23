@@ -12,15 +12,11 @@ public record Email : ValueObject
     public Email(string emailAddress)
     {
         if (string.IsNullOrWhiteSpace(emailAddress))
-        {
             throw new ArgumentException("Email address cannot be empty.");
-        }
 
         var regex = new Regex(EmailPattern);
         if (!regex.IsMatch(emailAddress))
-        {
             throw new ArgumentException("Invalid email address format.");
-        }
 
         EmailAddress = emailAddress;
     }

@@ -19,9 +19,7 @@ public class LogInHandler(
     {
         var validationResult = _validator.Validate(request);
         if (!validationResult.IsValid)
-        {
             return Result<LogInResponse>.Failure(validationResult.Errors);
-        }
 
         var logInResult = await _authService.LogIn(new(request.Login, request.Password));
         if (!logInResult)

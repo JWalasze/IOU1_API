@@ -26,15 +26,11 @@ public class AuthService(
         try
         {
             if (string.IsNullOrWhiteSpace(credentials.Login) || string.IsNullOrWhiteSpace(credentials.Password))
-            {
                 return Result<Token?>.Failure("Neither Password nor Login can be null or empty!");
-            }
 
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Login == credentials.Login);
             if (user is null)
-            {
                 return Result<Token?>.Failure($"User with login {credentials.Login} couldn't be found.");
-            }
 
             var passwordHash = _passwordHasher.GenerateHash(credentials.Password, user.PasswordSalt);
             var compareResult = _passwordComparer.Compare(passwordHash, user.PasswordHash);

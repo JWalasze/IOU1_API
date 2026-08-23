@@ -47,7 +47,7 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
                .WithMany()
                .HasForeignKey("PayerId");
 
-        builder.HasMany(e => e.ExpenseShares)
+        builder.HasMany(e => e.Shares)
                .WithOne(es => es.Expense)
                .HasForeignKey(es => es.ExpenseId);
 

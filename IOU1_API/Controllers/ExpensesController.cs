@@ -1,5 +1,5 @@
 ﻿using IOU1.Application.Features.Expenses.AddExpense.Handler;
-using IOU1.Application.Features.Expenses.AddExpense.Models;
+using IOU1.Application.Features.Expenses.AddExpense.Models.Request;
 using IOU1.Application.Features.Expenses.GetExpenses.Handler;
 using IOU1.Application.Features.Expenses.GetExpenses.Models;
 using Microsoft.AspNetCore.Authorization;

@@ -6,5 +6,5 @@ namespace IOU1.Application.Features.Groups.GetGroup.Handler;
 
 public interface IGetGroupHandler
 {
-    Task<Result<GetGroupDto?>> Handle(GetGroupRequest request, CancellationToken cancellationToken = default);
+    Task<Result<GroupDto?>> Handle(GetGroupRequest request, CancellationToken cancellationToken = default);
 }

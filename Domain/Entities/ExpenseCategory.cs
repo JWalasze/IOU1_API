@@ -29,26 +29,22 @@ public class ExpenseCategory : Entity
         int groupId)
     {
         GuardString.ForPresence<CreatingExpenseCategoryException>(title,
-            "Title for expense category cannot be empty.");
+            "Title for an expense category cannot be empty.");
         GuardString.ForMaxlength<CreatingExpenseCategoryException>(title, _maxTitleLength,
-            "Title for a expense category is too long!");
-
+            "Title for an expense category is too long!");
         Title = title;
 
         GuardString.ForMaxlength<CreatingExpenseCategoryException>(description, _maxDescriptionLength,
-            @$"Description for a expense category is too long! Max length: {_maxDescriptionLength}");
-
+            @$"Description for an expense category is too long! Max length: {_maxDescriptionLength}");
         Description = description;
 
         GuardIntId.ForPresence<CreatingExpenseCategoryException>(groupId,
-            "GroupId for a expense category cannot be empty.");
-
+            "GroupId for an expense category cannot be empty.");
         GroupId = groupId;
 
         if (iconKey is not null)
             GuardString.ForMaxlength<CreatingExpenseCategoryException>(description, _maxIconKeyLength,
-            @$"Description for a expense category is too long! Max length: {_maxIconKeyLength}");
-
+            @$"Description for an expense category is too long! Max length: {_maxIconKeyLength}");
         IconKey = iconKey;
         IsDeletd = false;
     }
@@ -63,10 +59,10 @@ public class ExpenseCategory : Entity
 
     public void SetTitle(string newTitle)
     {
-        GuardString.ForPresence<CreatingExpenseCategoryException>(newTitle, "Title cannot be empty.");
+        GuardString.ForPresence<CreatingExpenseCategoryException>(newTitle,
+            "Title for a expense category cannot be empty.");
         GuardString.ForMaxlength<CreatingExpenseCategoryException>(newTitle, _maxTitleLength,
             "Title for a expense category is too long!");
-
         Title = newTitle;
     }
 
@@ -74,7 +70,8 @@ public class ExpenseCategory : Entity
     {
         GuardString.ForMaxlength<CreatingExpenseCategoryException>(newDescription, _maxDescriptionLength,
             @$"Description for a expense category is too long! Max length: {_maxDescriptionLength}");
-
         Description = newDescription;
     }
+
+    //We can create region for Guards - to reuse them in other constructors and methods
 }

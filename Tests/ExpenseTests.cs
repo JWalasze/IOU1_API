@@ -83,7 +83,7 @@ public class ExpenseTests
         //Act
         var action = () =>
         {
-            var sut = new Expense(100, "Tytul", "Description", group, aliceMember,
+            var sut = Expense.Create("Tytul", "Description", 100, group, aliceMember,
             [
                 new()
                 {
@@ -91,7 +91,7 @@ public class ExpenseTests
                     MemberId = 1
                 },
 
-            ], null!);
+            ], null!, 1, 1);
         };
 
         //Assert
@@ -121,7 +121,7 @@ public class ExpenseTests
 
         var aliceMember = group.Members.First(m => m.UserId == alice.Id);
 
-        var sut = new Expense(200, "Tytul", "Description", group, aliceMember,
+        var sut = Expense.Create("Tytul", "Description", 200, group, aliceMember,
         [
             new()
             {
@@ -138,20 +138,20 @@ public class ExpenseTests
                 Amount = -50,
                 MemberId = 1
             }
-        ], new CustomSplitStrategy());
+        ], new CustomSplitStrategy(), 1, 1);
 
         //Assert
         sut.Should().NotBeNull();
-        sut.ExpenseShares.Should().NotBeNullOrEmpty();
-        sut.ExpenseShares.Should().NotContainNulls();
-        sut.ExpenseShares.Count.Should().Be(3);
-        sut.ExpenseShares.Count(es => es.Member.UserId == alice.Id).Should().Be(1);
-        sut.ExpenseShares.Count(es => es.Member.UserId == bob.Id).Should().Be(1);
-        sut.ExpenseShares.Count(es => es.Member.UserId == carol.Id).Should().Be(1);
+        sut.Shares.Should().NotBeNullOrEmpty();
+        sut.Shares.Should().NotContainNulls();
+        sut.Shares.Count.Should().Be(3);
+        sut.Shares.Count(es => es.Member.UserId == alice.Id).Should().Be(1);
+        sut.Shares.Count(es => es.Member.UserId == bob.Id).Should().Be(1);
+        sut.Shares.Count(es => es.Member.UserId == carol.Id).Should().Be(1);
 
-        var aliceShare = sut.ExpenseShares.First(es => es.Member.UserId == alice.Id);
-        var bobShare = sut.ExpenseShares.First(es => es.Member.UserId == bob.Id);
-        var carolShare = sut.ExpenseShares.First(es => es.Member.UserId == carol.Id);
+        var aliceShare = sut.Shares.First(es => es.Member.UserId == alice.Id);
+        var bobShare = sut.Shares.First(es => es.Member.UserId == bob.Id);
+        var carolShare = sut.Shares.First(es => es.Member.UserId == carol.Id);
 
         aliceShare.Amount.Should().Be(50);
         bobShare.Amount.Should().Be(100);

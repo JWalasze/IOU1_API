@@ -24,7 +24,7 @@ public class ExpenseRepository : Repository<Expense>, IExpenseRepository
     public async Task<IEnumerable<Expense>> GetByGroupIdAsync(int groupId, CancellationToken cancellationToken = default)
     {
         return await _context.Expenses
-            .Include(e => e.ExpenseShares)
+            .Include(e => e.Shares)
                 .ThenInclude(es => es.Member)
                     .ThenInclude(m => m.User)
             .Include(e => e.Group)
@@ -37,7 +37,7 @@ public class ExpenseRepository : Repository<Expense>, IExpenseRepository
     public async Task<Expense?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _context.Expenses
-            .Include(e => e.ExpenseShares)   // eager load related expense shares
+            .Include(e => e.Shares)   // eager load related expense shares
                 .ThenInclude(es => es.Member)
                     .ThenInclude(m => m.User)
             .Include(e => e.Group)
@@ -49,7 +49,7 @@ public class ExpenseRepository : Repository<Expense>, IExpenseRepository
     public IQueryable<Expense> GetByGroupIdQuery(int groupId)
     {
         return _context.Expenses
-            .Include(e => e.ExpenseShares)
+            .Include(e => e.Shares)
                 .ThenInclude(es => es.Member)
                     .ThenInclude(m => m.User)
             .Include(e => e.Group)

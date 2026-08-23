@@ -1,8 +1,6 @@
-using IOU1.Application.Strategy;
+using IOU1.Application.Services.Balances;
 using IOU1.Domain.Entities;
-using IOU1.Domain.Models;
 using IOU1.Domain.Services.Crypto;
-using IOU1.Domain.Services.Splits;
 using IOU1.Domain.ValueObjects;
 using IOU1.Infrastructure.Auth;
 using IOU1.Persistance.Context;
@@ -21,14 +19,30 @@ var connectionString = config.GetConnectionString("DefaultConnection")
 var services = new ServiceCollection();
 services.AddDbContext<IOU1Context>(opt => opt.UseSqlServer(connectionString));
 services.AddSingleton<IPasswordHasher, PasswordHasher>();
+services.AddScoped<IBalanceService, BalanceService>();
 
 var provider = services.BuildServiceProvider();
 using var scope = provider.CreateScope();
 
 var context = scope.ServiceProvider.GetRequiredService<IOU1Context>();
 var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+var balanceService = scope.ServiceProvider.GetRequiredService<IBalanceService>();
 
 Console.WriteLine("Seeding database...");
+
+//Expense categories
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Jedzenie', 'SYSTEM_FOOD')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Transport', 'SYSTEM_TRANSPORT')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Nocleg', 'SYSTEM_ACCOMODATION')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Rozrywka', 'SYSTEM_FUN')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Rachunki', 'SYSTEM_BILLS')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Rachunki', 'SYSTEM_DIFFERENT')");
+
+//Expense split types
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseSplit (Title,IconKey) values('Równo', 'EQUAL')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseSplit (Title,IconKey) values('Nierówno', 'CUSTOM')");
+await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseSplit (Title,IconKey) values('Procentowo', 'PERCENTAGE')");
+await context.SaveChangesAsync();
 
 // --- Currencies ---
 var existingKeys = await context.Currencies.Select(c => c.Key).ToListAsync();
@@ -50,11 +64,10 @@ Console.WriteLine($"Currencies ready: {string.Join(", ", currencies.Keys)}");
 // --- Users ---
 var users = new List<User>
 {
-    User.Create("Alice",   "Smith",  new Email("alice@example.com"),   "alice",   "123456", hasher),
-    User.Create("Bob",     "Jones",  new Email("bob@example.com"),     "bob",     "123456", hasher),
-    User.Create("Charlie", "Brown",  new Email("charlie@example.com"), "charlie", "123456", hasher),
-    User.Create("Diana",   "Prince", new Email("diana@example.com"),   "diana",   "123456", hasher),
-    User.Create("Eve",     "Miller", new Email("eve@example.com"),     "eve",     "123456", hasher),
+    User.Create("Jakub",      "Walaszek",        new Email("jakub@example.com"),      "jakub",      "123456", hasher),
+    User.Create("Julia",      "Jaśkielewicz",    new Email("julia@example.com"),      "julia",      "123456", hasher),
+    User.Create("Krzysztof",  "Kwas",            new Email("krzysztof@example.com"),  "krzysztof",  "123456", hasher),
+    User.Create("Kacper",     "Mejsner",         new Email("kacper@example.com"),     "kacper",     "123456", hasher),
 };
 
 context.Users.AddRange(users);
@@ -62,141 +75,35 @@ await context.SaveChangesAsync();
 Console.WriteLine($"Users seeded: {string.Join(", ", users.Select(u => u.Login))}");
 
 // --- Groups ---
-// "Roommates" — Alice owns, Alice + Bob + Charlie are members
-var roommates = new Group(
-    name: "Roommates",
-    description: "Shared apartment expenses",
+// "Wydatki w Krakowie" — Jakub owns, Jakub is the only member
+var krakow = new Group(
+    name: "Wydatki w Krakowie",
+    description: "Grupa do zarządzania wydatkami w Krakowie w paczce znajomych :)",
     owner: users[0],
     currency: currencies["PLN"],
-    members: [users[0], users[1], users[2]]);
+    members: [users[0]]);
 
-// "Weekend Trip" — Bob owns, Bob + Charlie + Diana + Eve are members
-var trip = new Group(
-    name: "Weekend Trip",
-    description: "Prague trip 2025",
-    owner: users[1],
-    currency: currencies["EUR"],
-    members: [users[1], users[2], users[3], users[4]]);
-
-// "Office Lunch" — Diana owns, Diana + Alice are members
-var lunch = new Group(
-    name: "Office Lunch",
-    description: null,
-    owner: users[3],
-    currency: currencies["PLN"],
-    members: [users[3], users[0]]);
-
-context.Groups.AddRange(roommates, trip, lunch);
+context.Groups.Add(krakow);
 await context.SaveChangesAsync();
-Console.WriteLine("Groups seeded: Roommates, Weekend Trip, Office Lunch");
+Console.WriteLine("Groups seeded: Wydatki w Krakowie");
 
-// --- Expenses ---
-// Reload groups with members so navigation properties are fully populated
-roommates = await context.Groups
+// Reload group with members so navigation properties are fully populated
+krakow = await context.Groups
     .Include(g => g.Members).ThenInclude(m => m.User)
-    .SingleAsync(g => g.Id == roommates.Id);
+    .SingleAsync(g => g.Id == krakow.Id);
 
-trip = await context.Groups
-    .Include(g => g.Members).ThenInclude(m => m.User)
-    .SingleAsync(g => g.Id == trip.Id);
+// --- Initial member balances ---
+foreach (var member in krakow.Members)
+{
+    var addedBalancesResult = await balanceService.AddInitialBalancesFor(member);
+    if (!addedBalancesResult.IsSuccess)
+        throw new InvalidOperationException(
+            addedBalancesResult.ErrorMessage ?? $"Error occured while adding initial balances for member {member.Id}.");
 
-lunch = await context.Groups
-    .Include(g => g.Members).ThenInclude(m => m.User)
-    .SingleAsync(g => g.Id == lunch.Id);
-
-ISplitStrategy equal = new EqualSplitStrategy();
-
-static GroupMember PayerOf(Group group, User user) => group.Members.First(m => m.UserId == user.Id);
-
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Jedzenie', 'SYSTEM_FOOD')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Transport', 'SYSTEM_TRANSPORT')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Nocleg', 'SYSTEM_ACCOMODATION')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Rozrywka', 'SYSTEM_FUN')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Rachunki', 'SYSTEM_BILLS')");
-
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseSplit (Title,IconKey) values('Równo', 'EQUAL')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseSplit (Title,IconKey) values('Nierówno', 'CUSTOM')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseSplit (Title,IconKey) values('Procentowo', 'PERCENTAGE')");
-await context.SaveChangesAsync();
-
-List<Expense> expenses =
-[
-    // Roommates group
-    new(
-        totalAmount: 180.00m,
-        title: "Groceries",
-        description: "Monthly grocery run",
-        group: roommates,
-        payer: PayerOf(roommates, users[0]),
-        splits: roommates.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal,
-        1,1),
-
-    new(
-        totalAmount: 90.00m,
-        title: "Internet bill",
-        description: null,
-        group: roommates,
-        payer: PayerOf(roommates, users[1]),
-        splits: roommates.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal,
-        1,1),
-
-    new(
-        totalAmount: 60.00m,
-        title: "Cleaning supplies",
-        description: null,
-        group: roommates,
-        payer: PayerOf(roommates, users[2]),
-        splits: roommates.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal,
-        1,1),
-
-    // Weekend Trip group
-    new(
-        totalAmount: 480.00m,
-        title: "Hotel",
-        description: "2 nights in Prague",
-        group: trip,
-        payer: PayerOf(trip, users[1]),
-        splits: trip.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal,
-        1,1),
-
-    new(
-        totalAmount: 160.00m,
-        title: "Train tickets",
-        description: "Round trip",
-        group: trip,
-        payer: PayerOf(trip, users[3]),
-        splits: trip.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal,
-        1,1),
-
-    new(
-        totalAmount: 200.00m,
-        title: "Restaurants",
-        description: "Meals during the trip",
-        group: trip,
-        payer: PayerOf(trip, users[2]),
-        splits: trip.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal,
-        1,1),
-
-    // Office Lunch group
-    new(
-        totalAmount: 55.00m,
-        title: "Team lunch",
-        description: "Italian restaurant",
-        group: lunch,
-        payer: PayerOf(lunch, users[3]),
-        splits: lunch.Members.Select(m => new Split { MemberId = m.UserId, Amount = 0 }),
-        splitStrategy: equal,
-        1,1),
-];
-
-context.Expenses.AddRange(expenses);
-await context.SaveChangesAsync();
-Console.WriteLine($"Expenses seeded: {expenses.Count} expenses, {expenses.Sum(e => e.ExpenseShares.Count)} expense shares");
+    // Zapis po każdym członku, żeby kolejne wywołania widziały już utworzone pary sald
+    // i nie tworzyły duplikatów w ramach tej samej partii seedowania.
+    await context.SaveChangesAsync();
+}
+Console.WriteLine("Initial member balances seeded.");
 
 Console.WriteLine("Database seeding completed successfully!");

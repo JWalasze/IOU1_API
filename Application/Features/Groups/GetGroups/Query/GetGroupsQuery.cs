@@ -8,17 +8,18 @@ public class GetGroupsQuery(IOU1Context context) : IGetGroupsQuery
 {
     private readonly IOU1Context _context = context;
 
-    public async Task<ICollection<GetGroupsDto>> GetGroups(int userId, CancellationToken cancellationToken = default)
+    public Task<List<GetGroupsDto>> GetGroups(int userId, CancellationToken cancellationToken = default)
     {
-        return await _context
+        return _context
             .GroupMembers
             .Include(gm => gm.Group)
                 .ThenInclude(g => g.Owner)
             .Where(gm => gm.UserId == userId)
             .Select(gm => new GetGroupsDto
             {
-                GroupId = gm.Id,
+                GroupId = gm.GroupId,
                 OwnerName = gm.Group.Owner.FullName,
+                Name = gm.Group.Name,
                 Description = gm.Group.Description,
             })
             .ToListAsync(cancellationToken);

@@ -23,7 +23,7 @@ public sealed class DeleteGroupHandler(
                 validationResult.Errors.Select(e => new ProblemDetails(e.ErrorMessage, e.ErrorCode)));
         }
 
-        var result = await _groupService.DeleteGroup(request.GroupId, cancellationToken);
+        var result = await _groupService.Delete(request.GroupId, cancellationToken);
         if (!result.IsSuccess)
         {
             return Result<DeleteGroupResponse?>.Failure(result.ErrorMessage ?? "Unexpected error occured!");

@@ -8,51 +8,81 @@ public class GetGroupQuery(IOU1Context context) : IGetGroupQuery
 {
     private readonly IOU1Context _context = context;
 
-    public async Task<IEnumerable<GetGroupExpenseDto>> GetLastExpenses(int groupId, int lastExpenseCount, CancellationToken cancellationToken = default)
+    //It's usefull to place here AsNoTracking() and return Task without async/await.
+    //Thank's to that we won't be creating additional state machine for async method and we won't be tracking entities in the context.
+    //We follow: task passthrough principle.
+    public Task<bool> IsThatYourGroup(int userId, int groupId, CancellationToken cancellationToken = default)
     {
-        return await _context
-            .Expenses
-            .Include(e => e.ExpenseShares)
-            .Where(e => e.GroupId == groupId)
-            .Select(e => new GetGroupExpenseDto
-            {
-                ExpenseId = e.Id,
-                BuyerId = e.Payer.UserId,
-                Amount = e.Amount,
-                Currency = "PLN",
-                ExpenseShares = e.ExpenseShares
-                    .Select(es => new GetGroupExpenseShareDto
-                    {
-                        Amount = es.Amount,
-                        MemberId = es.Member.UserId,
-                        ExpenseShareId = es.Id,
-                        Currency = "PLN"
-                    })
-                    .ToList()
-            })
-            .ToListAsync(cancellationToken);
+        return _context
+            .Groups
+            .AsNoTracking()
+            .Include(g => g.Members)
+            .AnyAsync(g =>
+                g.Id == groupId &&
+                g.Members.Any(m => m.UserId == userId), cancellationToken);
     }
 
-    public async Task<GetGroupDto?> GetGroup(int groupId, CancellationToken cancellationToken = default)
+    public Task<GroupDto?> GetGroup(int groupId, CancellationToken cancellationToken = default)
     {
-        return await _context
+        return _context
             .Groups
+            .AsNoTracking()
             .Include(g => g.Members)
                 .ThenInclude(m => m.User)
             .Where(g => g.Id == groupId)
-            .Select(g => new GetGroupDto
+            .Select(g => new GroupDto
             {
                 GroupId = g.Id,
-                OwnerName = g.Owner.FullName,
+                Title = g.Name,
                 Description = g.Description,
+                Currency = g.CurrencyKey,
                 Members = g.Members
-                    .Select(m => new GetGroupMemberDto
-                    {
-                        UserId = m.Id,
-                        UserName = m.User.FullName,
-                    })
+                    .Select(m => new MemberDto(
+                        m.Id,
+                        m.User.FullName))
                     .ToList()
             })
-            .FirstOrDefaultAsync(cancellationToken);
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+
+    public Task<List<ExpenseDto>> GetLastExpenses(int groupId, int lastExpenseCount, CancellationToken cancellationToken = default)
+    {
+        return _context
+            .Expenses
+            .AsNoTracking()
+            .Include(e => e.Shares)
+            .Include(e => e.Group)
+            .Where(e => e.GroupId == groupId)
+            .Take(lastExpenseCount)
+            .OrderByDescending(e => e.CreatedAt)
+            .Select(e => new ExpenseDto(
+                e.Id,
+                e.PayerId,
+                e.Amount,
+                e.CreatedAt,
+                e.Shares
+                    .Select(es => new ExpenseShareDto(
+                        es.Id,
+                        es.MemberId,
+                        es.Amount))
+                    .ToList()))
+            .ToListAsync(cancellationToken);
+    }
+
+    public Task<List<MemberBalanceDto>> GetBalances(int groupId, CancellationToken cancellationToken = default)
+    {
+        return _context
+            .MemberBalances
+            .AsNoTracking()
+            .Include(b => b.Member)
+            .Include(b => b.CounterpartyMember)
+            .Where(b =>
+                b.Member.GroupId == groupId &&
+                b.CounterpartyMember.GroupId == groupId)
+            .Select(b => new MemberBalanceDto(
+                b.MemberId,
+                b.CounterpartyMemberId,
+                b.Amount))
+            .ToListAsync(cancellationToken);
     }
 }

@@ -25,13 +25,15 @@ public class MemberBalanceConfiguration : IEntityTypeConfiguration<MemberBalance
                .WithMany()
                .HasForeignKey(mb => mb.MemberId)
                .OnDelete(DeleteBehavior.Restrict);
+        //TODO: poczytać o DeleteBehaviour jeszcze trochę
 
         builder.HasOne(mb => mb.CounterpartyMember)
                .WithMany()
                .HasForeignKey(mb => mb.CounterpartyMemberId)
                .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(mb => new { mb.MemberId, mb.CounterpartyMemberId })
-               .IsUnique();
+        builder.HasOne(mb => mb.Group)
+               .WithMany()
+               .HasForeignKey(mb => mb.GroupId);
     }
 }

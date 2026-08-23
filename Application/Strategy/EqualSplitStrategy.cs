@@ -3,18 +3,20 @@ using IOU1.Domain.Services.Splits;
 
 namespace IOU1.Application.Strategy;
 
-public class EqualSplitStrategy : ISplitStrategy
+public sealed class EqualSplitStrategy : ISplitStrategy
 {
     public IEnumerable<ExpenseShare> Split(Expense expense)
     {
         var numberOfMembers = expense.Group.Members.Count;
-        if (numberOfMembers is 0)
+        var equalAmount = Math.Round(expense.Amount / numberOfMembers, 2);
+
+        foreach (var member in expense.Group.Members)
         {
-            throw new InvalidOperationException($"Group {expense.Group.Id} has 0 members.");
+            var shareAmount = equalAmount;
+            if (expense.PayerId != member.Id)
+                shareAmount = -1 * shareAmount;
+
+            yield return ExpenseShare.Create(expense, member, shareAmount);
         }
-
-        var equalAmount = expense.Amount / numberOfMembers;
-
-        return [.. expense.Group.Members.Select(member => new ExpenseShare(expense, member, equalAmount))];
     }
 }

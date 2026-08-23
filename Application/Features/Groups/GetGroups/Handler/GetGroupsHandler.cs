@@ -20,11 +20,9 @@ public class GetGroupsHandler(
     {
         var validationResult = _validator.Validate(request);
         if (!validationResult.IsValid)
-        {
-            return Result<ICollection<GetGroupsDto>>.Failure(
-                validationResult.Errors.Select(e => new ProblemDetails(e.ErrorMessage, e.ErrorCode)));
-        }
+            return Result<ICollection<GetGroupsDto>>.Failure(validationResult.Errors);
 
+        //TODO: spróbowac tutaj zwrócic w iAsyncEnumerable i dalej z kontrolera
         var groups = await _repository.GetGroups(_authUser.Id, cancellationToken);
         return Result<ICollection<GetGroupsDto>>.Success(groups);
     }

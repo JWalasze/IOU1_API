@@ -22,8 +22,7 @@ public sealed class AddGroupHandler(
                 validationResult.Errors.Select(e => new ProblemDetails(e.ErrorMessage, e.ErrorCode)));
         }
 
-        var result = await _groupService.AddGroup(
-            request.MemberIds,
+        var result = await _groupService.Add(
             request.OwnerId,
             request.Name,
             request.Description,
@@ -31,9 +30,7 @@ public sealed class AddGroupHandler(
             cancellationToken);
 
         if (!result.IsSuccess || result.Data is null)
-        {
             return Result<AddGroupResponse?>.Failure(result.ErrorMessage ?? "Unexpected error occured!");
-        }
 
         return Result<AddGroupResponse?>.Success(new AddGroupResponse { GroupId = result.Data.GroupId });
     }

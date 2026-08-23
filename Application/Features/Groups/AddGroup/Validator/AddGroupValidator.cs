@@ -4,18 +4,10 @@ using IOU1.Domain.Entities;
 
 namespace IOU1.Application.Features.Groups.AddGroup.Validator;
 
-public class AddGroupValidator : AbstractValidator<AddGroupRequest>
+public sealed class AddGroupValidator : AbstractValidator<AddGroupRequest>
 {
     public AddGroupValidator()
     {
-        RuleFor(ag => ag.MemberIds)
-            .NotEmpty()
-            .WithErrorCode("EMPTY_GROUP_MEMBER_IDS_ERROR")
-            .WithMessage("MemberIds cannot be empty.")
-            .Must(ids => ids.All(id => id > 0))
-            .WithErrorCode("INVALID_GROUP_MEMBER_IDS_ERROR")
-            .WithMessage("All MemberIds must be positive int values.");
-
         RuleFor(ag => ag.Name)
             .NotEmpty()
             .WithErrorCode("EMPTY_GROUP_NAME_ERROR")
@@ -25,9 +17,10 @@ public class AddGroupValidator : AbstractValidator<AddGroupRequest>
             .WithMessage($"The name of group is too long. Max: {Group.NameMaxLength} chars.");
 
         RuleFor(ag => ag.Description)
-            .MaximumLength(Group.DescMaxLength)
-            .WithErrorCode("MAX_LENGTH_DESC_ERROR")
-            .WithMessage($"The description is too long. Max: {Group.DescMaxLength} chars.");
+            .MaximumLength(Group.DescriptionMaxLength)
+            .WithErrorCode("MAX_LENGTH_DESCRIPTION_ERROR")
+            .WithMessage($"The description is too long. Max: {Group.DescriptionMaxLength} chars.")
+            .When(ag => !string.IsNullOrWhiteSpace(ag.Description));
 
         RuleFor(ag => ag.CurrencyKey)
             .NotEmpty()

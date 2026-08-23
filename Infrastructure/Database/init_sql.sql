@@ -8,6 +8,8 @@
 --    IX_Tabela_Kolumny
 -- =============================================================================
 
+drop table if exists AppNotification;
+drop table if exists ExpenseShareSettlement;
 drop table if exists ExpenseShare;
 drop table if exists Settlement;
 drop table if exists Expense;
@@ -16,9 +18,14 @@ drop table if exists Invitation;
 drop table if exists MemberBalance;
 drop table if exists GroupMember;
 drop table if exists ExpenseCategory;
+drop table if exists ExpenseSplit;
 drop table if exists CommunityGroup;
 drop table if exists Currency;
 drop table if exists AppUser;
+go
+
+drop type if exists SingleIds;
+drop type if exists DoubleIds;
 go
 
 create table AppUser (
@@ -160,6 +167,7 @@ create table ExpenseCategory (
   Title         nvarchar(20)    not null,
   Description   nvarchar(255)   null,
   GroupId       int             null,
+  IconKey       nvarchar(20)    null,
 
   CreatedAt     datetime2(3)    not null constraint DF_ExpenseCategory_CreatedAt default sysutcdatetime(),
   IsDeleted     bit             not null constraint DF_ExpenseCategory_IsDeleted default 0,
@@ -171,12 +179,14 @@ create table ExpenseCategory (
 go
 
 create index IX_ExpenseCategory_CommunityGroup_GroupId on ExpenseCategory (GroupId);
+create unique index IX_ExpenseCategory_GroupId_IconKey on ExpenseCategory(GroupId, IconKey);
 go
 
 create table ExpenseSplit (
   Id            int             identity(1, 1) not null,
   Title         nvarchar(20)    not null,
   Description   nvarchar(255)   null,
+  IconKey       nvarchar(20)    null,
   
   CreatedAt     datetime2(3)    not null constraint DF_ExpenseSplit_CreatedAt default sysutcdatetime(),
   IsDeleted     bit             not null constraint DF_ExpenseSplit_IsDeleted default 0,
@@ -184,6 +194,9 @@ create table ExpenseSplit (
 
   constraint PK_ExpenseSplit    primary key (Id)
 );
+go
+
+create unique index IX_ExpenseSplit_IconKey on ExpenseSplit(IconKey);
 go
 
 create table Expense (
@@ -212,6 +225,7 @@ create table Expense (
 );
 go
 
+create index IX_Expense_GroupId on Expense (GroupId);
 create index IX_Expense_GroupId_PayerId   on Expense (GroupId, PayerId) include (Amount);
 create index IX_Expense_GroupId_CreatedAt on Expense (GroupId, CreatedAt);
 go
@@ -237,6 +251,7 @@ go
 
 create table MemberBalance (
   Id                    int           identity(1, 1) not null,
+  GroupId               int           not null,
 
   MemberId              int           not null,
   CounterpartyMemberId  int           not null,
@@ -246,6 +261,7 @@ create table MemberBalance (
   Version               rowversion,
 
   constraint PK_MemberBalance                                   primary key (Id),
+  constraint FK_MemberBalance_CommunityGroup_GroupId            foreign key (GroupId) references CommunityGroup (Id),
   constraint FK_MemberBalance_GroupMember_MemberId              foreign key (MemberId)                  references GroupMember (Id),
   constraint FK_MemberBalance_GroupMember_CounterpartyMemberId  foreign key (CounterpartyMemberId)      references GroupMember (Id),
   constraint UQ_MemberBalance_MemberId_CounterpartyMemberId     unique (MemberId, CounterpartyMemberId),
@@ -255,4 +271,53 @@ go
 
 create index IX_MemberBalance_MemberId on MemberBalance (MemberId);
 create index IX_MemberBalance_CounterpartyMemberId on MemberBalance (CounterpartyMemberId);
+create index IX_MemberBalance_GroupId on MemberBalance (GroupId);
 go
+
+create table ExpenseShareSettlement (
+  Id             int identity(1, 1) not null,
+  ExpenseShareId int not null,
+  SettlementId   int not null,
+
+  Version       rowversion,
+
+  constraint PK_ExpenseShareSettlement                             primary key (Id),
+  constraint FK_ExpenseShareSettlement_ExpenseShare_ExpenseShareId foreign key (ExpenseShareId) references ExpenseShare (Id) on delete cascade,
+  constraint FK_ExpenseShareSettlement_Settlement_SettlementId     foreign key (SettlementId) references Settlement (Id) on delete cascade
+);
+go
+
+create index IX_ExpenseShareSettlement_ExpenseShareId on ExpenseShareSettlement (ExpenseShareId);
+create index IX_ExpenseShareSettlement_CounterpartyMemberId on ExpenseShareSettlement (SettlementId);
+go
+
+create table AppNotification (
+  Id               int identity(1, 1) not null,
+  CreatedAt        datetime2(3) not null constraint DF_AppNotification_CreatedAt default sysutcdatetime(),
+  UserId           int not null,
+  Payload          nvarchar(max) not null,
+  NotificationType nvarchar(20),
+  IsRead           bit not null constraint DF_AppNotification_IsRead default 0,
+
+  Version       rowversion,
+
+  constraint PK_AppNotification                primary key (Id),
+  constraint FK_AppNotification_AppUser_UserId foreign key (UserId) references AppUser (Id) on delete cascade,
+  constraint CK_AppNotification_Payload_IsJson check (ISJSON(Payload) = 1)
+);
+go
+
+create index IX_AppNotification_UserId on AppUser (Id);
+go
+
+--Table-Valued Parameters
+CREATE TYPE SingleIds AS TABLE
+(
+    Id INT NOT NULL
+);
+
+CREATE TYPE DoubleIds AS TABLE
+(
+    FirstId  INT NOT NULL,
+    SecondId INT NOT NULL
+);

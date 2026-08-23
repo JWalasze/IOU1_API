@@ -18,9 +18,12 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
         builder.Property(g => g.Version)
                .IsRowVersion();
 
+        builder.Property(g => g.OwnerId)
+               .HasColumnName("CreatedById");
+
         builder.HasOne(g => g.Owner)
                .WithMany(u => u.OwnedGroups)
-               .HasForeignKey("CreatedById");
+               .HasForeignKey(e => e.OwnerId);
 
         builder.HasOne(g => g.Currency)
                .WithMany()

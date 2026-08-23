@@ -2,5 +2,9 @@
 
 public interface IAuthUser
 {
-    public int Id { get; set; }
+    int Id { get; }
+    string Login { get; }
+
+    void SetId(int id);
+    void SetLogin(string login);
 }

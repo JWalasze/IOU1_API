@@ -4,9 +4,7 @@ using IOU1.Application.Services.Balances;
 using IOU1.Application.Services.Members;
 using IOU1.Domain.Models.Auth.User;
 using IOU1.Domain.Models.Results;
-using IOU1.Domain.UnitOfWork;
 using IOU1.Persistance.Context;
-using Microsoft.EntityFrameworkCore;
 
 namespace IOU1.Application.Features.Members.AddMember.Handler;
 
@@ -15,7 +13,6 @@ public class AddMemberHandler(
     IAuthUser authUser,
     IMemberService memberService,
     IBalanceService balanceService,
-    IUnitOfWork unit,
     IOU1Context context) : IAddMemberHandler
 {
     private readonly IValidator<AddMemberRequest> _validator = validator;
@@ -24,7 +21,6 @@ public class AddMemberHandler(
     private readonly IMemberService _memberService = memberService;
     private readonly IBalanceService _balanceService = balanceService;
 
-    private readonly IUnitOfWork _unit = unit;
     private readonly IOU1Context _context = context;
 
     public async Task<Result<AddMemberDto?>> Handle(AddMemberRequest request, CancellationToken cancellationToken = default)
@@ -32,15 +28,6 @@ public class AddMemberHandler(
         var validationResult = _validator.Validate(request);
         if (!validationResult.IsValid)
             return Result<AddMemberDto?>.Failure(validationResult.Errors);
-
-        var group = await _context.Groups
-            .Include(g => g.Members)
-            .Where(g => g.Id == request.GroupId)
-            .SingleOrDefaultAsync(cancellationToken);
-
-        if (group is null)
-            return Result<AddMemberDto?>.Failure(
-                $"Group with ID: {request.GroupId} doesn't exist.");
 
         var isMemberOfGroup = await _memberService.IsMemberOfGroup(
             request.GroupId,

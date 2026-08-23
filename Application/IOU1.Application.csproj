@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Invitations\General\GetInvitationLinks\**" />
+    <EmbeddedResource Remove="Features\Invitations\General\GetInvitationLinks\**" />
+    <None Remove="Features\Invitations\General\GetInvitationLinks\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Domain\IOU1.Domain.csproj" />
     <ProjectReference Include="..\IOU1.Persistance\IOU1.Persistance.csproj" />
   </ItemGroup>

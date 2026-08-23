@@ -1,4 +1,5 @@
 ﻿using IOU1.Domain.Entities;
+using IOU1.Domain.Entities.Notifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace IOU1.Persistance.Context;
@@ -17,9 +18,12 @@ public class IOU1Context(DbContextOptions<IOU1Context> options) : DbContext(opti
     public virtual DbSet<ExpenseSplit> ExpenseSplits { get; set; }
     public virtual DbSet<Currency> Currencies { get; set; }
     public virtual DbSet<Settlement> Settlements { get; set; }
+    public virtual DbSet<ExpenseShareSettlement> ExpenseShareSettlements { get; set; }
 
     public virtual DbSet<Invitation> Invitations { get; set; }
     public virtual DbSet<InvitationLink> InvitationLinks { get; set; }
+
+    public virtual DbSet<Notification> Notifications { get; set; }
 
     //Runs per new instance of the context
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
