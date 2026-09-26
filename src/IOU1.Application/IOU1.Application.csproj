@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Features\Invitations\General\GetInvitationLinks\**" />
+    <EmbeddedResource Remove="Features\Invitations\General\GetInvitationLinks\**" />
+    <None Remove="Features\Invitations\General\GetInvitationLinks\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IOU1.Domain\IOU1.Domain.csproj" />
+    <ProjectReference Include="..\IOU1.Persistance\IOU1.Persistance.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="Mapster" Version="10.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Expenses\GetExpenses\Query\" />
+  </ItemGroup>
+
+</Project>

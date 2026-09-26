@@ -3,32 +3,30 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.1.11312.151
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.API", "IOU1_API\IOU1.API.csproj", "{5C57AFE1-CEAE-41D4-A687-3D7569C42C03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Api", "src\IOU1.Api\IOU1.Api.csproj", "{5C57AFE1-CEAE-41D4-A687-3D7569C42C03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Tests", "Tests\IOU1.Tests.csproj", "{B8AAA855-4408-4040-A84B-26527562C9FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Tests", "tests\Tests\IOU1.Tests.csproj", "{B8AAA855-4408-4040-A84B-26527562C9FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.BenchmarkTests", "BenchmarkTests\IOU1.BenchmarkTests.csproj", "{33CA0816-7265-485A-8EAC-B40BA385BE16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.BenchmarkTests", "tests\BenchmarkTests\IOU1.BenchmarkTests.csproj", "{33CA0816-7265-485A-8EAC-B40BA385BE16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Domain", "Domain\IOU1.Domain.csproj", "{DCA3B41E-85A1-412D-BFE8-219E04007813}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Domain", "src\IOU1.Domain\IOU1.Domain.csproj", "{DCA3B41E-85A1-412D-BFE8-219E04007813}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Infrastructure", "Infrastructure\IOU1.Infrastructure.csproj", "{4BEEB55D-585E-4025-B015-2D44A66C2F51}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Infrastructure", "src\IOU1.Infrastructure\IOU1.Infrastructure.csproj", "{4BEEB55D-585E-4025-B015-2D44A66C2F51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Application", "Application\IOU1.Application.csproj", "{A790D2B0-EC68-4E75-A5AE-C6FFD89F86B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Application", "src\IOU1.Application\IOU1.Application.csproj", "{A790D2B0-EC68-4E75-A5AE-C6FFD89F86B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Persistance", "IOU1.Persistance\IOU1.Persistance.csproj", "{2AAA538A-6283-44BE-94D8-6EBA730A2A39}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Shared", "IOU1.Shared\IOU1.Shared.csproj", "{500FA294-5FFD-4DE4-BF6F-D132F54DCFF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.Persistance", "src\IOU1.Persistance\IOU1.Persistance.csproj", "{2AAA538A-6283-44BE-94D8-6EBA730A2A39}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{41D3EAA2-F627-4E99-9835-9E8A5CE5CCA1}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseDataSetter", "DatabaseDataSetter\DatabaseDataSetter.csproj", "{4F222D89-BBC2-4764-A5F2-01E9E5C6889A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.DatabaseDataSetter", "src\IOU1.DatabaseDataSetter\IOU1.DatabaseDataSetter.csproj", "{4F222D89-BBC2-4764-A5F2-01E9E5C6889A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplifyDebtsAlgorithm", "SimplifyDebtsAlgorithm\SimplifyDebtsAlgorithm.csproj", "{2E74A69B-F440-46D1-9A55-7FE79B79F392}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.SimplifyDebtsAlgorithm", "src\IOU1.SimplifyDebtsAlgorithm\IOU1.SimplifyDebtsAlgorithm.csproj", "{2E74A69B-F440-46D1-9A55-7FE79B79F392}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "TestConsole\TestConsole.csproj", "{62F007F8-3CFB-41CA-B267-DF9856537308}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.TestConsole", "tests\TestConsole\IOU1.TestConsole.csproj", "{62F007F8-3CFB-41CA-B267-DF9856537308}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,10 +62,6 @@ Global
 		{2AAA538A-6283-44BE-94D8-6EBA730A2A39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AAA538A-6283-44BE-94D8-6EBA730A2A39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AAA538A-6283-44BE-94D8-6EBA730A2A39}.Release|Any CPU.Build.0 = Release|Any CPU
-		{500FA294-5FFD-4DE4-BF6F-D132F54DCFF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{500FA294-5FFD-4DE4-BF6F-D132F54DCFF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{500FA294-5FFD-4DE4-BF6F-D132F54DCFF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{500FA294-5FFD-4DE4-BF6F-D132F54DCFF2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4F222D89-BBC2-4764-A5F2-01E9E5C6889A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4F222D89-BBC2-4764-A5F2-01E9E5C6889A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F222D89-BBC2-4764-A5F2-01E9E5C6889A}.Release|Any CPU.ActiveCfg = Release|Any CPU
