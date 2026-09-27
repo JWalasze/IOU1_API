@@ -10,6 +10,7 @@ using IOU1.Application;
 using IOU1.Application.Features.Auth;
 using IOU1.Application.Mappings;
 using IOU1.Application.Options;
+using IOU1.Application.Persistance;
 using IOU1.Application.Services.Balances;
 using IOU1.Application.Services.Expenses;
 using IOU1.Application.Services.Groups;

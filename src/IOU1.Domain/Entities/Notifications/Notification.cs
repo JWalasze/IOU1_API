@@ -1,7 +1,7 @@
 ﻿using IOU1.Domain.Base;
 using IOU1.Domain.Enums;
 using IOU1.Domain.Exceptions;
-using IOU1.Domain.Utils;
+using IOU1.Domain.Utils.Guards;
 
 namespace IOU1.Domain.Entities.Notifications;
 
@@ -20,7 +20,7 @@ public class Notification : Entity
 
     private Notification(DateTime createdAt, string payload, int userId, NotificationType type)
     {
-        GuardIntId.ForPresence<CreatingNotificationException>(userId, "Provided user ID is invalid!");
+        IntIdGuard.ForPositivr<CreatingNotificationException>(userId, "Provided user ID is invalid!");
         UserId = userId;
         Type = type;
 

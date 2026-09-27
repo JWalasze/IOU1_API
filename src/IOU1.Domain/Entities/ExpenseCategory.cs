@@ -1,6 +1,6 @@
 ﻿using IOU1.Domain.Base;
 using IOU1.Domain.Exceptions;
-using IOU1.Domain.Utils;
+using IOU1.Domain.Utils.Guards;
 
 namespace IOU1.Domain.Entities;
 
@@ -28,22 +28,22 @@ public class ExpenseCategory : Entity
         string? iconKey,
         int groupId)
     {
-        GuardString.ForPresence<CreatingExpenseCategoryException>(title,
+        StringGuard.ForPresence<CreatingExpenseCategoryException>(title,
             "Title for an expense category cannot be empty.");
-        GuardString.ForMaxlength<CreatingExpenseCategoryException>(title, _maxTitleLength,
+        StringGuard.ForMaxlength<CreatingExpenseCategoryException>(title, _maxTitleLength,
             "Title for an expense category is too long!");
         Title = title;
 
-        GuardString.ForMaxlength<CreatingExpenseCategoryException>(description, _maxDescriptionLength,
+        StringGuard.ForMaxlength<CreatingExpenseCategoryException>(description, _maxDescriptionLength,
             @$"Description for an expense category is too long! Max length: {_maxDescriptionLength}");
         Description = description;
 
-        GuardIntId.ForPresence<CreatingExpenseCategoryException>(groupId,
+        IntIdGuard.ForPositivr<CreatingExpenseCategoryException>(groupId,
             "GroupId for an expense category cannot be empty.");
         GroupId = groupId;
 
         if (iconKey is not null)
-            GuardString.ForMaxlength<CreatingExpenseCategoryException>(description, _maxIconKeyLength,
+            StringGuard.ForMaxlength<CreatingExpenseCategoryException>(description, _maxIconKeyLength,
             @$"Description for an expense category is too long! Max length: {_maxIconKeyLength}");
         IconKey = iconKey;
         IsDeletd = false;
@@ -59,16 +59,16 @@ public class ExpenseCategory : Entity
 
     public void SetTitle(string newTitle)
     {
-        GuardString.ForPresence<CreatingExpenseCategoryException>(newTitle,
+        StringGuard.ForPresence<CreatingExpenseCategoryException>(newTitle,
             "Title for a expense category cannot be empty.");
-        GuardString.ForMaxlength<CreatingExpenseCategoryException>(newTitle, _maxTitleLength,
+        StringGuard.ForMaxlength<CreatingExpenseCategoryException>(newTitle, _maxTitleLength,
             "Title for a expense category is too long!");
         Title = newTitle;
     }
 
     public void SetDescription(string newDescription)
     {
-        GuardString.ForMaxlength<CreatingExpenseCategoryException>(newDescription, _maxDescriptionLength,
+        StringGuard.ForMaxlength<CreatingExpenseCategoryException>(newDescription, _maxDescriptionLength,
             @$"Description for a expense category is too long! Max length: {_maxDescriptionLength}");
         Description = newDescription;
     }

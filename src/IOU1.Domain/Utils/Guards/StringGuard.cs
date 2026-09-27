@@ -1,6 +1,6 @@
-﻿namespace IOU1.Domain.Utils;
+namespace IOU1.Domain.Utils.Guards;
 
-public static class GuardString
+public static class StringGuard
 {
     public static void ForPresence<TException>(string value, string errorMessage)
         where TException : Exception

@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using IOU1.Application.Features.Invitations.Direct.UseDirectInvitation.Models.Request;
 using IOU1.Application.Features.Invitations.Direct.UseDirectInvitation.Models.Response;
+using IOU1.Application.Persistance;
 using IOU1.Application.Services.Balances;
 using IOU1.Application.Services.Members;
 using IOU1.Domain.Enums;

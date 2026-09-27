@@ -1,7 +1,7 @@
 ﻿using IOU1.Domain.Base;
 using IOU1.Domain.Enums;
 using IOU1.Domain.Exceptions;
-using IOU1.Domain.Utils;
+using IOU1.Domain.Utils.Guards;
 
 namespace IOU1.Domain.Entities;
 
@@ -23,15 +23,15 @@ public class Invitation : Entity
 
     private Invitation(int groupId, int userId, int senderId)
     {
-        GuardIntId.ForPresence<CreatingInvitationException>(groupId,
+        IntIdGuard.ForPositivr<CreatingInvitationException>(groupId,
             "GroupId for an invitation cannot be empty.");
         GroupId = groupId;
 
-        GuardIntId.ForPresence<CreatingInvitationException>(userId,
+        IntIdGuard.ForPositivr<CreatingInvitationException>(userId,
             "GroupId for a expense category cannot be empty.");
         UserId = userId;
 
-        GuardIntId.ForPresence<CreatingInvitationException>(senderId,
+        IntIdGuard.ForPositivr<CreatingInvitationException>(senderId,
             "GroupId for a expense category cannot be empty.");
         SenderId = senderId;
 

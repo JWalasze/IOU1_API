@@ -1,4 +1,4 @@
-﻿namespace IOU1.Domain.UnitOfWork;
+﻿namespace IOU1.Application.Persistance;
 
 public interface IUnitOfWork
 {

@@ -1,6 +1,6 @@
 ﻿using IOU1.Domain.Base;
 using IOU1.Domain.Exceptions;
-using IOU1.Domain.Utils;
+using IOU1.Domain.Utils.Guards;
 
 namespace IOU1.Domain.Entities;
 
@@ -24,19 +24,19 @@ public class ExpenseSplit : Entity
         string description,
         string? iconKey)
     {
-        GuardString.ForPresence<CreatingExpenseSplitException>(title, "Title for expense split cannot be empty.");
-        GuardString.ForMaxlength<CreatingExpenseSplitException>(title, _maxTitleLength,
+        StringGuard.ForPresence<CreatingExpenseSplitException>(title, "Title for expense split cannot be empty.");
+        StringGuard.ForMaxlength<CreatingExpenseSplitException>(title, _maxTitleLength,
             "Title for a expense split is too long!");
 
         Title = title;
 
-        GuardString.ForMaxlength<CreatingExpenseSplitException>(description, _maxDescriptionLength,
+        StringGuard.ForMaxlength<CreatingExpenseSplitException>(description, _maxDescriptionLength,
             @$"Description for a expense split is too long! Max length: {_maxDescriptionLength}");
 
         Description = description;
 
         if (iconKey is not null)
-            GuardString.ForMaxlength<CreatingExpenseSplitException>(description, _maxIconKeyLength,
+            StringGuard.ForMaxlength<CreatingExpenseSplitException>(description, _maxIconKeyLength,
             @$"Description for a expense split is too long! Max length: {_maxIconKeyLength}");
 
         IconKey = iconKey;

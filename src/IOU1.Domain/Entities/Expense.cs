@@ -3,7 +3,7 @@ using IOU1.Domain.Constants.Expense;
 using IOU1.Domain.Exceptions;
 using IOU1.Domain.Models;
 using IOU1.Domain.Services.Splits;
-using IOU1.Domain.Utils;
+using IOU1.Domain.Utils.Guards;
 
 namespace IOU1.Domain.Entities;
 
@@ -51,18 +51,18 @@ public sealed class Expense : Entity
         int categoryId,
         int splitId)
     {
-        GuardString.ForPresence<CreatingExpenseException>(title,
+        StringGuard.ForPresence<CreatingExpenseException>(title,
             "Title for a expense cannot be empty.");
-        GuardString.ForMaxlength<CreatingExpenseException>(title, MaxTitleLength,
+        StringGuard.ForMaxlength<CreatingExpenseException>(title, MaxTitleLength,
             "Title for a expense is too long!");
         Title = title;
 
         if (description is not null)
-            GuardString.ForMaxlength<CreatingExpenseException>(description, MaxDescriptionLength,
+            StringGuard.ForMaxlength<CreatingExpenseException>(description, MaxDescriptionLength,
                 @$"Description for a expense is too long! Max length: {MaxDescriptionLength}");
         Description = description;
 
-        GuardDecimal.ForPositive<CreatingExpenseException>(amount,
+        DecimalGuard.ForPositive<CreatingExpenseException>(amount,
             "Amount for a expense must be greater than 0.");
         Amount = amount;
         CreatedAt = DateTime.UtcNow;
@@ -72,11 +72,11 @@ public sealed class Expense : Entity
         Payer = payer;
         PayerId = payer.Id;
 
-        GuardIntId.ForPresence<CreatingExpenseException>(categoryId,
+        IntIdGuard.ForPositivr<CreatingExpenseException>(categoryId,
             "Category for a expense must be provided and greater than 0.");
         CategoryId = categoryId;
 
-        GuardIntId.ForPresence<CreatingExpenseException>(splitId,
+        IntIdGuard.ForPositivr<CreatingExpenseException>(splitId,
             "Split for a expense must be provided and greater than 0.");
         SplitId = splitId;
 

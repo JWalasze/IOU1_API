@@ -1,6 +1,6 @@
-namespace IOU1.Domain.Utils;
+namespace IOU1.Domain.Utils.Guards;
 
-public static class GuardDecimal
+public static class DecimalGuard
 {
     public static void ForPositive<TException>(decimal value, string errorMessage)
         where TException : Exception

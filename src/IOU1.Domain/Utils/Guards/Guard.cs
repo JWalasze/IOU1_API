@@ -1,4 +1,4 @@
-﻿namespace IOU1.Domain.Utils;
+﻿namespace IOU1.Domain.Utils.Guards;
 
 public static class Guard
 {
