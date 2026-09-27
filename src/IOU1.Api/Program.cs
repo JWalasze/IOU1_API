@@ -1,4 +1,3 @@
-using Domain.RepoInterfaces;
 using Elastic.Channels;
 using Elastic.CommonSchema.Serilog;
 using Elastic.Ingest.Elasticsearch;
@@ -22,11 +21,10 @@ using IOU1.Application.Services.Settlements;
 using IOU1.Application.Services.Users;
 using IOU1.Application.Services.Users.Checker;
 using IOU1.Domain.Entities;
+using IOU1.Domain.Interfaces.Repositories;
 using IOU1.Domain.Models.Auth.User;
-using IOU1.Domain.RepoInterfaces;
 using IOU1.Domain.Services.Crypto;
 using IOU1.Domain.Services.Users;
-using IOU1.Domain.UnitOfWork;
 using IOU1.Infrastructure.Auth;
 using IOU1.Infrastructure.Notifications;
 using IOU1.Infrastructure.Repositories;
@@ -95,12 +93,7 @@ public class Program
         #endregion
 
         #region ScopedServices
-        builder.Services.AddScoped<IRepository<Group>, GroupRepository>();
-
-        builder.Services.AddScoped<IGroupRepository, GroupRepository>();
-        builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
-        builder.Services.AddScoped<IUserRepository, UserRepository>();
-        builder.Services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+        builder.Services.AddScoped<IRepository<Group>, Repository<Group>>();
 
         builder.Services.AddScoped<IExpenseService, ExpenseService>();
         builder.Services.AddScoped<IGroupService, GroupService>();

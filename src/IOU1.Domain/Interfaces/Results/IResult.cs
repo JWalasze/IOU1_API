@@ -1,4 +1,4 @@
-﻿namespace IOU1.Domain.Interfaces;
+﻿namespace IOU1.Domain.Interfaces.Results;
 
 public interface IResult
 {

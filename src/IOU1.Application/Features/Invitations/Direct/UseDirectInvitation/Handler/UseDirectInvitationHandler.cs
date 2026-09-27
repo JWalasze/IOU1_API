@@ -7,7 +7,6 @@ using IOU1.Application.Services.Members;
 using IOU1.Domain.Enums;
 using IOU1.Domain.Models.Auth.User;
 using IOU1.Domain.Models.Results;
-using IOU1.Domain.UnitOfWork;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

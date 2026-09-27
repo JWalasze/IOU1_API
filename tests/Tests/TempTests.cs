@@ -1,7 +1,4 @@
-using Domain.RepoInterfaces;
 using IOU1.Application.Services.Members;
-using IOU1.Domain.RepoInterfaces;
-using IOU1.Infrastructure.Repositories;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -46,10 +43,6 @@ public class TempTests
         _serviceProvider = serviceProviderMock.Object;
 
         var services = new ServiceCollection();
-        services.AddScoped<IUserRepository>(x => new UserRepository(_context));
-        services.AddScoped<IGroupRepository>(x => new GroupRepository(_context));
-        services.AddScoped<IExpenseRepository>(x => new ExpenseRepository(_context));
-        services.AddScoped<ICurrencyRepository>(x => new CurrencyRepository(_context));
 
         _serviceProvider = services.BuildServiceProvider();
     }

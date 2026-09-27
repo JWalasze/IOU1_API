@@ -1,11 +1,9 @@
-﻿using Domain.RepoInterfaces;
-using FluentAssertions;
+﻿using FluentAssertions;
 using IOU1.Application.Features.Auth;
 using IOU1.Application.Options;
 using IOU1.Domain.Entities;
 using IOU1.Domain.Models.Auth;
 using IOU1.Infrastructure.Auth;
-using IOU1.Infrastructure.Repositories;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -55,7 +53,6 @@ public class LogInTests
         _serviceProvider = serviceProviderMock.Object;
 
         var services = new ServiceCollection();
-        services.AddScoped<IUserRepository>(x => new UserRepository(_context));
 
         _serviceProvider = services.BuildServiceProvider();
 

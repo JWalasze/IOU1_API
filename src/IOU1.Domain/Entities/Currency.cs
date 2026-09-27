@@ -1,6 +1,8 @@
-﻿namespace IOU1.Domain.Entities;
+﻿using IOU1.Domain.Base;
 
-public class Currency
+namespace IOU1.Domain.Entities;
+
+public class Currency : Entity
 {
     public string Key { get; } = null!;
     public byte[] Version { get; private set; } = null!;

@@ -1,10 +1,7 @@
-using Domain.RepoInterfaces;
 using FluentAssertions;
 using IOU1.Application.Strategy;
 using IOU1.Domain.Entities;
-using IOU1.Domain.RepoInterfaces;
 using IOU1.Domain.ValueObjects;
-using IOU1.Infrastructure.Repositories;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -51,10 +48,6 @@ public class ExpenseTests
         _serviceProvider = serviceProviderMock.Object;
 
         var services = new ServiceCollection();
-        services.AddScoped<IUserRepository>(x => new UserRepository(_context));
-        services.AddScoped<IGroupRepository>(x => new GroupRepository(_context));
-        services.AddScoped<IExpenseRepository>(x => new ExpenseRepository(_context));
-        services.AddScoped<ICurrencyRepository>(x => new CurrencyRepository(_context));
 
         _serviceProvider = services.BuildServiceProvider();
     }

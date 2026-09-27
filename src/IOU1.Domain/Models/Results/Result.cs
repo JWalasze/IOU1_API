@@ -1,5 +1,5 @@
 ﻿using FluentValidation.Results;
-using IOU1.Domain.Interfaces;
+using IOU1.Domain.Interfaces.Results;
 using System.Text.Json.Serialization;
 
 namespace IOU1.Domain.Models.Results;

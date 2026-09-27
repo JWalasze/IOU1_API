@@ -2,15 +2,15 @@
 
 public interface IUnitOfWork
 {
-    Task BeginTransaction();
+    Task BeginTransaction(CancellationToken cancellationToken = default);
 
-    Task CommitTransaction();
+    Task CommitTransaction(CancellationToken cancellationToken = default);
 
     Task RollbackTransaction();
 
-    Task CreateSavepoint();
+    Task CreateSavepoint(CancellationToken cancellationToken = default);
 
-    Task RollbackToSavepoint();
+    Task RollbackToSavepoint(CancellationToken cancellationToken = default);
 
     Task<int> SaveChanges(CancellationToken cancellationToken = default);
 }

@@ -1,4 +1,4 @@
-﻿using IOU1.Domain.Interfaces;
+﻿using IOU1.Domain.Interfaces.Results;
 
 namespace IOU1.Domain.Models.Results;
 
