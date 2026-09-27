@@ -2,19 +2,16 @@ using FluentValidation;
 using IOU1.Application.Features.Users.AddUser.Models.Endpoint;
 using IOU1.Application.Services.Users;
 using IOU1.Domain.Models.Results;
-using MapsterMapper;
 
 namespace IOU1.Application.Features.Users.AddUser;
 
 public sealed class AddUserHandler(
     IUserService userService,
-    IValidator<AddUserRequest> validator,
-    IMapper mapper)
+    IValidator<AddUserRequest> validator)
     : IAddUserHandler
 {
     private readonly IUserService _userService = userService;
     private readonly IValidator<AddUserRequest> _validator = validator;
-    private readonly IMapper _mapper = mapper;
 
     public async Task<Result<AddUserResponse?>> Handle(AddUserRequest request, CancellationToken cancellationToken = default)
     {
@@ -37,6 +34,6 @@ public sealed class AddUserHandler(
             return Result<AddUserResponse?>.Failure(result.ErrorMessage ?? "Unexpected error occured!");
         }
 
-        return Result<AddUserResponse?>.Success(_mapper.Map<AddUserResponse>(result));
+        return Result<AddUserResponse?>.Success(result.ToAddUserResponse());
     }
 }

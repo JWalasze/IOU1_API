@@ -2,11 +2,13 @@ using IOU1.Application.Features.Invitations.General.GenerateInvitationKey.Handle
 using IOU1.Application.Features.Invitations.General.GenerateInvitationKey.Request;
 using IOU1.Application.Features.Invitations.General.UseInvitationLink;
 using IOU1.Application.Features.Invitations.General.UseInvitationLink.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOU1.API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class InvitationController : BaseApiController
 {

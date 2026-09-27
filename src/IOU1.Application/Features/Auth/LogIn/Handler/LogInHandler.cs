@@ -1,18 +1,15 @@
 ﻿using FluentValidation;
 using IOU1.Application.Features.Auth.LogIn.Models;
 using IOU1.Domain.Models.Results;
-using MapsterMapper;
 
 namespace IOU1.Application.Features.Auth.LogIn.Handler;
 
 public class LogInHandler(
     IValidator<LogInRequest> validator,
-    IMapper mapper,
     IAuthService authService)
     : ILogInHandler
 {
     private readonly IValidator<LogInRequest> _validator = validator;
-    private readonly IMapper _mapper = mapper;
     private readonly IAuthService _authService = authService;
 
     public async Task<Result<LogInResponse>> Handle(LogInRequest request, CancellationToken cancellationToken = default)
@@ -28,7 +25,7 @@ public class LogInHandler(
             return Result<LogInResponse>.Failure("AUTH_LOG_IN_ERROR", errorMessage);
         }
 
-        var result = _mapper.Map<LogInResponse>(logInResult);
+        var result = logInResult.ToLogInResponse();
         return Result<LogInResponse>.Success(result);
     }
 }

@@ -2,7 +2,6 @@
 using IOU1.Application.Features.Expenses.GetExpenses.Models;
 using IOU1.Application.Services.Expenses;
 using IOU1.Domain.Models.Results;
-using Mapster;
 
 namespace IOU1.Application.Features.Expenses.GetExpenses.Handler;
 
@@ -28,7 +27,7 @@ public class GetExpensesHandler(
             return Result<GetExpensesResponse?>.Failure(summary.Errors);
         }
 
-        var response = summary.Data.Adapt<GetExpensesResponse>();
+        var response = summary.Data.ToGetExpensesResponse();
         return Result<GetExpensesResponse?>.Success(response);
     }
 }

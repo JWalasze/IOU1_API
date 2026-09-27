@@ -28,6 +28,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.SimplifyDebtsAlgorithm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOU1.TestConsole", "tests\TestConsole\IOU1.TestConsole.csproj", "{62F007F8-3CFB-41CA-B267-DF9856537308}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DebtsAlgorithm", "DebtsAlgorithm", "{E25F231C-E7E1-418F-B905-7B93D6E13C94}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DatabaseFeeder", "DatabaseFeeder", "{A46455C1-EF1A-4EF3-B046-F2407BB8BAB8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EEA10682-F768-4231-92DE-C404F0D9F06D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +83,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2E74A69B-F440-46D1-9A55-7FE79B79F392} = {E25F231C-E7E1-418F-B905-7B93D6E13C94}
+		{62F007F8-3CFB-41CA-B267-DF9856537308} = {E25F231C-E7E1-418F-B905-7B93D6E13C94}
+		{4F222D89-BBC2-4764-A5F2-01E9E5C6889A} = {A46455C1-EF1A-4EF3-B046-F2407BB8BAB8}
+		{B8AAA855-4408-4040-A84B-26527562C9FD} = {EEA10682-F768-4231-92DE-C404F0D9F06D}
+		{33CA0816-7265-485A-8EAC-B40BA385BE16} = {EEA10682-F768-4231-92DE-C404F0D9F06D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4D0DA347-52B2-4DC9-9DCE-1AA05F1F7B1C}

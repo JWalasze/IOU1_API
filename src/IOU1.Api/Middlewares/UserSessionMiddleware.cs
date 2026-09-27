@@ -5,16 +5,16 @@ namespace IOU1.API.Middlewares;
 
 public class UserSessionMiddleware(IAuthUser user) : IMiddleware
 {
-    private readonly IAuthUser _authUser = user;
-
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
+        //If we keep proper attributes on the controller methods, we won't have situations where
+        //the user is not authenticated, but the request is hitting a protected endpoint.
+        //It's because the authorization middleware will block the request before it reaches this middleware.
         var isUserAuthenticated = context.User.Identity?.IsAuthenticated ?? false;
         if (!isUserAuthenticated)
             await next(context);
         else
         {
-            //TODO: a może spróbować setować dla konkretnych Kontrolerów Usera? Np poprzez użycie atrybutów
             SetUserSession(context);
             await next(context);
         }
@@ -31,7 +31,7 @@ public class UserSessionMiddleware(IAuthUser user) : IMiddleware
         if (!int.TryParse(userId, out var parsedUserId))
             throw new UserSessionException("Invalid user! ID is not a valid int value!");
 
-        _authUser.SetId(parsedUserId);
-        _authUser.SetLogin(userLogin);
+        user.SetId(parsedUserId);
+        user.SetLogin(userLogin);
     }
 }
