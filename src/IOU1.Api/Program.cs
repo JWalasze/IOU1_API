@@ -212,6 +212,7 @@ public class Program
         #endregion
 
         builder.Services.AddScoped<UserSessionMiddleware>();
+        builder.Services.AddScoped<ErrorHandlingMiddleware>();
         builder.Services.AddAuthorization();
         builder.Services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -300,6 +301,7 @@ public class Program
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseMiddleware<ErrorHandlingMiddleware>();
         app.UseMiddleware<UserSessionMiddleware>();
         app.MapControllers();
         app.MapHub<NotificationHub>("/notificationHub");
