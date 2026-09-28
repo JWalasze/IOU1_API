@@ -5,5 +5,8 @@ namespace IOU1.Application.Features.Groups.AddGroup.Handler;
 
 public interface IAddGroupHandler
 {
-    Task<Result<AddGroupResponse?>> Handle(AddGroupRequest request, CancellationToken cancellationToken = default);
+    Task<Result<AddGroupResponse?>> Handle(
+        AddGroupRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

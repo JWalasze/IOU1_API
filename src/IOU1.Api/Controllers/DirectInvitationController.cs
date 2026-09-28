@@ -16,7 +16,8 @@ namespace IOU1.API.Controllers
         public async Task<IActionResult> Create(
             [FromBody] AddDirectInvitationRequest request,
             [FromServices] IAddDirectInvitationHandler handler,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             var result = await handler.Handle(request, cancellationToken);
             return CreateEndpointResponse(result);
@@ -26,7 +27,8 @@ namespace IOU1.API.Controllers
         public async Task<IActionResult> Accept(
             [FromBody] UseDirectInvitationRequest request,
             [FromServices] IUseDirectInvitationHandler handler,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default
+        )
         {
             var result = await handler.Handle(request, cancellationToken);
             return CreateEndpointResponse(result);

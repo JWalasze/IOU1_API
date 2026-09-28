@@ -2,6 +2,6 @@
 
 public static class Guard
 {
-    public static T CreateException<T>(string errorMessage) where T : Exception
-        => (T)Activator.CreateInstance(typeof(T), errorMessage)!;
+    public static T CreateException<T>(string errorMessage)
+        where T : Exception => (T)Activator.CreateInstance(typeof(T), errorMessage)!;
 }

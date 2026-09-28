@@ -10,4 +10,5 @@ public sealed record NewExpense(
     decimal Amount,
     int SplitTypeId,
     int CategoryId,
-    IEnumerable<Split> Splits);
+    IEnumerable<Split> Splits
+);

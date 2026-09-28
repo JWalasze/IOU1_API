@@ -8,12 +8,13 @@ public class GetNotificationsQuery(IOU1Context context) : IGetNotificationsQuery
 {
     private readonly IOU1Context _context = context;
 
-    public Task<List<NotificationDto>> GetAll(int userId, CancellationToken cancellationToken = default)
+    public Task<List<NotificationDto>> GetAll(
+        int userId,
+        CancellationToken cancellationToken = default
+    )
     {
-        return _context.Notifications
-            .Where(n =>
-                n.UserId == userId &&
-                !n.IsRead)
+        return _context
+            .Notifications.Where(n => n.UserId == userId && !n.IsRead)
             .Select(n => new NotificationDto
             {
                 Id = n.Id,

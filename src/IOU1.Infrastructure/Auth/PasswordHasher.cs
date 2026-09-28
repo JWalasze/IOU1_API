@@ -1,7 +1,7 @@
-﻿using IOU1.Domain.Entities;
-using IOU1.Domain.Services.Crypto;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
+using IOU1.Domain.Entities;
+using IOU1.Domain.Services.Crypto;
 
 namespace IOU1.Infrastructure.Auth;
 
@@ -14,7 +14,8 @@ public class PasswordHasher : IPasswordHasher
             Encoding.UTF8.GetBytes(salt),
             350000,
             HashAlgorithmName.SHA512,
-            64);
+            64
+        );
 
         return Convert.ToBase64String(hash);
     }

@@ -6,5 +6,8 @@ namespace IOU1.Application.Features.Invitations.Direct.AddDirectInvitation.Handl
 
 public interface IAddDirectInvitationHandler
 {
-    Task<Result<AddDirectInvitationResponse?>> Handle(AddDirectInvitationRequest request, CancellationToken cancellationToken = default);
+    Task<Result<AddDirectInvitationResponse?>> Handle(
+        AddDirectInvitationRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

@@ -12,15 +12,10 @@ public class GroupMemberConfiguration : IEntityTypeConfiguration<GroupMember>
 
         builder.HasKey(gm => gm.Id);
 
-        builder.Property(gm => gm.Version)
-               .IsRowVersion();
+        builder.Property(gm => gm.Version).IsRowVersion();
 
-        builder.HasOne(gm => gm.Group)
-               .WithMany(g => g.Members)
-               .HasForeignKey("GroupId");
+        builder.HasOne(gm => gm.Group).WithMany(g => g.Members).HasForeignKey("GroupId");
 
-        builder.HasOne(gm => gm.User)
-               .WithMany(u => u.MemberGroups)
-               .HasForeignKey("UserId");
+        builder.HasOne(gm => gm.User).WithMany(u => u.MemberGroups).HasForeignKey("UserId");
     }
 }

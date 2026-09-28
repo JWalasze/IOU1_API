@@ -11,18 +11,27 @@ namespace IOU1.Application.Services.Invitations.General;
 public class InvitationLinkService(
     IOU1Context context,
     IOptionsMonitor<LinkInvitation> options,
-    IMemberService memberService) : IInvitationLinkService
+    IMemberService memberService
+) : IInvitationLinkService
 {
     private readonly IOU1Context _context = context;
     private readonly LinkInvitation _linkInvitation = options.CurrentValue;
     private readonly IMemberService _memberService = memberService;
 
-    public async Task<InvitationLink> For(int groupId, CancellationToken cancellationToken = default)
+    public async Task<InvitationLink> For(
+        int groupId,
+        CancellationToken cancellationToken = default
+    )
     {
-        var foundGroup = await _context.Groups.FirstOrDefaultAsync(g => g.Id == groupId, cancellationToken)
+        var foundGroup =
+            await _context.Groups.FirstOrDefaultAsync(g => g.Id == groupId, cancellationToken)
             ?? throw new Exception($"Group {groupId} couldn't be found.");
 
-        var invitationLink = new InvitationLink(foundGroup, new InvitationKey(), new LinkExpirationDate(_linkInvitation.ExpirationTime));
+        var invitationLink = new InvitationLink(
+            foundGroup,
+            new InvitationKey(),
+            new LinkExpirationDate(_linkInvitation.ExpirationTime)
+        );
 
         _context.InvitationLinks.Add(invitationLink);
         await _context.SaveChangesAsync(cancellationToken);
@@ -30,14 +39,20 @@ public class InvitationLinkService(
         return invitationLink;
     }
 
-    public async Task UseDirectInvitation(int invitationId, CancellationToken cancellationToken = default)
+    public async Task UseDirectInvitation(
+        int invitationId,
+        CancellationToken cancellationToken = default
+    )
     {
         var invitation = await _context.Invitations.FirstOrDefaultAsync(i => i.Id == invitationId);
         await _memberService.AddMember(invitation.GroupId, invitation.UserId, cancellationToken);
         //Change invitation status
     }
 
-    public Task UseInvitationKey(InvitationKey invitationKey, CancellationToken cancellationToken = default)
+    public Task UseInvitationKey(
+        InvitationKey invitationKey,
+        CancellationToken cancellationToken = default
+    )
     {
         throw new NotImplementedException();
     }

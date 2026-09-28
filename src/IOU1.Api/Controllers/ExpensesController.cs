@@ -16,7 +16,8 @@ public class ExpensesController : BaseApiController
     public async Task<IActionResult> AddExpense(
         [FromServices] IAddExpenseHandler handler,
         [FromBody] AddExpenseRequest request,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);
@@ -26,7 +27,8 @@ public class ExpensesController : BaseApiController
     public async Task<IActionResult> GetGroupExpenses(
         [FromRoute] GetExpensesRequest request,
         [FromServices] IGetExpensesHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);

@@ -8,5 +8,6 @@ public interface IGetExpenseOptionsHandler
 {
     Task<Result<IEnumerable<GetExpenseOptionsResponse>>> Handle(
         GetExpenseOptionsRequest request,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 }

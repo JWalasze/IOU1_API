@@ -20,7 +20,9 @@ public class AddExpenseValidator : AbstractValidator<AddExpenseRequest>
         RuleFor(e => e.Description)
             .MaximumLength(Expense.MaxDescriptionLength)
             .WithErrorCode("TOO_LONG_EXPENSE_DESCRIPTION_ERROR")
-            .WithMessage($"The expense description is too long. Limit: {Expense.MaxDescriptionLength}.")
+            .WithMessage(
+                $"The expense description is too long. Limit: {Expense.MaxDescriptionLength}."
+            )
             .When(ag => !string.IsNullOrWhiteSpace(ag.Description));
 
         RuleFor(e => e.PayerId)

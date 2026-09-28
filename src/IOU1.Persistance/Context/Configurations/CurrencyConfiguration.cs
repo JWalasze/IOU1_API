@@ -12,11 +12,9 @@ namespace IOU1.Persistance.Context.Configurations
 
             builder.HasKey(c => c.Key);
 
-            builder.Property(x => x.Key)
-                .HasColumnName("CurrencyKey");
+            builder.Property(x => x.Key).HasColumnName("CurrencyKey");
 
-            builder.Property(x => x.Version)
-                   .IsRowVersion();
+            builder.Property(x => x.Version).IsRowVersion();
         }
     }
 }

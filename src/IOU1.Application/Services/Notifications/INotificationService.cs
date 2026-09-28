@@ -2,5 +2,10 @@
 
 public interface INotificationService
 {
-    Task SendToUser(int userId, int notificationId, string payload, CancellationToken cancellationToken = default);
+    Task SendToUser(
+        int userId,
+        int notificationId,
+        string payload,
+        CancellationToken cancellationToken = default
+    );
 }

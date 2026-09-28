@@ -4,6 +4,5 @@ namespace IOU1.Application.Features.Users.DeleteUser;
 
 public static class DeleteUserMapper
 {
-    public static DeleteUserResponse ToDeleteUserResponse(this string message)
-        => new(message);
+    public static DeleteUserResponse ToDeleteUserResponse(this string message) => new(message);
 }

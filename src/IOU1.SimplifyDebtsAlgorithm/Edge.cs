@@ -1,10 +1,6 @@
 ﻿namespace SimplifyDebtsAlgorithm;
 
-public class Edge<T>(
-    Node<T> startNode,
-    Node<T> endNode,
-    decimal maxCapacity,
-    bool isResidual)
+public class Edge<T>(Node<T> startNode, Node<T> endNode, decimal maxCapacity, bool isResidual)
 {
     public Node<T> StartNode { get; set; } = startNode;
 

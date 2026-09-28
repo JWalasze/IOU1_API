@@ -12,23 +12,22 @@ public class ExpenseShareConfiguration : IEntityTypeConfiguration<ExpenseShare>
 
         builder.HasKey(es => es.Id);
 
-        builder.Property(es => es.Amount)
-               .IsRequired();
+        builder.Property(es => es.Amount).IsRequired();
 
-        builder.Property(es => es.Version)
-               .IsRowVersion();
+        builder.Property(es => es.Version).IsRowVersion();
 
-        builder.HasOne(es => es.Expense)
-               .WithMany(e => e.Shares)
-               .HasForeignKey(es => es.ExpenseId)
-               .OnDelete(DeleteBehavior.Cascade);
+        builder
+            .HasOne(es => es.Expense)
+            .WithMany(e => e.Shares)
+            .HasForeignKey(es => es.ExpenseId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(es => es.Member)
-               .WithMany()
-               .HasForeignKey(es => es.MemberId)
-               .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasOne(es => es.Member)
+            .WithMany()
+            .HasForeignKey(es => es.MemberId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasIndex(es => new { es.ExpenseId, es.MemberId })
-               .IsUnique();
+        builder.HasIndex(es => new { es.ExpenseId, es.MemberId }).IsUnique();
     }
 }

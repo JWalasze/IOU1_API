@@ -9,8 +9,9 @@ public class NotificationHub : Hub
     public override async Task OnConnectedAsync()
     {
         var userId = Context
-            .GetHttpContext()?.User?.Claims
-            .FirstOrDefault(c => c.Type == "id")?.Value;
+            .GetHttpContext()
+            ?.User?.Claims.FirstOrDefault(c => c.Type == "id")
+            ?.Value;
 
         if (!string.IsNullOrWhiteSpace(userId))
             await Groups.AddToGroupAsync(Context.ConnectionId, $"group_{userId}");

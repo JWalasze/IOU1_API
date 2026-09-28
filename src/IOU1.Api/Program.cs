@@ -1,5 +1,5 @@
-using IOU1.Api.Pipelines;
 using IOU1.API.Middlewares;
+using IOU1.Api.Pipelines;
 using IOU1.Infrastructure.Notifications;
 
 var builder = WebApplication.CreateBuilder(args);

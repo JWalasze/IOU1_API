@@ -3,7 +3,6 @@
 
 //namespace IOU1.Infrastructure.Messages;
 
-
 //public class ProductAddedEventConsumer : IConsumer<TestMessage>
 //{
 //    public Task Consume(ConsumeContext<TestMessage> context)
@@ -12,4 +11,3 @@
 //        return Task.CompletedTask;
 //    }
 //}
-

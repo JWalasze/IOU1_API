@@ -1,9 +1,9 @@
-﻿using IOU1.Domain.Entities;
+﻿using System.Data;
+using IOU1.Domain.Entities;
 using IOU1.Domain.Enums;
 using IOU1.Persistance.Context;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Data;
 
 namespace IOU1.Application.Services.Settlements;
 
@@ -14,14 +14,15 @@ public sealed class SettlementService(IOU1Context context) : ISettlementService
     public async Task<List<ExpenseShareSettlement>> SettleBasedOnNewExpense(
         SearchExpense searchExpense,
         Expense newExpense,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         return searchExpense switch
         {
             SearchExpense.ByOldest => await SettleByOldest(newExpense, cancellationToken),
             SearchExpense.ByNewest => throw new NotImplementedException(),
             SearchExpense.ByMostExpensive => throw new NotImplementedException(),
-            _ => throw new NotImplementedException()
+            _ => throw new NotImplementedException(),
         };
 
         throw new NotImplementedException();
@@ -29,7 +30,8 @@ public sealed class SettlementService(IOU1Context context) : ISettlementService
 
     private async Task<List<ExpenseShareSettlement>> SettleByOldest(
         Expense newExpense,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var table = new DataTable();
         table.Columns.Add("FirstId", typeof(int));
@@ -40,18 +42,20 @@ public sealed class SettlementService(IOU1Context context) : ISettlementService
         var param = new SqlParameter("@MemberPairs", table)
         {
             TypeName = "DoubleIds",
-            SqlDbType = SqlDbType.Structured
+            SqlDbType = SqlDbType.Structured,
         };
 
         //Bierzemy gdzie payer jest rozny od memberId
-        var foundExpenseShares = await _context.ExpenseShares
-            .FromSqlRaw($@"
+        var foundExpenseShares = await _context
+            .ExpenseShares.FromSqlRaw(
+                $@"
                 SELECT es.*
                 FROM ExpenseShare es
                 JOIN Expense e ON e.id = es.ExpenseId
                 JOIN @MemberPairs p ON es.MemberId = p.FirstId AND e.PayerId = p.SecondId
                 WHERE e.IsSettled = 0",
-                param)
+                param
+            )
             .Include(es => es.Expense)
             .Include(es => es.ExpenseShareSettlements)
             .OrderBy(es => es.Expense.CreatedAt)
@@ -69,10 +73,13 @@ public sealed class SettlementService(IOU1Context context) : ISettlementService
         //Może do balansów przekaże expensyShare nowy ORAZ dodane Settlementy aby wiedział żeby sfiftować a pozniej w kolejnej pętli sfitować
         //na podstawie Settlementów
         //I jeszcze trzeba sprawdzać czy tamten Expense będzie settled po naszej operacji...
-        foreach (var newExpenseShare in newExpense.Shares.Where(s => s.Expense.PayerId != s.MemberId))
+        foreach (
+            var newExpenseShare in newExpense.Shares.Where(s => s.Expense.PayerId != s.MemberId)
+        )
         {
             var previousExpenseShareGroup = foundExpenseSharesLookup.GetValueOrDefault(
-                (newExpenseShare.MemberId, newExpenseShare.Expense.PayerId));
+                (newExpenseShare.MemberId, newExpenseShare.Expense.PayerId)
+            );
 
             if (previousExpenseShareGroup is null || previousExpenseShareGroup.Count == 0)
                 continue;
@@ -95,11 +102,13 @@ public sealed class SettlementService(IOU1Context context) : ISettlementService
                         newExpense.Group,
                         newExpenseShare.Member,
                         newExpense.Payer,
-                        Math.Abs(newExpenseShare.Amount) - Math.Abs(previousExpenseShare.Amount));
+                        Math.Abs(newExpenseShare.Amount) - Math.Abs(previousExpenseShare.Amount)
+                    );
 
                     var expenseShareSettlement = ExpenseShareSettlement.Create(
                         previousExpenseShare,
-                        settlement);
+                        settlement
+                    );
 
                     //Jak się doda settlement trzeba jeszcze sprawdzić czy settlement rozlicza cały expense...
                     //Juz includuje sobie więc...jedynie podliczyć
@@ -113,11 +122,13 @@ public sealed class SettlementService(IOU1Context context) : ISettlementService
                         newExpense.Group,
                         newExpenseShare.Member,
                         newExpense.Payer,
-                        Math.Abs(newExpenseShare.Amount));
+                        Math.Abs(newExpenseShare.Amount)
+                    );
 
                     var expenseShareSettlement = ExpenseShareSettlement.Create(
                         previousExpenseShare,
-                        settlement);
+                        settlement
+                    );
 
                     //ExpenseShareSettlements można do expense od razu dodawać przecież...
                     //Nie bo to jest nowy a my będziemy dodawać do starego

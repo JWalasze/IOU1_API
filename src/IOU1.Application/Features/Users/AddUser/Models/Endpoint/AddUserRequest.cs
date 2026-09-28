@@ -7,4 +7,5 @@ public sealed record AddUserRequest(
     string LastName,
     string Email,
     string Login,
-    string Password) : IRequest;
+    string Password
+) : IRequest;

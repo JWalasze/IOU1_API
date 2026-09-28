@@ -6,15 +6,17 @@ public static class CorsPipeline
     {
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("DevCors", p => p
-                .WithOrigins(
-                    "http://localhost:4200",
-                    "https://localhost:4200",
-                    "http://localhost:5173",
-                    "https://localhost:5173"
-                )
-                .AllowAnyHeader()
-                .AllowAnyMethod()
+            options.AddPolicy(
+                "DevCors",
+                p =>
+                    p.WithOrigins(
+                            "http://localhost:4200",
+                            "https://localhost:4200",
+                            "http://localhost:5173",
+                            "https://localhost:5173"
+                        )
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
             );
         });
     }

@@ -7,8 +7,9 @@ public static class DatabasePipeline
 {
     public static void AddDatabasePipeline(this WebApplicationBuilder builder)
     {
-        builder.Services.AddDbContext<IOU1Context>(opt => opt
-            .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-            .EnableSensitiveDataLogging());
+        builder.Services.AddDbContext<IOU1Context>(opt =>
+            opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+                .EnableSensitiveDataLogging()
+        );
     }
 }

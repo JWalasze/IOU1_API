@@ -6,5 +6,6 @@ public interface IGetExpenseOptionsQuery
 {
     Task<IEnumerable<ExpenseOption>> Get(
         int groupId,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 }

@@ -25,7 +25,8 @@ public class Debt
         string debtorName,
         int creditorId,
         string creditorName,
-        decimal amount)
+        decimal amount
+    )
     {
         DebtorId = debtorId;
         DebtorName = debtorName;

@@ -7,23 +7,30 @@ namespace IOU1.Application.Features.Invitations.General.UseInvitationLink;
 
 public sealed class UseInvitationLinkHandler(
     IValidator<UseInvitationLinkRequest> validator,
-    IInvitationLinkService generateInvitationService)
-    : IUseInvitationLinkHandler
+    IInvitationLinkService generateInvitationService
+) : IUseInvitationLinkHandler
 {
     private readonly IValidator<UseInvitationLinkRequest> _validator = validator;
     private readonly IInvitationLinkService _generateInvitationService = generateInvitationService;
 
-    public async Task<Result<UseInvitationLinkResponse?>> Handle(UseInvitationLinkRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result<UseInvitationLinkResponse?>> Handle(
+        UseInvitationLinkRequest request,
+        CancellationToken cancellationToken = default
+    )
     {
         var validationResult = _validator.Validate(request);
         if (!validationResult.IsValid)
         {
             return Result<UseInvitationLinkResponse?>.Failure(
-                validationResult.Errors.Select(e => new ProblemDetails(e.ErrorMessage, e.ErrorCode)));
+                validationResult.Errors.Select(e => new ProblemDetails(e.ErrorMessage, e.ErrorCode))
+            );
         }
 
         //Add logic here
-        await _generateInvitationService.UseDirectInvitation((int)request.InvitationId!, cancellationToken);
+        await _generateInvitationService.UseDirectInvitation(
+            (int)request.InvitationId!,
+            cancellationToken
+        );
 
         return Result<UseInvitationLinkResponse?>.Success(new UseInvitationLinkResponse());
     }

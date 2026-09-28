@@ -14,9 +14,9 @@ public sealed class ExpenseShare : Entity
 
     public decimal Amount { get; }
 
-
     private readonly List<ExpenseShareSettlement> _expensShareSettlements = [];
-    public IReadOnlyCollection<ExpenseShareSettlement> ExpenseShareSettlements => _expensShareSettlements;
+    public IReadOnlyCollection<ExpenseShareSettlement> ExpenseShareSettlements =>
+        _expensShareSettlements;
 
     #region Ctor
     private ExpenseShare() { }
@@ -37,10 +37,16 @@ public sealed class ExpenseShare : Entity
 
     private ExpenseShare(int expenseId, int memberId, decimal amount)
     {
-        IntIdGuard.ForPositivr<CreatingExpenseShareException>(expenseId, "ExpenseId cannot be less or equal to 0.");
+        IntIdGuard.ForPositivr<CreatingExpenseShareException>(
+            expenseId,
+            "ExpenseId cannot be less or equal to 0."
+        );
         ExpenseId = expenseId;
 
-        IntIdGuard.ForPositivr<CreatingExpenseShareException>(memberId, "MemberId cannot be less or equal to 0.");
+        IntIdGuard.ForPositivr<CreatingExpenseShareException>(
+            memberId,
+            "MemberId cannot be less or equal to 0."
+        );
         MemberId = memberId;
 
         Amount = amount;

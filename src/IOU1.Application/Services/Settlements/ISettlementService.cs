@@ -8,5 +8,6 @@ public interface ISettlementService
     Task<List<ExpenseShareSettlement>> SettleBasedOnNewExpense(
         SearchExpense searchExpense,
         Expense newExpense,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 }

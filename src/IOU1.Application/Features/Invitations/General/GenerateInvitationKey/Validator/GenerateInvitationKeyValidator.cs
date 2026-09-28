@@ -5,8 +5,5 @@ namespace IOU1.Application.Features.Invitations.General.GenerateInvitationKey.Va
 
 public class GenerateInvitationKeyValidator : AbstractValidator<GenerateInvitationKeyRequest>
 {
-    public GenerateInvitationKeyValidator()
-    {
-
-    }
+    public GenerateInvitationKeyValidator() { }
 }

@@ -4,5 +4,5 @@ public enum SearchExpense
 {
     ByOldest = 1,
     ByNewest = 2,
-    ByMostExpensive = 3
+    ByMostExpensive = 3,
 }

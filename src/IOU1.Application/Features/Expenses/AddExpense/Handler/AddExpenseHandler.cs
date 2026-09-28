@@ -12,13 +12,17 @@ namespace IOU1.Application.Features.Expenses.AddExpense.Handler;
 public class AddExpenseHandler(
     IValidator<AddExpenseRequest> validator,
     IUnitOfWork unitOfWork,
-    IExpenseService expenseService) : IAddExpenseHandler
+    IExpenseService expenseService
+) : IAddExpenseHandler
 {
     private readonly IValidator<AddExpenseRequest> _validator = validator;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IExpenseService _expenseService = expenseService;
 
-    public async Task<Result<AddExpenseResponse?>> Handle(AddExpenseRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result<AddExpenseResponse?>> Handle(
+        AddExpenseRequest request,
+        CancellationToken cancellationToken = default
+    )
     {
         var validationResult = _validator.Validate(request);
         if (!validationResult.IsValid)
@@ -40,17 +44,18 @@ public class AddExpenseHandler(
                 {
                     Amount = s.Amount,
                     MemberId = s.MemberId,
-                    Percentage = s.Percentage
-                }));
+                    Percentage = s.Percentage,
+                })
+            );
 
-            var result = await _expenseService.AddExpense(
-                newExpense,
-                cancellationToken);
+            var result = await _expenseService.AddExpense(newExpense, cancellationToken);
 
             if (!result.IsSuccess || result.Data is null)
             {
                 await _unitOfWork.RollbackTransaction();
-                return Result<AddExpenseResponse?>.Failure(result.ErrorMessage ?? "We had problem adding your expense. Try again later.");
+                return Result<AddExpenseResponse?>.Failure(
+                    result.ErrorMessage ?? "We had problem adding your expense. Try again later."
+                );
             }
 
             var expense = result.Data;

@@ -21,8 +21,7 @@ public class ExpenseShareSettlement : Entity
     #endregion
 
     #region Factories
-    public static ExpenseShareSettlement Create(
-        ExpenseShare expenseShare, Settlement settlement)
-        => new(expenseShare, settlement);
+    public static ExpenseShareSettlement Create(ExpenseShare expenseShare, Settlement settlement) =>
+        new(expenseShare, settlement);
     #endregion
 }

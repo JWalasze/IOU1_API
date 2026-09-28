@@ -1,5 +1,3 @@
 ﻿namespace Domain.Base;
 
-public abstract record ValueObject
-{
-}
+public abstract record ValueObject { }

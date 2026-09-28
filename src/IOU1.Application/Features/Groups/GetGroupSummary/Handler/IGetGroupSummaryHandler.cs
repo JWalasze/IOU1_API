@@ -6,5 +6,8 @@ namespace IOU1.Application.Features.Groups.GetGroupSummary.Handler;
 
 public interface IGetGroupSummaryHandler
 {
-    Task<Result<GetGroupSummaryResponse?>> Handle(GetGroupSummaryRequest request, CancellationToken cancellationToken = default);
+    Task<Result<GetGroupSummaryResponse?>> Handle(
+        GetGroupSummaryRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

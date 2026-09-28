@@ -8,9 +8,7 @@ public sealed record AddExpenseRequest(
     decimal Amount,
     int SplitTypeId,
     int CategoryId,
-    IEnumerable<SplitRequest> Splits);
+    IEnumerable<SplitRequest> Splits
+);
 
-public sealed record SplitRequest(
-    int MemberId,
-    decimal Amount,
-    decimal? Percentage);
+public sealed record SplitRequest(int MemberId, decimal Amount, decimal? Percentage);

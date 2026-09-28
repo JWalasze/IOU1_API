@@ -15,7 +15,8 @@ public class AuthController : BaseApiController
     public async Task<IActionResult> Login(
         [FromBody] LogInRequest logInRequest,
         [FromServices] ILogInHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(logInRequest, cancellationToken);
         return CreateEndpointResponse(result);

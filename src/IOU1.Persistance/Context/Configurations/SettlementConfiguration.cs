@@ -12,28 +12,28 @@ public class SettlementConfiguration : IEntityTypeConfiguration<Settlement>
 
         builder.HasKey(s => s.Id);
 
-        builder.Property(s => s.Amount)
-               .IsRequired();
+        builder.Property(s => s.Amount).IsRequired();
 
-        builder.Property(s => s.SettledAt)
-               .IsRequired();
+        builder.Property(s => s.SettledAt).IsRequired();
 
-        builder.Property(s => s.Version)
-               .IsRowVersion();
+        builder.Property(s => s.Version).IsRowVersion();
 
-        builder.HasOne(s => s.Group)
-               .WithMany()
-               .HasForeignKey(s => s.GroupId)
-               .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasOne(s => s.Group)
+            .WithMany()
+            .HasForeignKey(s => s.GroupId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(s => s.FromMember)
-               .WithMany()
-               .HasForeignKey(s => s.FromMemberId)
-               .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasOne(s => s.FromMember)
+            .WithMany()
+            .HasForeignKey(s => s.FromMemberId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(s => s.ToMember)
-               .WithMany()
-               .HasForeignKey(s => s.ToMemberId)
-               .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasOne(s => s.ToMember)
+            .WithMany()
+            .HasForeignKey(s => s.ToMemberId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

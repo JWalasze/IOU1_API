@@ -17,8 +17,8 @@ public static class GetExpensesMapper
                 ExpenseId = 0,
                 Description = $"{gd.DebtorName} owes {gd.CreditorName}",
                 Amount = gd.Amount,
-                Date = DateTime.MinValue
-            })
+                Date = DateTime.MinValue,
+            }),
         };
     }
 }

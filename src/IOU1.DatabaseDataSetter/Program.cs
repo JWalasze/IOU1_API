@@ -13,7 +13,8 @@ var config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: false)
     .Build();
 
-var connectionString = config.GetConnectionString("DefaultConnection")
+var connectionString =
+    config.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 var services = new ServiceCollection();
@@ -31,17 +32,35 @@ var balanceService = scope.ServiceProvider.GetRequiredService<IBalanceService>()
 Console.WriteLine("Seeding database...");
 
 //Expense categories
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Jedzenie', 'SYSTEM_FOOD')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Transport', 'SYSTEM_TRANSPORT')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Nocleg', 'SYSTEM_ACCOMODATION')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Rozrywka', 'SYSTEM_FUN')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Rachunki', 'SYSTEM_BILLS')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseCategory (Title,IconKey) values('Rachunki', 'SYSTEM_DIFFERENT')");
+await context.Database.ExecuteSqlInterpolatedAsync(
+    $"INSERT INTO ExpenseCategory (Title,IconKey) values('Jedzenie', 'SYSTEM_FOOD')"
+);
+await context.Database.ExecuteSqlInterpolatedAsync(
+    $"INSERT INTO ExpenseCategory (Title,IconKey) values('Transport', 'SYSTEM_TRANSPORT')"
+);
+await context.Database.ExecuteSqlInterpolatedAsync(
+    $"INSERT INTO ExpenseCategory (Title,IconKey) values('Nocleg', 'SYSTEM_ACCOMODATION')"
+);
+await context.Database.ExecuteSqlInterpolatedAsync(
+    $"INSERT INTO ExpenseCategory (Title,IconKey) values('Rozrywka', 'SYSTEM_FUN')"
+);
+await context.Database.ExecuteSqlInterpolatedAsync(
+    $"INSERT INTO ExpenseCategory (Title,IconKey) values('Rachunki', 'SYSTEM_BILLS')"
+);
+await context.Database.ExecuteSqlInterpolatedAsync(
+    $"INSERT INTO ExpenseCategory (Title,IconKey) values('Rachunki', 'SYSTEM_DIFFERENT')"
+);
 
 //Expense split types
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseSplit (Title,IconKey) values('Równo', 'EQUAL')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseSplit (Title,IconKey) values('Nierówno', 'CUSTOM')");
-await context.Database.ExecuteSqlInterpolatedAsync($"INSERT INTO ExpenseSplit (Title,IconKey) values('Procentowo', 'PERCENTAGE')");
+await context.Database.ExecuteSqlInterpolatedAsync(
+    $"INSERT INTO ExpenseSplit (Title,IconKey) values('Równo', 'EQUAL')"
+);
+await context.Database.ExecuteSqlInterpolatedAsync(
+    $"INSERT INTO ExpenseSplit (Title,IconKey) values('Nierówno', 'CUSTOM')"
+);
+await context.Database.ExecuteSqlInterpolatedAsync(
+    $"INSERT INTO ExpenseSplit (Title,IconKey) values('Procentowo', 'PERCENTAGE')"
+);
 await context.SaveChangesAsync();
 
 // --- Currencies ---
@@ -64,10 +83,17 @@ Console.WriteLine($"Currencies ready: {string.Join(", ", currencies.Keys)}");
 // --- Users ---
 var users = new List<User>
 {
-    User.Create("Jakub",      "Walaszek",        new Email("jakub@example.com"),      "jakub",      "123456", hasher),
-    User.Create("Julia",      "Jaśkielewicz",    new Email("julia@example.com"),      "julia",      "123456", hasher),
-    User.Create("Krzysztof",  "Kwas",            new Email("krzysztof@example.com"),  "krzysztof",  "123456", hasher),
-    User.Create("Kacper",     "Mejsner",         new Email("kacper@example.com"),     "kacper",     "123456", hasher),
+    User.Create("Jakub", "Walaszek", new Email("jakub@example.com"), "jakub", "123456", hasher),
+    User.Create("Julia", "Jaśkielewicz", new Email("julia@example.com"), "julia", "123456", hasher),
+    User.Create(
+        "Krzysztof",
+        "Kwas",
+        new Email("krzysztof@example.com"),
+        "krzysztof",
+        "123456",
+        hasher
+    ),
+    User.Create("Kacper", "Mejsner", new Email("kacper@example.com"), "kacper", "123456", hasher),
 };
 
 context.Users.AddRange(users);
@@ -81,15 +107,17 @@ var krakow = new Group(
     description: "Grupa do zarządzania wydatkami w Krakowie w paczce znajomych :)",
     owner: users[0],
     currency: currencies["PLN"],
-    members: [users[0]]);
+    members: [users[0]]
+);
 
 context.Groups.Add(krakow);
 await context.SaveChangesAsync();
 Console.WriteLine("Groups seeded: Wydatki w Krakowie");
 
 // Reload group with members so navigation properties are fully populated
-krakow = await context.Groups
-    .Include(g => g.Members).ThenInclude(m => m.User)
+krakow = await context
+    .Groups.Include(g => g.Members)
+        .ThenInclude(m => m.User)
     .SingleAsync(g => g.Id == krakow.Id);
 
 // --- Initial member balances ---
@@ -98,7 +126,9 @@ foreach (var member in krakow.Members)
     var addedBalancesResult = await balanceService.AddInitialBalancesFor(member);
     if (!addedBalancesResult.IsSuccess)
         throw new InvalidOperationException(
-            addedBalancesResult.ErrorMessage ?? $"Error occured while adding initial balances for member {member.Id}.");
+            addedBalancesResult.ErrorMessage
+                ?? $"Error occured while adding initial balances for member {member.Id}."
+        );
 
     // Zapis po każdym członku, żeby kolejne wywołania widziały już utworzone pary sald
     // i nie tworzyły duplikatów w ramach tej samej partii seedowania.

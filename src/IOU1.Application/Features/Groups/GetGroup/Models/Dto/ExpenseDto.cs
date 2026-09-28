@@ -5,4 +5,5 @@ public sealed record ExpenseDto(
     int PayerId,
     decimal Amount,
     DateTime CreatedAt,
-    IEnumerable<ExpenseShareDto> ExpenseShares);
+    IEnumerable<ExpenseShareDto> ExpenseShares
+);

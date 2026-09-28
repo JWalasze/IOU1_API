@@ -1,7 +1,7 @@
+using System.Net;
 using IOU1.Domain.Exceptions;
 using IOU1.Domain.Models.Results;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Net;
 
 namespace IOU1.API.Middlewares;
 
@@ -23,15 +23,19 @@ public class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) : 
     {
         var statusCode = ResolveStatusCode(ex);
 
-        logger.LogError(ex, "Unhandled exception occurred while processing {Method} {Path}",
-            context.Request.Method, context.Request.Path);
+        logger.LogError(
+            ex,
+            "Unhandled exception occurred while processing {Method} {Path}",
+            context.Request.Method,
+            context.Request.Path
+        );
 
         var problem = new Problem
         {
             Title = ReasonPhrases.GetReasonPhrase((int)statusCode),
             Description = ex.Message,
             StatusCode = ((int)statusCode).ToString(),
-            Errors = [new ProblemItem { Code = ex.GetType().Name, Message = ex.Message }]
+            Errors = [new ProblemItem { Code = ex.GetType().Name, Message = ex.Message }],
         };
 
         context.Response.ContentType = "application/json";
@@ -40,15 +44,16 @@ public class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) : 
         await context.Response.WriteAsJsonAsync(problem);
     }
 
-    private static HttpStatusCode ResolveStatusCode(Exception ex) => ex switch
-    {
-        UserSessionException => HttpStatusCode.Unauthorized,
-        UserNotFoundException => HttpStatusCode.NotFound,
-        CreatingUserException
+    private static HttpStatusCode ResolveStatusCode(Exception ex) =>
+        ex switch
+        {
+            UserSessionException => HttpStatusCode.Unauthorized,
+            UserNotFoundException => HttpStatusCode.NotFound,
+            CreatingUserException
             or CreateGroupException
             or CreatingExpenseException
             or CreatingExpenseCategoryException
-            or DeletingExpensecategoryException
+            or DeletingExpenseCategoryException
             or CreatingExpenseShareException
             or CreatingExpenseSplitException
             or DeletingExpenseSplitException
@@ -57,7 +62,7 @@ public class ErrorHandlingMiddleware(ILogger<ErrorHandlingMiddleware> logger) : 
             or CreatingNotificationException
             or InvitationStatusException
             or InvalidEntityStateException
-            or InvalidResultState => HttpStatusCode.BadRequest,
-        _ => HttpStatusCode.InternalServerError
-    };
+            or InvalidResultState => HttpStatusCode.UnprocessableEntity,
+            _ => HttpStatusCode.InternalServerError,
+        };
 }

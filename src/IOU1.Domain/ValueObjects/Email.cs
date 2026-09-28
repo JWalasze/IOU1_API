@@ -1,5 +1,5 @@
-﻿using Domain.Base;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using Domain.Base;
 
 namespace IOU1.Domain.ValueObjects;
 

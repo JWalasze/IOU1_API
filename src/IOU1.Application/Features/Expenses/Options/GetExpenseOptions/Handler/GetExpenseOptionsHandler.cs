@@ -10,7 +10,8 @@ namespace IOU1.Application.Features.Expenses.Options.GetExpenseOptiions.Handler;
 public sealed class GetExpenseOptionsHandler(
     IAuthUser user,
     IValidator<GetExpenseOptionsRequest> validator,
-    IGetExpenseOptionsQuery queryHandler) : IGetExpenseOptionsHandler
+    IGetExpenseOptionsQuery queryHandler
+) : IGetExpenseOptionsHandler
 {
     private readonly IAuthUser _user = user;
     private readonly IValidator<GetExpenseOptionsRequest> _validator = validator;
@@ -18,7 +19,8 @@ public sealed class GetExpenseOptionsHandler(
 
     public async Task<Result<IEnumerable<GetExpenseOptionsResponse>>> Handle(
         GetExpenseOptionsRequest request,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var validationResult = _validator.Validate(request);
         if (!validationResult.IsValid)
@@ -26,6 +28,7 @@ public sealed class GetExpenseOptionsHandler(
 
         var result = await _queryHandler.Get(request.GroupId, cancellationToken);
         return Result<IEnumerable<GetExpenseOptionsResponse>>.Success(
-            result.Select(r => new GetExpenseOptionsResponse(r.Id, r.Key, r.Value, r.IconKey)));
+            result.Select(r => new GetExpenseOptionsResponse(r.Id, r.Key, r.Value, r.IconKey))
+        );
     }
 }

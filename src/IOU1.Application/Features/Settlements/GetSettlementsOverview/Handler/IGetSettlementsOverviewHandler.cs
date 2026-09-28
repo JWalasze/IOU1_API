@@ -5,5 +5,8 @@ namespace IOU1.Application.Features.Settlements.GetSettlementsOverview.Handler;
 
 public interface IGetSettlementsOverviewHandler
 {
-    Task<Result<GetSettlementOverviewResponse>> Handle(GetSettlementOverviewRequest request, CancellationToken cancellationToken);
+    Task<Result<GetSettlementOverviewResponse>> Handle(
+        GetSettlementOverviewRequest request,
+        CancellationToken cancellationToken
+    );
 }

@@ -13,27 +13,23 @@ public sealed class NotificationConfiguration : IEntityTypeConfiguration<Notific
 
         builder.HasKey(mb => mb.Id);
 
-        builder.Property(mb => mb.CreatedAt)
-               .IsRequired();
+        builder.Property(mb => mb.CreatedAt).IsRequired();
 
         builder.Property(mb => mb.Payload);
 
-        builder.Property(mb => mb.Type)
-               .IsRequired()
-               .HasConversion(
-                    v => v.ToString(),
-                    v => Enum.Parse<NotificationType>(v));
+        builder
+            .Property(mb => mb.Type)
+            .IsRequired()
+            .HasConversion(v => v.ToString(), v => Enum.Parse<NotificationType>(v));
 
-        builder.Property(mb => mb.Type)
-               .IsRequired()
-               .HasColumnName("NotificationType");
+        builder.Property(mb => mb.Type).IsRequired().HasColumnName("NotificationType");
 
-        builder.Property(mb => mb.Version)
-               .IsRowVersion();
+        builder.Property(mb => mb.Version).IsRowVersion();
 
-        builder.HasOne(mb => mb.User)
-               .WithMany()
-               .HasForeignKey(mb => mb.UserId)
-               .OnDelete(DeleteBehavior.Restrict);
+        builder
+            .HasOne(mb => mb.User)
+            .WithMany()
+            .HasForeignKey(mb => mb.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

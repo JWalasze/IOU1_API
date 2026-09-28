@@ -6,9 +6,6 @@ namespace IOU1.Application.Features.Auth.LogIn;
 
 public static class LogInMapper
 {
-    public static LogInResponse ToLogInResponse(this Result<Token?> result)
-        => new()
-        {
-            Token = result.Data?.Value
-        };
+    public static LogInResponse ToResponse(this Result<Token?> result) =>
+        new() { Token = result.Data?.Value };
 }

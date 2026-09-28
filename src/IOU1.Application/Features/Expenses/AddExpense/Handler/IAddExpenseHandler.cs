@@ -6,5 +6,8 @@ namespace IOU1.Application.Features.Expenses.AddExpense.Handler;
 
 public interface IAddExpenseHandler
 {
-    Task<Result<AddExpenseResponse?>> Handle(AddExpenseRequest request, CancellationToken cancellationToken = default);
+    Task<Result<AddExpenseResponse?>> Handle(
+        AddExpenseRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

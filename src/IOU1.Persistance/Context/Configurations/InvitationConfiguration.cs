@@ -12,27 +12,26 @@ public class InvitationConfiguration : IEntityTypeConfiguration<Invitation>
 
         builder.HasKey(g => g.Id);
 
-        builder.Property(g => g.Version)
-               .IsRowVersion();
-
-        builder.HasOne(g => g.Group)
-               .WithMany()
-               .HasForeignKey("GroupId")
-               .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne(g => g.User)
-               .WithMany()
-               .HasForeignKey("UserId")
-               .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne(g => g.Sender)
-               .WithMany()
-               .HasForeignKey("SenderId")
-               .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(g => g.Version).IsRowVersion();
 
         builder
-            .Property(i => i.InvitationStatus)
-            .HasConversion<string>()
-            .IsRequired();
+            .HasOne(g => g.Group)
+            .WithMany()
+            .HasForeignKey("GroupId")
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasOne(g => g.User)
+            .WithMany()
+            .HasForeignKey("UserId")
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasOne(g => g.Sender)
+            .WithMany()
+            .HasForeignKey("SenderId")
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(i => i.InvitationStatus).HasConversion<string>().IsRequired();
     }
 }

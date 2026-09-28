@@ -5,5 +5,8 @@ namespace IOU1.Application.Features.Users.AddUser;
 
 public interface IAddUserHandler
 {
-    Task<Result<AddUserResponse?>> Handle(AddUserRequest request, CancellationToken cancellationToken = default);
+    Task<Result<AddUserResponse?>> Handle(
+        AddUserRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

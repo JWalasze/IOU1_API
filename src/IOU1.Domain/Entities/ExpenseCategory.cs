@@ -22,29 +22,38 @@ public class ExpenseCategory : Entity
 
     private ExpenseCategory() { }
 
-    public ExpenseCategory(
-        string title,
-        string description,
-        string? iconKey,
-        int groupId)
+    public ExpenseCategory(string title, string description, string? iconKey, int groupId)
     {
-        StringGuard.ForPresence<CreatingExpenseCategoryException>(title,
-            "Title for an expense category cannot be empty.");
-        StringGuard.ForMaxlength<CreatingExpenseCategoryException>(title, _maxTitleLength,
-            "Title for an expense category is too long!");
+        StringGuard.ForPresence<CreatingExpenseCategoryException>(
+            title,
+            "Title for an expense category cannot be empty."
+        );
+        StringGuard.ForMaxlength<CreatingExpenseCategoryException>(
+            title,
+            _maxTitleLength,
+            "Title for an expense category is too long!"
+        );
         Title = title;
 
-        StringGuard.ForMaxlength<CreatingExpenseCategoryException>(description, _maxDescriptionLength,
-            @$"Description for an expense category is too long! Max length: {_maxDescriptionLength}");
+        StringGuard.ForMaxlength<CreatingExpenseCategoryException>(
+            description,
+            _maxDescriptionLength,
+            @$"Description for an expense category is too long! Max length: {_maxDescriptionLength}"
+        );
         Description = description;
 
-        IntIdGuard.ForPositivr<CreatingExpenseCategoryException>(groupId,
-            "GroupId for an expense category cannot be empty.");
+        IntIdGuard.ForPositivr<CreatingExpenseCategoryException>(
+            groupId,
+            "GroupId for an expense category cannot be empty."
+        );
         GroupId = groupId;
 
         if (iconKey is not null)
-            StringGuard.ForMaxlength<CreatingExpenseCategoryException>(description, _maxIconKeyLength,
-            @$"Description for an expense category is too long! Max length: {_maxIconKeyLength}");
+            StringGuard.ForMaxlength<CreatingExpenseCategoryException>(
+                description,
+                _maxIconKeyLength,
+                @$"Description for an expense category is too long! Max length: {_maxIconKeyLength}"
+            );
         IconKey = iconKey;
         IsDeletd = false;
     }
@@ -52,24 +61,34 @@ public class ExpenseCategory : Entity
     public void Delete()
     {
         if (IsDeletd)
-            throw new DeletingExpensecategoryException($"Expense category with id: {Id} is already deleted!");
+            throw new DeletingExpenseCategoryException(
+                $"Expense category with id: {Id} is already deleted!"
+            );
 
         IsDeletd = true;
     }
 
     public void SetTitle(string newTitle)
     {
-        StringGuard.ForPresence<CreatingExpenseCategoryException>(newTitle,
-            "Title for a expense category cannot be empty.");
-        StringGuard.ForMaxlength<CreatingExpenseCategoryException>(newTitle, _maxTitleLength,
-            "Title for a expense category is too long!");
+        StringGuard.ForPresence<CreatingExpenseCategoryException>(
+            newTitle,
+            "Title for a expense category cannot be empty."
+        );
+        StringGuard.ForMaxlength<CreatingExpenseCategoryException>(
+            newTitle,
+            _maxTitleLength,
+            "Title for a expense category is too long!"
+        );
         Title = newTitle;
     }
 
     public void SetDescription(string newDescription)
     {
-        StringGuard.ForMaxlength<CreatingExpenseCategoryException>(newDescription, _maxDescriptionLength,
-            @$"Description for a expense category is too long! Max length: {_maxDescriptionLength}");
+        StringGuard.ForMaxlength<CreatingExpenseCategoryException>(
+            newDescription,
+            _maxDescriptionLength,
+            @$"Description for a expense category is too long! Max length: {_maxDescriptionLength}"
+        );
         Description = newDescription;
     }
 

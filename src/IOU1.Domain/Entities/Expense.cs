@@ -49,21 +49,32 @@ public sealed class Expense : Entity
         IEnumerable<Split> splits,
         ISplitStrategy splitStrategy,
         int categoryId,
-        int splitId)
+        int splitId
+    )
     {
-        StringGuard.ForPresence<CreatingExpenseException>(title,
-            "Title for a expense cannot be empty.");
-        StringGuard.ForMaxlength<CreatingExpenseException>(title, MaxTitleLength,
-            "Title for a expense is too long!");
+        StringGuard.ForPresence<CreatingExpenseException>(
+            title,
+            "Title for a expense cannot be empty."
+        );
+        StringGuard.ForMaxlength<CreatingExpenseException>(
+            title,
+            MaxTitleLength,
+            "Title for a expense is too long!"
+        );
         Title = title;
 
         if (description is not null)
-            StringGuard.ForMaxlength<CreatingExpenseException>(description, MaxDescriptionLength,
-                @$"Description for a expense is too long! Max length: {MaxDescriptionLength}");
+            StringGuard.ForMaxlength<CreatingExpenseException>(
+                description,
+                MaxDescriptionLength,
+                @$"Description for a expense is too long! Max length: {MaxDescriptionLength}"
+            );
         Description = description;
 
-        DecimalGuard.ForPositive<CreatingExpenseException>(amount,
-            "Amount for a expense must be greater than 0.");
+        DecimalGuard.ForPositive<CreatingExpenseException>(
+            amount,
+            "Amount for a expense must be greater than 0."
+        );
         Amount = amount;
         CreatedAt = DateTime.UtcNow;
 
@@ -72,12 +83,16 @@ public sealed class Expense : Entity
         Payer = payer;
         PayerId = payer.Id;
 
-        IntIdGuard.ForPositivr<CreatingExpenseException>(categoryId,
-            "Category for a expense must be provided and greater than 0.");
+        IntIdGuard.ForPositivr<CreatingExpenseException>(
+            categoryId,
+            "Category for a expense must be provided and greater than 0."
+        );
         CategoryId = categoryId;
 
-        IntIdGuard.ForPositivr<CreatingExpenseException>(splitId,
-            "Split for a expense must be provided and greater than 0.");
+        IntIdGuard.ForPositivr<CreatingExpenseException>(
+            splitId,
+            "Split for a expense must be provided and greater than 0."
+        );
         SplitId = splitId;
 
         Validate(splits);
@@ -115,18 +130,24 @@ public sealed class Expense : Entity
 
         foreach (var member in splits)
             if (!Group.Members.Any(m => m.Id == member.MemberId))
-                throw new InvalidOperationException($"Member {member.MemberId} doesn't belong to the group {Group.Id}");
+                throw new InvalidOperationException(
+                    $"Member {member.MemberId} doesn't belong to the group {Group.Id}"
+                );
 
         if (SplitId == SplitTypeId.Percentage)
         {
             var totalPercentage = splits.Sum(s => s.Percentage);
             if (totalPercentage != 100)
-                throw new CreatingExpenseException($"Total percentage of splits must be 100%. Current total: {totalPercentage}%");
+                throw new CreatingExpenseException(
+                    $"Total percentage of splits must be 100%. Current total: {totalPercentage}%"
+                );
         }
 
         var totalAmount = splits.Sum(s => s.Amount);
         if (totalAmount != Amount)
-            throw new CreatingExpenseException($"Total amount of splits must equal the expense amount. Current total: {totalAmount}, Expense amount: {Amount}");
+            throw new CreatingExpenseException(
+                $"Total amount of splits must equal the expense amount. Current total: {totalAmount}, Expense amount: {Amount}"
+            );
     }
 
     private void Validate(IEnumerable<ExpenseShare> shares)
@@ -137,7 +158,9 @@ public sealed class Expense : Entity
         foreach (var share in shares)
         {
             if (!Group.Members.Any(m => m.Id == share.MemberId))
-                throw new InvalidOperationException($"Member {share.MemberId} doesn't belong to the group {Group.Id}");
+                throw new InvalidOperationException(
+                    $"Member {share.MemberId} doesn't belong to the group {Group.Id}"
+                );
         }
     }
     #endregion
@@ -152,7 +175,7 @@ public sealed class Expense : Entity
         IEnumerable<Split> splits,
         ISplitStrategy splitStrategy,
         int categoryId,
-        int splitId) =>
-            new(title, description, amount, group, payer, splits, splitStrategy, categoryId, splitId);
+        int splitId
+    ) => new(title, description, amount, group, payer, splits, splitStrategy, categoryId, splitId);
     #endregion
 }

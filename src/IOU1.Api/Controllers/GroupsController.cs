@@ -4,10 +4,10 @@ using IOU1.Application.Features.Groups.DeleteGroup.Handler;
 using IOU1.Application.Features.Groups.DeleteGroup.Request;
 using IOU1.Application.Features.Groups.GetGroup.Handler;
 using IOU1.Application.Features.Groups.GetGroup.Models.Request;
-using IOU1.Application.Features.Groups.GetGroupSummary.Handler;
-using IOU1.Application.Features.Groups.GetGroupSummary.Models.Request;
 using IOU1.Application.Features.Groups.GetGroups.Handler;
 using IOU1.Application.Features.Groups.GetGroups.Models.Request;
+using IOU1.Application.Features.Groups.GetGroupSummary.Handler;
+using IOU1.Application.Features.Groups.GetGroupSummary.Models.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +22,8 @@ public class GroupsController : BaseApiController
     public async Task<IActionResult> GetGroups(
         [FromQuery] GetGroupsRequest request,
         [FromServices] IGetGroupsHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);
@@ -32,7 +33,8 @@ public class GroupsController : BaseApiController
     public async Task<IActionResult> GetGroup(
         [FromRoute] GetGroupRequest request,
         [FromServices] IGetGroupHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);
@@ -42,7 +44,8 @@ public class GroupsController : BaseApiController
     public async Task<IActionResult> AddGroup(
         [FromBody] AddGroupRequest request,
         [FromServices] IAddGroupHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);
@@ -52,7 +55,8 @@ public class GroupsController : BaseApiController
     public async Task<IActionResult> DeleteGroup(
         [FromRoute] DeleteGroupRequest request,
         [FromServices] IDeleteGroupHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);
@@ -62,7 +66,8 @@ public class GroupsController : BaseApiController
     public async Task<IActionResult> GetGroupSummary(
         [FromRoute] GetGroupSummaryRequest request,
         [FromServices] IGetGroupSummaryHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);

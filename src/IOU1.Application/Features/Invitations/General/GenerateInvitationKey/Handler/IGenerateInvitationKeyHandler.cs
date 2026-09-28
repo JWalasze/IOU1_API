@@ -6,5 +6,8 @@ namespace IOU1.Application.Features.Invitations.General.GenerateInvitationKey.Ha
 
 public interface IGenerateInvitationKeyHandler
 {
-    Task<Result<UseInvitationLinkResponse?>> Handle(GenerateInvitationKeyRequest request, CancellationToken cancellationToken = default);
+    Task<Result<UseInvitationLinkResponse?>> Handle(
+        GenerateInvitationKeyRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

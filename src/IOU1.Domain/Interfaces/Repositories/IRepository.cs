@@ -3,7 +3,8 @@
 namespace IOU1.Domain.Interfaces.Repositories;
 
 //Let's keep it as some other approach when it comes to DbContext
-public interface IRepository<T> where T : Entity
+public interface IRepository<T>
+    where T : Entity
 {
     void Add(T entity);
 

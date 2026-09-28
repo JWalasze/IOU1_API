@@ -19,7 +19,12 @@ public sealed class MemberBalance : Entity
 
     private MemberBalance() { }
 
-    public MemberBalance(GroupMember member, GroupMember counterpartyMember, Group group, decimal amount)
+    public MemberBalance(
+        GroupMember member,
+        GroupMember counterpartyMember,
+        Group group,
+        decimal amount
+    )
     {
         ArgumentNullException.ThrowIfNull(member);
         ArgumentNullException.ThrowIfNull(counterpartyMember);
@@ -44,8 +49,12 @@ public sealed class MemberBalance : Entity
     }
 
     #region Factories
-    public static MemberBalance Create(GroupMember member, GroupMember counterpartyMember, Group group, decimal amount)
-        => new(member, counterpartyMember, group, amount);
+    public static MemberBalance Create(
+        GroupMember member,
+        GroupMember counterpartyMember,
+        Group group,
+        decimal amount
+    ) => new(member, counterpartyMember, group, amount);
 
     #endregion
 

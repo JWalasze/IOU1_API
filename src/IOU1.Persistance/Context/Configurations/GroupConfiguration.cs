@@ -12,25 +12,16 @@ public class GroupConfiguration : IEntityTypeConfiguration<Group>
 
         builder.HasKey(g => g.Id);
 
-        builder.Property(g => g.Description)
-               .IsRequired();
+        builder.Property(g => g.Description).IsRequired();
 
-        builder.Property(g => g.Version)
-               .IsRowVersion();
+        builder.Property(g => g.Version).IsRowVersion();
 
-        builder.Property(g => g.OwnerId)
-               .HasColumnName("CreatedById");
+        builder.Property(g => g.OwnerId).HasColumnName("CreatedById");
 
-        builder.HasOne(g => g.Owner)
-               .WithMany(u => u.OwnedGroups)
-               .HasForeignKey(e => e.OwnerId);
+        builder.HasOne(g => g.Owner).WithMany(u => u.OwnedGroups).HasForeignKey(e => e.OwnerId);
 
-        builder.HasOne(g => g.Currency)
-               .WithMany()
-               .HasForeignKey(g => g.CurrencyKey);
+        builder.HasOne(g => g.Currency).WithMany().HasForeignKey(g => g.CurrencyKey);
 
-        builder.HasMany(g => g.Members)
-               .WithOne(m => m.Group)
-               .OnDelete(DeleteBehavior.Cascade);
+        builder.HasMany(g => g.Members).WithOne(m => m.Group).OnDelete(DeleteBehavior.Cascade);
     }
 }

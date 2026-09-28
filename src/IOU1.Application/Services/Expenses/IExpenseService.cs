@@ -9,7 +9,11 @@ public interface IExpenseService
 {
     Task<Result<Expense?>> AddExpense(
         NewExpense newExpense,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 
-    Task<Result<GroupExpenseSummary?>> GetSummary(int groupId, CancellationToken cancellationToken = default);
+    Task<Result<GroupExpenseSummary?>> GetSummary(
+        int groupId,
+        CancellationToken cancellationToken = default
+    );
 }

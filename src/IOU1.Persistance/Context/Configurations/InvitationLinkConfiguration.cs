@@ -12,28 +12,26 @@ public class InvitationLinkConfiguration : IEntityTypeConfiguration<InvitationLi
 
         builder.HasKey(il => il.Id);
 
-        builder.HasOne(il => il.Group)
-               .WithMany()
-               .IsRequired();
+        builder.HasOne(il => il.Group).WithMany().IsRequired();
 
-        builder.Property(il => il.AddDate)
-               .IsRequired();
+        builder.Property(il => il.AddDate).IsRequired();
 
-        builder.Property(il => il.Version)
-               .IsRowVersion();
+        builder.Property(il => il.Version).IsRowVersion();
 
-        builder.ComplexProperty(cp => cp.InvitationKey, cp =>
-        {
-            cp.Property(ik => ik.Key)
-              .HasColumnName("InvitationKey")
-              .IsRequired();
-        });
+        builder.ComplexProperty(
+            cp => cp.InvitationKey,
+            cp =>
+            {
+                cp.Property(ik => ik.Key).HasColumnName("InvitationKey").IsRequired();
+            }
+        );
 
-        builder.ComplexProperty(cp => cp.ExpirationDate, cp =>
-        {
-            cp.Property(ed => ed.ExpirationDate)
-              .HasColumnName("ExpirationDate")
-              .IsRequired();
-        });
+        builder.ComplexProperty(
+            cp => cp.ExpirationDate,
+            cp =>
+            {
+                cp.Property(ed => ed.ExpirationDate).HasColumnName("ExpirationDate").IsRequired();
+            }
+        );
     }
 }

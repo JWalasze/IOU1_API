@@ -4,15 +4,16 @@ using IOU1.Domain.Models.Results;
 
 namespace IOU1.Application.Features.Auth.LogIn.Handler;
 
-public class LogInHandler(
-    IValidator<LogInRequest> validator,
-    IAuthService authService)
+public class LogInHandler(IValidator<LogInRequest> validator, IAuthService authService)
     : ILogInHandler
 {
     private readonly IValidator<LogInRequest> _validator = validator;
     private readonly IAuthService _authService = authService;
 
-    public async Task<Result<LogInResponse>> Handle(LogInRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result<LogInResponse>> Handle(
+        LogInRequest request,
+        CancellationToken cancellationToken = default
+    )
     {
         var validationResult = _validator.Validate(request);
         if (!validationResult.IsValid)
@@ -25,7 +26,7 @@ public class LogInHandler(
             return Result<LogInResponse>.Failure("AUTH_LOG_IN_ERROR", errorMessage);
         }
 
-        var result = logInResult.ToLogInResponse();
+        var result = logInResult.ToResponse();
         return Result<LogInResponse>.Success(result);
     }
 }

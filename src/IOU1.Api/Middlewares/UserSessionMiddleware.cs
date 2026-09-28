@@ -22,10 +22,12 @@ public class UserSessionMiddleware(IAuthUser user) : IMiddleware
 
     private void SetUserSession(HttpContext context)
     {
-        var userId = context.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
+        var userId =
+            context.User.Claims.FirstOrDefault(c => c.Type == "id")?.Value
             ?? throw new UserSessionException("Invalid user! ID is missing!");
 
-        var userLogin = context.User.Claims.FirstOrDefault(c => c.Type == "login")?.Value
+        var userLogin =
+            context.User.Claims.FirstOrDefault(c => c.Type == "login")?.Value
             ?? throw new UserSessionException("Invalid user! Login is missing!");
 
         if (!int.TryParse(userId, out var parsedUserId))

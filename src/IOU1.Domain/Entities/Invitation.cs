@@ -23,25 +23,28 @@ public class Invitation : Entity
 
     private Invitation(int groupId, int userId, int senderId)
     {
-        IntIdGuard.ForPositivr<CreatingInvitationException>(groupId,
-            "GroupId for an invitation cannot be empty.");
+        IntIdGuard.ForPositivr<CreatingInvitationException>(
+            groupId,
+            "GroupId for an invitation cannot be empty."
+        );
         GroupId = groupId;
 
-        IntIdGuard.ForPositivr<CreatingInvitationException>(userId,
-            "GroupId for a expense category cannot be empty.");
+        IntIdGuard.ForPositivr<CreatingInvitationException>(
+            userId,
+            "GroupId for a expense category cannot be empty."
+        );
         UserId = userId;
 
-        IntIdGuard.ForPositivr<CreatingInvitationException>(senderId,
-            "GroupId for a expense category cannot be empty.");
+        IntIdGuard.ForPositivr<CreatingInvitationException>(
+            senderId,
+            "GroupId for a expense category cannot be empty."
+        );
         SenderId = senderId;
 
         InvitationStatus = InvitationStatus.Pending;
     }
 
-    private Invitation(
-        Group group,
-        User userToBeAdded,
-        User sender)
+    private Invitation(Group group, User userToBeAdded, User sender)
     {
         ArgumentNullException.ThrowIfNull(group);
         ArgumentNullException.ThrowIfNull(userToBeAdded);
@@ -61,15 +64,11 @@ public class Invitation : Entity
     #endregion
 
     #region Factories
-    public static Invitation Create(
-        int groupId, int userId, int senderId)
-        => new(groupId, userId, senderId);
+    public static Invitation Create(int groupId, int userId, int senderId) =>
+        new(groupId, userId, senderId);
 
-    public static Invitation Create(
-        Group group,
-        User userToBeAdded,
-        User sender)
-        => new(group, userToBeAdded, sender);
+    public static Invitation Create(Group group, User userToBeAdded, User sender) =>
+        new(group, userToBeAdded, sender);
     #endregion
 
     #region Public Methods
@@ -77,10 +76,14 @@ public class Invitation : Entity
     {
         InvitationStatus = InvitationStatus switch
         {
-            InvitationStatus.Accepted => throw new InvitationStatusException("Invitation is already accepted!"),
-            InvitationStatus.Canceled => throw new InvitationStatusException("Invitation is canceled!"),
+            InvitationStatus.Accepted => throw new InvitationStatusException(
+                "Invitation is already accepted!"
+            ),
+            InvitationStatus.Canceled => throw new InvitationStatusException(
+                "Invitation is canceled!"
+            ),
             InvitationStatus.Pending => InvitationStatus.Accepted,
-            _ => throw new InvitationStatusException("Invitation has invalid status!")
+            _ => throw new InvitationStatusException("Invitation has invalid status!"),
         };
     }
     #endregion

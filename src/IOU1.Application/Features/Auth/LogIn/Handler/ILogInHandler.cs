@@ -5,5 +5,8 @@ namespace IOU1.Application.Features.Auth.LogIn.Handler;
 
 public interface ILogInHandler
 {
-    Task<Result<LogInResponse>> Handle(LogInRequest request, CancellationToken cancellationToken = default);
+    Task<Result<LogInResponse>> Handle(
+        LogInRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

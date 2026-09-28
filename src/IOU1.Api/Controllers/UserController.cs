@@ -15,7 +15,8 @@ public class UserController : BaseApiController
     public async Task<IActionResult> Add(
         [FromBody] AddUserRequest request,
         [FromServices] IAddUserHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);

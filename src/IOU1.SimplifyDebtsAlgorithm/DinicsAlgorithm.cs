@@ -15,8 +15,6 @@ public class DinicsAlgorithm
         _source = source;
         _sink = sink;
         _levels = [.. new int[_graph.NodesCount]];
-
-
     }
 
     //Musimy mieć listę odnośnie leveli -> to nam mówi czy dany node był odwiedzony, bo chodzi o to
@@ -38,7 +36,10 @@ public class DinicsAlgorithm
                 foreach (var niegbour in _graph.Nodes[currentNode].Edges)
                 {
                     Console.WriteLine($"Sąsiad node: {niegbour.EndNode.Value}");
-                    if (!visitedNodes.Contains(niegbour.EndNode.Value) && niegbour.GetRemainingCapacity() > 0)
+                    if (
+                        !visitedNodes.Contains(niegbour.EndNode.Value)
+                        && niegbour.GetRemainingCapacity() > 0
+                    )
                     {
                         Console.WriteLine($"Nieodwiedzony sąsiad node: {niegbour.EndNode.Value}");
                         nodesQueue.Enqueue(niegbour.EndNode.Value);
@@ -46,7 +47,9 @@ public class DinicsAlgorithm
                     }
                     else
                     {
-                        Console.WriteLine($"Odwiedzony sąsiad node: {niegbour.EndNode.Value}. Skipujemy.");
+                        Console.WriteLine(
+                            $"Odwiedzony sąsiad node: {niegbour.EndNode.Value}. Skipujemy."
+                        );
                     }
                 }
             }
@@ -57,7 +60,7 @@ public class DinicsAlgorithm
         return _levels[_sink] != 0;
     }
 
-    //at czyli w którym node obecnie jesteśmy, next to lista kolejnych node do których możemy się udać, flow to ile przepływu możemy jeszcze przepuścić 
+    //at czyli w którym node obecnie jesteśmy, next to lista kolejnych node do których możemy się udać, flow to ile przepływu możemy jeszcze przepuścić
     //dla przepływu wyliczamy MIN, bo on nam powie ile możemy przepuścić przez tą ścieżkę.
     public decimal PerformDFS(int at, List<int> next, decimal flow)
     {
@@ -76,7 +79,11 @@ public class DinicsAlgorithm
             if (remainingCapacity > 0 && _levels[edge.EndNode.Value] == _levels[next[at]] + 1)
             {
                 //Rekurencyjnie, aż w końcu zwrócimy maksymalny flow na ścieżce (maks flow jaki możemy puścić na ścieżce)
-                var bottleNeck = PerformDFS(edge.EndNode.Value, next, Math.Min(remainingCapacity, flow));
+                var bottleNeck = PerformDFS(
+                    edge.EndNode.Value,
+                    next,
+                    Math.Min(remainingCapacity, flow)
+                );
                 if (bottleNeck > 0)
                 {
                     _graph.AugmentEdgeWithResidual(edge, bottleNeck);

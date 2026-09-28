@@ -40,7 +40,12 @@ public sealed class Settlement : Entity
         SettledAt = DateTime.UtcNow;
     }
 
-    public static Settlement Create(Group group, GroupMember fromMember, GroupMember toMember, decimal amount)
+    public static Settlement Create(
+        Group group,
+        GroupMember fromMember,
+        GroupMember toMember,
+        decimal amount
+    )
     {
         return new Settlement(group, fromMember, toMember, amount);
     }

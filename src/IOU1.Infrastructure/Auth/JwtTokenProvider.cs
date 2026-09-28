@@ -1,10 +1,10 @@
-﻿using IOU1.Application.Options;
+﻿using System.Security.Claims;
+using System.Text;
+using IOU1.Application.Options;
 using IOU1.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using System.Text;
 
 namespace IOU1.Infrastructure.Auth;
 
@@ -36,8 +36,7 @@ public sealed class JwtTokenProvider(IOptions<JwtConfig> options) : ITokenProvid
         // 3) Create token descriptor with claims and metadata.
         var securityTokenDescriptor = new SecurityTokenDescriptor()
         {
-            Subject = new ClaimsIdentity(
-            [
+            Subject = new ClaimsIdentity([
                 new Claim("id", user.Id.ToString()),
                 new Claim("login", user.Login),
                 new Claim(JwtRegisteredClaimNames.Name, user.FullName),

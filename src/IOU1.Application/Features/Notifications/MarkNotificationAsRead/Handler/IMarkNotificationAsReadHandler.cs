@@ -6,5 +6,8 @@ namespace IOU1.Application.Features.Notifications.MarkNotificationAsRead.Handler
 
 public interface IMarkNotificationAsReadHandler
 {
-    Task<Result<MarkNotificationAsReadResponse?>> Handle(MarkNotificationAsReadRequest request, CancellationToken cancellationToken = default);
+    Task<Result<MarkNotificationAsReadResponse?>> Handle(
+        MarkNotificationAsReadRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

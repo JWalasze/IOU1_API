@@ -5,5 +5,8 @@ namespace IOU1.Application.Features.Expenses.GetExpenses.Handler;
 
 public interface IGetExpensesHandler
 {
-    Task<Result<GetExpensesResponse?>> Handle(GetExpensesRequest request, CancellationToken cancellationToken = default);
+    Task<Result<GetExpensesResponse?>> Handle(
+        GetExpensesRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

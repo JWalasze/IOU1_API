@@ -5,5 +5,8 @@ namespace IOU1.Application.Features.Users.DeleteUser;
 
 public interface IDeleteUserHandler
 {
-    Task<Result<DeleteUserResponse?>> Handle(DeleteUserRequest request, CancellationToken cancellationToken = default);
+    Task<Result<DeleteUserResponse?>> Handle(
+        DeleteUserRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

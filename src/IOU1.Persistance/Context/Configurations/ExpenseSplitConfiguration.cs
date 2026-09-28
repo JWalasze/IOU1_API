@@ -10,14 +10,9 @@ public class ExpenseSplitConfiguration : IEntityTypeConfiguration<ExpenseSplit>
     {
         builder.ToTable("ExpenseSplit");
         builder.HasKey(e => e.Id);
-        builder.Property(e => e.Title)
-               .IsRequired()
-               .HasMaxLength(20);
-        builder.Property(e => e.Description)
-               .HasMaxLength(255);
-        builder.Property(e => e.IconKey)
-                .HasMaxLength(20);
-        builder.Property(e => e.Version)
-               .IsRowVersion();
+        builder.Property(e => e.Title).IsRequired().HasMaxLength(20);
+        builder.Property(e => e.Description).HasMaxLength(255);
+        builder.Property(e => e.IconKey).HasMaxLength(20);
+        builder.Property(e => e.Version).IsRowVersion();
     }
 }

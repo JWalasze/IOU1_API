@@ -1,5 +1,3 @@
 ﻿namespace IOU1.Infrastructure.Messages;
 
-public interface IConsumer
-{
-}
+public interface IConsumer { }

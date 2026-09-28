@@ -53,10 +53,10 @@ public class Graph<T>
     public void AugmentEdgeWithResidual(Edge<T> edge, decimal value)
     {
         edge.Flow += value;
-        var residualEdge = _nodes
-            .FirstOrDefault(n => n.Node == edge.EndNode)
-            .Edges
-            .FirstOrDefault(e => e.IsResidual && e.EndNode == edge.StartNode)
+        var residualEdge =
+            _nodes
+                .FirstOrDefault(n => n.Node == edge.EndNode)
+                .Edges.FirstOrDefault(e => e.IsResidual && e.EndNode == edge.StartNode)
             ?? throw new Exception($"Nie znaleziono krawędzi w DFS: {edge}, {value}");
 
         residualEdge.Flow -= value;

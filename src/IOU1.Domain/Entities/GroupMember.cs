@@ -29,12 +29,8 @@ public class GroupMember : Entity
         Id = id;
     }
 
-    public static GroupMember Create(
-        Group group,
-        User user)
+    public static GroupMember Create(Group group, User user)
     {
-        return new GroupMember(
-            group,
-            user);
+        return new GroupMember(group, user);
     }
 }

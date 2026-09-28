@@ -14,7 +14,8 @@ public class NotificationController : BaseApiController
     [HttpGet]
     public async Task<IActionResult> GetNotifications(
         [FromServices] IGetNotificationsHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(cancellationToken);
         return CreateEndpointResponse(result);
@@ -24,7 +25,8 @@ public class NotificationController : BaseApiController
     public async Task<IActionResult> MarkNotificationAsRead(
         [FromRoute] MarkNotificationAsReadRequest request,
         [FromServices] IMarkNotificationAsReadHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);

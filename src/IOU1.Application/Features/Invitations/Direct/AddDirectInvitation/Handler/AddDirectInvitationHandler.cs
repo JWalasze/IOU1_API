@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FluentValidation;
 using IOU1.Application.Features.Invitations.Direct.AddDirectInvitation.Models.Request;
 using IOU1.Application.Features.Invitations.Direct.AddDirectInvitation.Models.Response;
@@ -11,7 +12,6 @@ using IOU1.Domain.Models.Results;
 using IOU1.Persistance.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace IOU1.Application.Features.Invitations.Direct.AddDirectInvitation.Handler;
 
@@ -21,8 +21,8 @@ public sealed class AddDirectInvitationHandler(
     IUnitOfWork unit,
     IOU1Context context,
     ILogger<AddDirectInvitationHandler> logger,
-    INotificationService notificationService)
-    : IAddDirectInvitationHandler
+    INotificationService notificationService
+) : IAddDirectInvitationHandler
 {
     private readonly IValidator<AddDirectInvitationRequest> _validator = validator;
     private readonly IAuthUser _user = user;
@@ -31,7 +31,10 @@ public sealed class AddDirectInvitationHandler(
     private readonly ILogger<AddDirectInvitationHandler> _logger = logger;
     private readonly INotificationService _notificationService = notificationService;
 
-    public async Task<Result<AddDirectInvitationResponse?>> Handle(AddDirectInvitationRequest request, CancellationToken cancellationToken = default)
+    public async Task<Result<AddDirectInvitationResponse?>> Handle(
+        AddDirectInvitationRequest request,
+        CancellationToken cancellationToken = default
+    )
     {
         var validationResult = _validator.Validate(request);
         if (!validationResult.IsValid)
@@ -46,39 +49,45 @@ public sealed class AddDirectInvitationHandler(
         {
             await _unit.BeginTransaction();
 
-            userToBeAdded = await _context.Users
-                .Where(u => u.Email.EmailAddress == request.Email)
+            userToBeAdded = await _context
+                .Users.Where(u => u.Email.EmailAddress == request.Email)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (userToBeAdded is null)
-                return Result<AddDirectInvitationResponse?>.Failure("User with provided email address doesn't exist.");
+                return Result<AddDirectInvitationResponse?>.Failure(
+                    "User with provided email address doesn't exist."
+                );
 
-            var groupMember = await _context.GroupMembers
-                .Include(u => u.User)
+            var groupMember = await _context
+                .GroupMembers.Include(u => u.User)
                 .Include(u => u.Group)
                 .Where(u => u.UserId == _user.Id)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (groupMember is null)
-                return Result<AddDirectInvitationResponse?>.Failure("Internal server error. Try again later.");
+                return Result<AddDirectInvitationResponse?>.Failure(
+                    "Internal server error. Try again later."
+                );
 
             invitation = Invitation.Create(
                 groupMember.GroupId,
                 userToBeAdded.Id,
-                senderId: _user.Id);
+                senderId: _user.Id
+            );
 
             await _context.Invitations.AddAsync(invitation, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
             var title = "Zaproszenie do nowej grupy";
-            var message = @$"Użytkownik {groupMember.User.Login} zaprosił cię do grupy {groupMember.Group.Name}!
+            var message =
+                @$"Użytkownik {groupMember.User.Login} zaprosił cię do grupy {groupMember.Group.Name}!
                 Czy akceptujesz zaproszenie?";
 
             var dbPayload = new
             {
                 InvitationId = invitation.Id,
                 Title = title,
-                Message = message
+                Message = message,
             };
 
             serializedDbPayload = JsonSerializer.Serialize(dbPayload);
@@ -86,7 +95,8 @@ public sealed class AddDirectInvitationHandler(
                 createdAt: DateTime.UtcNow,
                 payload: serializedDbPayload,
                 userId: userToBeAdded.Id,
-                type: NotificationType.InvitationToGroup);
+                type: NotificationType.InvitationToGroup
+            );
 
             await _context.Notifications.AddAsync(notification, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
@@ -96,7 +106,7 @@ public sealed class AddDirectInvitationHandler(
                 InvitationId = invitation.Id,
                 NotificationId = notification.Id,
                 Title = title,
-                Message = message
+                Message = message,
             };
 
             await _unit.CommitTransaction();
@@ -105,21 +115,36 @@ public sealed class AddDirectInvitationHandler(
         {
             _logger.LogError(ex, "An unexpected error occured while creating an invitation!");
             await _unit.RollbackTransaction();
-            return Result<AddDirectInvitationResponse?>.Failure(ex,
-                $"An unexpected error occured while creating an invitation for email {request.Email}!");
+            return Result<AddDirectInvitationResponse?>.Failure(
+                ex,
+                $"An unexpected error occured while creating an invitation for email {request.Email}!"
+            );
         }
 
         //Moze notyfikacje powinny zwracac result, bo moze sie nie udac wyslac powiadomienia, ale zaproszenie zostanie dodane do bazy danych
         try
         {
-            await _notificationService.SendToUser(userToBeAdded.Id, notification.Id, serializedDbPayload, cancellationToken);
-            return Result<AddDirectInvitationResponse?>.Success(new AddDirectInvitationResponse(invitation.Id, notification.Id));
+            await _notificationService.SendToUser(
+                userToBeAdded.Id,
+                notification.Id,
+                serializedDbPayload,
+                cancellationToken
+            );
+            return Result<AddDirectInvitationResponse?>.Success(
+                new AddDirectInvitationResponse(invitation.Id, notification.Id)
+            );
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occured while sending a notification to user with id {UserId}!", userToBeAdded.Id);
-            return Result<AddDirectInvitationResponse?>.Failure(ex,
-                $"An unexpected error occured while sending a notification to user with id {userToBeAdded.Id}!");
+            _logger.LogError(
+                ex,
+                "An unexpected error occured while sending a notification to user with id {UserId}!",
+                userToBeAdded.Id
+            );
+            return Result<AddDirectInvitationResponse?>.Failure(
+                ex,
+                $"An unexpected error occured while sending a notification to user with id {userToBeAdded.Id}!"
+            );
         }
     }
 }

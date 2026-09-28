@@ -19,25 +19,34 @@ public class ExpenseSplit : Entity
 
     private ExpenseSplit() { }
 
-    public ExpenseSplit(
-        string title,
-        string description,
-        string? iconKey)
+    public ExpenseSplit(string title, string description, string? iconKey)
     {
-        StringGuard.ForPresence<CreatingExpenseSplitException>(title, "Title for expense split cannot be empty.");
-        StringGuard.ForMaxlength<CreatingExpenseSplitException>(title, _maxTitleLength,
-            "Title for a expense split is too long!");
+        StringGuard.ForPresence<CreatingExpenseSplitException>(
+            title,
+            "Title for expense split cannot be empty."
+        );
+        StringGuard.ForMaxlength<CreatingExpenseSplitException>(
+            title,
+            _maxTitleLength,
+            "Title for a expense split is too long!"
+        );
 
         Title = title;
 
-        StringGuard.ForMaxlength<CreatingExpenseSplitException>(description, _maxDescriptionLength,
-            @$"Description for a expense split is too long! Max length: {_maxDescriptionLength}");
+        StringGuard.ForMaxlength<CreatingExpenseSplitException>(
+            description,
+            _maxDescriptionLength,
+            @$"Description for a expense split is too long! Max length: {_maxDescriptionLength}"
+        );
 
         Description = description;
 
         if (iconKey is not null)
-            StringGuard.ForMaxlength<CreatingExpenseSplitException>(description, _maxIconKeyLength,
-            @$"Description for a expense split is too long! Max length: {_maxIconKeyLength}");
+            StringGuard.ForMaxlength<CreatingExpenseSplitException>(
+                description,
+                _maxIconKeyLength,
+                @$"Description for a expense split is too long! Max length: {_maxIconKeyLength}"
+            );
 
         IconKey = iconKey;
         IsDeletd = false;
@@ -46,7 +55,9 @@ public class ExpenseSplit : Entity
     public void Delete()
     {
         if (IsDeletd)
-            throw new DeletingExpenseSplitException($"Expense split with id: {Id} is already deleted!");
+            throw new DeletingExpenseSplitException(
+                $"Expense split with id: {Id} is already deleted!"
+            );
 
         IsDeletd = true;
     }

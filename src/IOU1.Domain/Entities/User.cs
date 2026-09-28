@@ -32,7 +32,8 @@ public class User : Entity
         Email email,
         string login,
         string password,
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher
+    )
     {
         if (string.IsNullOrWhiteSpace(firstName))
         {
@@ -73,7 +74,8 @@ public class User : Entity
         DateTime createdAt,
         string login,
         string passwordHash,
-        string passwordSalt)
+        string passwordSalt
+    )
     {
         FirstName = firstName;
         LastName = lastName;
@@ -94,14 +96,7 @@ public class User : Entity
         DateTime createdAt
     )
     {
-        return new User(
-            firstName,
-            lastName,
-            email,
-            createdAt,
-            login,
-            passwordHash,
-            passwordSalt);
+        return new User(firstName, lastName, email, createdAt, login, passwordHash, passwordSalt);
     }
 
     public static User Create(
@@ -110,15 +105,10 @@ public class User : Entity
         Email email,
         string login,
         string password,
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher
+    )
     {
-        return new User(
-            firstName,
-            lastName,
-            email,
-            login,
-            password,
-            passwordHasher);
+        return new User(firstName, lastName, email, login, password, passwordHasher);
     }
 
     public void Delete()

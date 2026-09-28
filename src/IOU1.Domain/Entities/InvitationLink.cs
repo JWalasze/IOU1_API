@@ -15,8 +15,8 @@ public class InvitationLink : Entity
 
     private InvitationLink() { }
 
-    public InvitationLink(Group group, InvitationKey key, LinkExpirationDate expirationDate) 
-    { 
+    public InvitationLink(Group group, InvitationKey key, LinkExpirationDate expirationDate)
+    {
         Group = group;
         InvitationKey = key;
         ExpirationDate = expirationDate;

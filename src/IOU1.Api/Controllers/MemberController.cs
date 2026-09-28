@@ -14,7 +14,8 @@ public class MemberController : BaseApiController
     public async Task<IActionResult> AddMember(
         [FromBody] AddMemberRequest request,
         [FromServices] IAddMemberHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);

@@ -5,5 +5,7 @@ namespace IOU1.Application.Features.Notifications.GetNotifications.Handler;
 
 public interface IGetNotificationsHandler
 {
-    Task<Result<ICollection<NotificationDto>>> Handle(CancellationToken cancellationToken = default);
+    Task<Result<ICollection<NotificationDto>>> Handle(
+        CancellationToken cancellationToken = default
+    );
 }

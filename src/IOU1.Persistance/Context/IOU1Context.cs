@@ -11,7 +11,6 @@ public class IOU1Context(DbContextOptions<IOU1Context> options) : DbContext(opti
     public DbSet<GroupMember> GroupMembers => Set<GroupMember>();
     public DbSet<MemberBalance> MemberBalances => Set<MemberBalance>();
 
-
     public DbSet<Expense> Expenses => Set<Expense>();
     public DbSet<ExpenseShare> ExpenseShares => Set<ExpenseShare>();
     public DbSet<ExpenseCategory> ExpenseCategories => Set<ExpenseCategory>();

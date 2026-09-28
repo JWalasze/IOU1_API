@@ -1,10 +1,11 @@
-﻿using FluentValidation.Results;
+﻿using System.Text.Json.Serialization;
+using FluentValidation.Results;
 using IOU1.Domain.Interfaces.Results;
-using System.Text.Json.Serialization;
 
 namespace IOU1.Domain.Models.Results;
 
-public class Result<T> : IResult<T> where T : class?
+public class Result<T> : IResult<T>
+    where T : class?
 {
     public T Data { get; init; }
 
@@ -47,13 +48,21 @@ public class Result<T> : IResult<T> where T : class?
         Errors = errors;
     }
 
-    public static implicit operator bool(Result<T> result) => result.IsSuccess && result.Data is not null;
+    public static implicit operator bool(Result<T> result) =>
+        result.IsSuccess && result.Data is not null;
 
     public static Result<T> Success(T data) => new(data, true, null);
+
     public static Result<T> Failure(string errorMessage) => new(default!, false, errorMessage);
-    public static Result<T> Failure(string errorCode, string errorMessage) => new(default!, false, errorCode, errorMessage);
-    public static Result<T> Failure(Exception ex, string errorMessage) => new(default!, false, errorMessage, ex);
+
+    public static Result<T> Failure(string errorCode, string errorMessage) =>
+        new(default!, false, errorCode, errorMessage);
+
+    public static Result<T> Failure(Exception ex, string errorMessage) =>
+        new(default!, false, errorMessage, ex);
+
     public static Result<T> Failure(IEnumerable<ProblemDetails> errors) => new(errors);
+
     public static Result<T> Failure(IEnumerable<ValidationFailure> errors)
     {
         var problemDetails = errors.Select(e => new ProblemDetails(e.ErrorMessage, e.ErrorCode));

@@ -11,15 +11,15 @@ public sealed class BalanceService(IOU1Context context) : IBalanceService
 
     public async Task<Result<List<MemberBalance>>> AddInitialBalancesFor(
         GroupMember newMember,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
             var balancesInDatabase = await _context
-                .MemberBalances
-                .Where(mb =>
-                    mb.MemberId == newMember.Id ||
-                    mb.CounterpartyMemberId == newMember.Id)
+                .MemberBalances.Where(mb =>
+                    mb.MemberId == newMember.Id || mb.CounterpartyMemberId == newMember.Id
+                )
                 .Select(mb => new { mb.MemberId, mb.CounterpartyMemberId })
                 .ToListAsync(cancellationToken);
 
@@ -56,44 +56,56 @@ public sealed class BalanceService(IOU1Context context) : IBalanceService
         catch (Exception ex)
         {
             return Result<List<MemberBalance>>.Failure(
-                ex, $"Error while adding initial balances for a new member {newMember.Id}");
+                ex,
+                $"Error while adding initial balances for a new member {newMember.Id}"
+            );
         }
     }
 
     public Task<List<MemberBalance>> GetBalancesFor(
         Group group,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         return _context
-            .MemberBalances
-            .Include(mb => mb.Member)
+            .MemberBalances.Include(mb => mb.Member)
             .Include(mb => mb.CounterpartyMember)
-            .Where(mb => mb.GroupId == group.Id &&
-                (group.Members.Contains(mb.Member) &&
-                group.Members.Contains(mb.CounterpartyMember)))
+            .Where(mb =>
+                mb.GroupId == group.Id
+                && (
+                    group.Members.Contains(mb.Member)
+                    && group.Members.Contains(mb.CounterpartyMember)
+                )
+            )
             .ToListAsync(cancellationToken);
     }
 
     public void AdjustBalancesForNewExpense(
         Expense expense,
         IEnumerable<MemberBalance> balances,
-        IEnumerable<ExpenseShareSettlement>? expenseShareSettlements = null)
+        IEnumerable<ExpenseShareSettlement>? expenseShareSettlements = null
+    )
     {
         var balancesLookup = balances.ToDictionary(
             mb => (mb.MemberId, mb.CounterpartyMemberId),
-            mb => mb);
+            mb => mb
+        );
 
         foreach (var expenseShare in expense.Shares.Where(s => s.MemberId != expense.PayerId))
         {
             var key = (expense.PayerId, expenseShare.MemberId);
             if (!balancesLookup.TryGetValue(key, out var balanceFromPayerToMember))
-                throw new InvalidOperationException($"Balance not found for payer with id: {expense.PayerId} and member: {expenseShare.MemberId}");
+                throw new InvalidOperationException(
+                    $"Balance not found for payer with id: {expense.PayerId} and member: {expenseShare.MemberId}"
+                );
 
             balanceFromPayerToMember.ShiftAmount(expenseShare.Amount);
 
             key = (expenseShare.MemberId, expense.PayerId);
             if (!balancesLookup.TryGetValue(key, out var balanceFromMemberToPayer))
-                throw new InvalidOperationException($"Balance not found for member with id: {expenseShare.MemberId} and payer: {expense.PayerId}");
+                throw new InvalidOperationException(
+                    $"Balance not found for member with id: {expenseShare.MemberId} and payer: {expense.PayerId}"
+                );
 
             balanceFromMemberToPayer.ShiftAmount(-1 * expenseShare.Amount);
         }
@@ -112,7 +124,9 @@ public sealed class BalanceService(IOU1Context context) : IBalanceService
                 continue;
 
             if (!balancesLookup.TryGetValue(key, out var balanceFromPayerToMember))
-                throw new InvalidOperationException($"Balance not found for payer with id: {expense.PayerId} and member: {expenseShare.MemberId}");
+                throw new InvalidOperationException(
+                    $"Balance not found for payer with id: {expense.PayerId} and member: {expenseShare.MemberId}"
+                );
 
             balanceFromPayerToMember.ShiftAmount(-1 * shiftAmountFromPayerToMember);
 
@@ -121,7 +135,9 @@ public sealed class BalanceService(IOU1Context context) : IBalanceService
                 continue;
 
             if (!balancesLookup.TryGetValue(key, out var balanceFromMemberToPayer))
-                throw new InvalidOperationException($"Balance not found for member with id: {expenseShare.MemberId} and payer: {expense.PayerId}");
+                throw new InvalidOperationException(
+                    $"Balance not found for member with id: {expenseShare.MemberId} and payer: {expense.PayerId}"
+                );
 
             balanceFromMemberToPayer.ShiftAmount(shiftAmountFromPayerToMember);
         }

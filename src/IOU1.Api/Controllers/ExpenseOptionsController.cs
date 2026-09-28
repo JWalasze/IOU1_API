@@ -14,7 +14,8 @@ public class ExpenseOptionsController : BaseApiController
     public async Task<IActionResult> Get(
         [FromServices] IGetExpenseOptionsHandler handler,
         [FromQuery] GetExpenseOptionsRequest request,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);

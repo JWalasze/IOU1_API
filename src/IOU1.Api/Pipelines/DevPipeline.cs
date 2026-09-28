@@ -12,9 +12,7 @@ public static class DevPipeline
         app.MapOpenApi();
         app.MapScalarApiReference();
         app.UseCors(builder =>
-            builder
-                .WithOrigins("http://localhost:5173")
-                .AllowAnyHeader()
-                .AllowAnyMethod());
+            builder.WithOrigins("http://localhost:5173").AllowAnyHeader().AllowAnyMethod()
+        );
     }
 }

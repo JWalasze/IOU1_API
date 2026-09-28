@@ -5,4 +5,5 @@ public record NewUser(
     string LastName,
     string Email,
     string Login,
-    string Password);
+    string Password
+);

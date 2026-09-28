@@ -14,10 +14,11 @@ public static class AddUserMapper
             user.FirstName,
             user.LastName,
             user.Email.EmailAddress,
-            user.Login)
+            user.Login
+        )
         {
             ErrorMessage = result.ErrorMessage,
-            Errors = result.Errors
+            Errors = result.Errors,
         };
     }
 }

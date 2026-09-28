@@ -6,5 +6,8 @@ namespace IOU1.Application.Features.Groups.GetGroups.Handler;
 
 public interface IGetGroupsHandler
 {
-    Task<Result<ICollection<GetGroupsDto>>> Handle(GetGroupsRequest request, CancellationToken cancellationToken = default);
+    Task<Result<ICollection<GetGroupsDto>>> Handle(
+        GetGroupsRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

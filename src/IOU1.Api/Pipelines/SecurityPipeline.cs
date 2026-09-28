@@ -1,6 +1,6 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace IOU1.Api.Pipelines;
 
@@ -9,8 +9,8 @@ public static class SecurityPipeline
     public static void AddSecurityPipeline(this WebApplicationBuilder builder)
     {
         builder.Services.AddAuthorization();
-        builder.Services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        builder
+            .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(o =>
             {
                 o.RequireHttpsMetadata = false;
@@ -18,11 +18,13 @@ public static class SecurityPipeline
                 {
                     //Podajemy dane do autoryzacji żeby klasa wiedziała jak odczytać/odkodowac token oraz sprawdzić jego poprawność
                     //TODO: Co jak zmienimu Issuer albo Audience?
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)),
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)
+                    ),
                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
                     ValidAudience = builder.Configuration["Jwt:Audience"],
                     ClockSkew = TimeSpan.Zero,
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
                 };
 
                 // Configure the Authority to the expected value for
@@ -49,15 +51,17 @@ public static class SecurityPipeline
 
                         // If the request is for our hub...
                         var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken) &&
-                            (path.StartsWithSegments("/NotificationHub")))
+                        if (
+                            !string.IsNullOrEmpty(accessToken)
+                            && (path.StartsWithSegments("/NotificationHub"))
+                        )
                         {
                             // Read the token out of the query string
                             context.Token = accessToken;
                         }
 
                         return Task.CompletedTask;
-                    }
+                    },
                 };
             });
     }

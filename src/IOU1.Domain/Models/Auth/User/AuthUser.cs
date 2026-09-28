@@ -16,7 +16,9 @@ public sealed record AuthUser : IAuthUser
     public void SetLogin(string login)
     {
         if (!string.IsNullOrWhiteSpace(Login))
-            throw new InvalidOperationException("Login has already been set and cannot be changed.");
+            throw new InvalidOperationException(
+                "Login has already been set and cannot be changed."
+            );
 
         Login = login;
     }

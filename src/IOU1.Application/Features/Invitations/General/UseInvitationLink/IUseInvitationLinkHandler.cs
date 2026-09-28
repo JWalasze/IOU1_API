@@ -5,5 +5,8 @@ namespace IOU1.Application.Features.Invitations.General.UseInvitationLink;
 
 public interface IUseInvitationLinkHandler
 {
-    Task<Result<UseInvitationLinkResponse?>> Handle(UseInvitationLinkRequest request, CancellationToken cancellationToken = default);
+    Task<Result<UseInvitationLinkResponse?>> Handle(
+        UseInvitationLinkRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

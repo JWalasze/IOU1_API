@@ -241,8 +241,7 @@ create table ExpenseShare (
   constraint PK_ExpenseShare                       primary key (Id),
   constraint FK_ExpenseShare_Expense_ExpenseId     foreign key (ExpenseId) references Expense (Id),
   constraint FK_ExpenseShare_GroupMember_MemberId  foreign key (MemberId)  references GroupMember (Id),
-  constraint UQ_ExpenseShare_ExpenseId_MemberId    unique (ExpenseId, MemberId),
-  constraint CK_ExpenseShare_Amount_NonNegative    check (Amount >= 0)
+  constraint UQ_ExpenseShare_ExpenseId_MemberId    unique (ExpenseId, MemberId)
 );
 go
 
@@ -296,7 +295,7 @@ create table AppNotification (
   CreatedAt        datetime2(3) not null constraint DF_AppNotification_CreatedAt default sysutcdatetime(),
   UserId           int not null,
   Payload          nvarchar(max) not null,
-  NotificationType nvarchar(20),
+  NotificationType nvarchar(50) not null,
   IsRead           bit not null constraint DF_AppNotification_IsRead default 0,
 
   Version       rowversion,

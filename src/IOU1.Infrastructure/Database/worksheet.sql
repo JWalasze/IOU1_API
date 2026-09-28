@@ -8,4 +8,6 @@ select * from Groupmember where groupid = 1;
 select * from CommunityGroup;
 select * from AppUser;
 
-alter table memberbalance add GroupId int;
+
+select ap.login, ap.email
+from AppUser ap;

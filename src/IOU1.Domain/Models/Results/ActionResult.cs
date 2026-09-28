@@ -14,13 +14,16 @@ public class Result : IResult
     private Result(bool isSuccess, string? errorMessage)
     {
         if (isSuccess && !string.IsNullOrWhiteSpace(errorMessage))
-            throw new InvalidResultState($"{nameof(Result)} cannot be successed with errorMessage: {errorMessage}");
+            throw new InvalidResultState(
+                $"{nameof(Result)} cannot be successed with errorMessage: {errorMessage}"
+            );
 
         IsSuccess = isSuccess;
         ErrorMessage = errorMessage;
     }
 
     public static Result Success() => new(true, null);
+
     public static Result Failure(string errorMessage) => new(false, errorMessage);
 }
 

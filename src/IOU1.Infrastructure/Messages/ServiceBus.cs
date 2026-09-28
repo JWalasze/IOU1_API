@@ -3,7 +3,10 @@ using MassTransit;
 
 namespace IOU1.Infrastructure.Messages
 {
-    public class ServiceBus(IPublishEndpoint publishEndpoint, ISendEndpointProvider sendEndpointProvider) : IServiceBus
+    public class ServiceBus(
+        IPublishEndpoint publishEndpoint,
+        ISendEndpointProvider sendEndpointProvider
+    ) : IServiceBus
     {
         private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
         private readonly ISendEndpointProvider _sendEndpointProvider = sendEndpointProvider;
@@ -13,9 +16,15 @@ namespace IOU1.Infrastructure.Messages
             await _publishEndpoint.Publish(@event, cancellation);
         }
 
-        public async Task SendAsync<T>(T message, string queueName, CancellationToken cancellation = default)
+        public async Task SendAsync<T>(
+            T message,
+            string queueName,
+            CancellationToken cancellation = default
+        )
         {
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri($"queue:{queueName}"));
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(
+                new Uri($"queue:{queueName}")
+            );
             await endpoint.Send(message, cancellation);
         }
     }

@@ -7,12 +7,16 @@ namespace IOU1.Application.Features.Settlements.GetSettlementsOverview.Handler;
 
 public class GetSettlementsOverviewHandler(
     IValidator<GetSettlementOverviewRequest> validator,
-    ISettlementService settlementService) : IGetSettlementsOverviewHandler
+    ISettlementService settlementService
+) : IGetSettlementsOverviewHandler
 {
     private readonly IValidator<GetSettlementOverviewRequest> _validator = validator;
     private readonly ISettlementService _settlementService = settlementService;
 
-    public async Task<Result<GetSettlementOverviewResponse>> Handle(GetSettlementOverviewRequest request, CancellationToken cancellationToken)
+    public async Task<Result<GetSettlementOverviewResponse>> Handle(
+        GetSettlementOverviewRequest request,
+        CancellationToken cancellationToken
+    )
     {
         var validationResult = _validator.Validate(request);
         if (!validationResult.IsValid)

@@ -20,7 +20,10 @@ public class Notification : Entity
 
     private Notification(DateTime createdAt, string payload, int userId, NotificationType type)
     {
-        IntIdGuard.ForPositivr<CreatingNotificationException>(userId, "Provided user ID is invalid!");
+        IntIdGuard.ForPositivr<CreatingNotificationException>(
+            userId,
+            "Provided user ID is invalid!"
+        );
         UserId = userId;
         Type = type;
 
@@ -47,15 +50,15 @@ public class Notification : Entity
         DateTime createdAt,
         string payload,
         int userId,
-        NotificationType type)
-        => new(createdAt, payload, userId, type);
+        NotificationType type
+    ) => new(createdAt, payload, userId, type);
 
     public static Notification Create(
         DateTime createdAt,
         string payload,
         User user,
-        NotificationType type)
-        => new(createdAt, payload, user, type);
+        NotificationType type
+    ) => new(createdAt, payload, user, type);
     #endregion
 
     #region Public Methods

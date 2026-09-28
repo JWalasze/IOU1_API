@@ -21,7 +21,13 @@ public class Group : Entity
 
     private Group() { }
 
-    public Group(string name, string? description, User owner, Currency currency, ICollection<GroupMember> members)
+    public Group(
+        string name,
+        string? description,
+        User owner,
+        Currency currency,
+        ICollection<GroupMember> members
+    )
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new CreateGroupException($"Name cannot be null or empty.");
@@ -33,16 +39,20 @@ public class Group : Entity
         CurrencyKey = currency.Key;
         Members = members;
 
-        if (!Members
-            .Select(m => m.Id)
-            .Contains(owner.Id))
+        if (!Members.Select(m => m.Id).Contains(owner.Id))
         {
             var ownerMember = GroupMember.Create(this, owner);
             Members.Add(ownerMember);
         }
     }
 
-    public Group(string name, string? description, User owner, Currency currency, ICollection<User> members)
+    public Group(
+        string name,
+        string? description,
+        User owner,
+        Currency currency,
+        ICollection<User> members
+    )
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new CreateGroupException($"Name cannot be null or empty.");
@@ -54,9 +64,7 @@ public class Group : Entity
         CurrencyKey = currency.Key;
         Members = [.. members.Select(member => GroupMember.Create(this, member))];
 
-        if (!Members
-            .Select(m => m.User.Id)
-            .Contains(owner.Id))
+        if (!Members.Select(m => m.User.Id).Contains(owner.Id))
         {
             var ownerMember = GroupMember.Create(this, owner);
             Members.Add(ownerMember);
@@ -87,14 +95,10 @@ public class Group : Entity
         string? description,
         User owner,
         Currency currency,
-        ICollection<GroupMember> members)
+        ICollection<GroupMember> members
+    )
     {
-        return new Group(
-            name,
-            description,
-            owner,
-            currency,
-            members);
+        return new Group(name, description, owner, currency, members);
     }
 
     public static Group Create(
@@ -102,13 +106,9 @@ public class Group : Entity
         string? description,
         User owner,
         Currency currency,
-        ICollection<User> users)
+        ICollection<User> users
+    )
     {
-        return new Group(
-            name,
-            description,
-            owner,
-            currency,
-            users);
+        return new Group(name, description, owner, currency, users);
     }
 }

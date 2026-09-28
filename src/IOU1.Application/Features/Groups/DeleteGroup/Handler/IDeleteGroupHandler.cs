@@ -6,5 +6,8 @@ namespace IOU1.Application.Features.Groups.DeleteGroup.Handler;
 
 public interface IDeleteGroupHandler
 {
-    Task<Result<DeleteGroupResponse?>> Handle(DeleteGroupRequest request, CancellationToken cancellationToken = default);
+    Task<Result<DeleteGroupResponse?>> Handle(
+        DeleteGroupRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

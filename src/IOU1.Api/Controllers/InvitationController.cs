@@ -16,7 +16,8 @@ public class InvitationController : BaseApiController
     public async Task<IActionResult> CreateLink(
         [FromBody] GenerateInvitationKeyRequest request,
         [FromServices] IGenerateInvitationKeyHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);
@@ -26,7 +27,8 @@ public class InvitationController : BaseApiController
     public async Task<IActionResult> AcceptLink(
         [FromBody] UseInvitationLinkRequest request,
         [FromServices] IUseInvitationLinkHandler handler,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var result = await handler.Handle(request, cancellationToken);
         return CreateEndpointResponse(result);

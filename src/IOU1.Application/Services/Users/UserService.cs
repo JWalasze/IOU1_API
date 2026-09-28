@@ -14,8 +14,8 @@ public class UserService(
     IOU1Context context,
     ILogger<UserService> logger,
     IPasswordHasher passwordHasher,
-    IUserChecker userCheckerService)
-    : IUserService
+    IUserChecker userCheckerService
+) : IUserService
 {
     private readonly IOU1Context _context = context;
     private readonly ILogger<UserService> _logger = logger;
@@ -23,7 +23,10 @@ public class UserService(
     private readonly IPasswordHasher _passwordHasher = passwordHasher;
     private readonly IUserChecker _userCheckerService = userCheckerService;
 
-    public async Task<Result<User?>> Add(NewUser newUser, CancellationToken cancellationToken = default)
+    public async Task<Result<User?>> Add(
+        NewUser newUser,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
@@ -45,7 +48,8 @@ public class UserService(
                 new(newUser.Email),
                 newUser.Login,
                 newUser.Password,
-                _passwordHasher);
+                _passwordHasher
+            );
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync(cancellationToken);
@@ -54,38 +58,47 @@ public class UserService(
         }
         catch (CreatingUserException ex)
         {
-            _logger.LogError(ex, "An error occurred while adding a new user. User data: {@UserData}",
+            _logger.LogError(
+                ex,
+                "An error occurred while adding a new user. User data: {@UserData}",
                 new
                 {
                     newUser.FirstName,
                     newUser.LastName,
                     newUser.Email,
-                    newUser.Login
-                });
+                    newUser.Login,
+                }
+            );
 
             return Result<User?>.Failure(ex.Message);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while adding a new user. User data: {@UserData}",
+            _logger.LogError(
+                ex,
+                "An unexpected error occurred while adding a new user. User data: {@UserData}",
                 new
                 {
                     newUser.FirstName,
                     newUser.LastName,
                     newUser.Email,
-                    newUser.Login
-                });
+                    newUser.Login,
+                }
+            );
 
             return Result<User?>.Failure($"An error occurred while adding the user.");
         }
     }
 
-    public async Task<Result<string>> Delete(int userId, CancellationToken cancellationToken = default)
+    public async Task<Result<string>> Delete(
+        int userId,
+        CancellationToken cancellationToken = default
+    )
     {
         try
         {
-            var user = await _context.Users
-                .Include(u => u.MemberGroups)
+            var user = await _context
+                .Users.Include(u => u.MemberGroups)
                 .Include(u => u.OwnedGroups)
                 .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
 
@@ -96,7 +109,9 @@ public class UserService(
 
             if (user.OwnedGroups.Count > 0)
             {
-                return Result<string>.Failure("User cannot be deleted because they own one or more groups.");
+                return Result<string>.Failure(
+                    "User cannot be deleted because they own one or more groups."
+                );
             }
 
             user.Delete();
@@ -108,7 +123,11 @@ public class UserService(
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An unexpected error occurred while deleting user with ID {UserId}.", userId);
+            _logger.LogError(
+                ex,
+                "An unexpected error occurred while deleting user with ID {UserId}.",
+                userId
+            );
             return Result<string>.Failure("An error occurred while deleting the user.");
         }
     }

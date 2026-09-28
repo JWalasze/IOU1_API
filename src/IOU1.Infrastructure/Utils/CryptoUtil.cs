@@ -12,7 +12,8 @@ public static class CryptoUtil
             Encoding.UTF8.GetBytes(salt),
             350000,
             HashAlgorithmName.SHA512,
-            64);
+            64
+        );
 
         var hashedSource = Convert.ToBase64String(hash);
 

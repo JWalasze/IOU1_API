@@ -5,5 +5,8 @@ namespace IOU1.Application.Features.Members.AddMember.Handler;
 
 public interface IAddMemberHandler
 {
-    Task<Result<AddMemberDto?>> Handle(AddMemberRequest request, CancellationToken cancellationToken = default);
+    Task<Result<AddMemberDto?>> Handle(
+        AddMemberRequest request,
+        CancellationToken cancellationToken = default
+    );
 }
